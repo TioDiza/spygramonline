@@ -20,13 +20,13 @@ const TypingText: React.FC<TypingTextProps> = ({ text, speed = 70, className }) 
     }
   }, [index, text, speed]);
 
-  // Função para aplicar o gradiente à palavra "Instagram" e text-white ao restante
+  // Função para aplicar o gradiente à palavra "INSTAGRAM" e text-white ao restante
   const renderTextWithGradient = (currentText: string) => {
-    // Divide o texto em partes, mantendo "Instagram" como um item separado
-    const parts = currentText.split(/(Instagram)/g); 
+    // Divide o texto em partes, mantendo "INSTAGRAM" como um item separado
+    const parts = currentText.split(/(INSTAGRAM)/g); 
     
     return parts.map((part, idx) => {
-      if (part === 'Instagram') {
+      if (part === 'INSTAGRAM') {
         return `
           <span key=${idx} class="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
             ${part}
