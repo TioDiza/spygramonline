@@ -57,7 +57,7 @@ const TypingText: React.FC<TypingTextProps> = ({ text, speed = 70, className }) 
       
       // Define a classe CSS com base se é a palavra 'INSTAGRAM' ou não
       const spanClassName = segment.isInstagram
-        ? "bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text"
+        ? "inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text"
         : "text-white";
 
       renderedElements.push(
