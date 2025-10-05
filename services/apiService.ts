@@ -1,6 +1,5 @@
-
 import { PROXY_FOLLOWERS_URL } from '../constants';
-import type { ApiResponse, ProfileData } from '../types';
+import type { ApiResponse, ProfileData, ApiErrorResponse } from '../types';
 
 export const fetchProfileData = async (username: string): Promise<ProfileData> => {
   if (!username) {
@@ -24,7 +23,8 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     // Fix for line 27: Check for the failure case first to allow TypeScript to correctly
     // narrow the type of `data` to `ApiErrorResponse` and access `data.message`.
     if (!data.success) {
-      throw new Error(data.message || 'Failed to fetch profile data.');
+      const errorData = data as ApiErrorResponse; // Explicitly cast to ApiErrorResponse
+      throw new Error(errorData.message || 'Failed to fetch profile data.');
     }
 
     return data.data;
