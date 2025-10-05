@@ -27,6 +27,30 @@ const MainAppContent: React.FC = () => {
   const [loadingStartTime, setLoadingStartTime] = useState<string | null>(null); // Novo estado para o horário de início
   const navigate = useNavigate();
 
+  // Mensagens para a sequência de carregamento
+  const loadingMessages = [
+    "Procurando perfil pesquisado...",
+    "Inicializando conexão — preparando ambiente...",
+    "Isso pode levar alguns segundos.",
+    "Não feche esta página."
+  ];
+  const [currentTypingMessageIndex, setCurrentTypingMessageIndex] = useState(0);
+
+  // Efeito para reiniciar a sequência de mensagens quando o carregamento começa
+  useEffect(() => {
+    if (isLoading) {
+      setCurrentTypingMessageIndex(0); // Reinicia o índice da mensagem quando o carregamento começa
+    }
+  }, [isLoading]);
+
+  // Callback para quando uma mensagem termina de digitar
+  const handleTypingComplete = useCallback(() => {
+    if (currentTypingMessageIndex < loadingMessages.length - 1) {
+      setCurrentTypingMessageIndex((prevIndex) => prevIndex + 1);
+    }
+  }, [currentTypingMessageIndex, loadingMessages.length]);
+
+
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -200,18 +224,20 @@ const MainAppContent: React.FC = () => {
               {loadingStartTime && (
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
               )}
-              <TypingText 
-                text="Procurando perfil pesquisado..." 
-                className="text-lg font-semibold text-white mt-4" 
-                speed={28} // 60% mais rápido
-              />
-              <TypingText 
-                text="Inicializando conexão — preparando ambiente..." 
-                className="text-base text-gray-400 mt-2" 
-                speed={40} // Velocidade ligeiramente diferente
-              />
-              <p className="text-base text-gray-400 mt-2">Isso pode levar alguns segundos.</p>
-              <p className="text-base text-gray-400">Não feche esta página.</p>
+              {/* Renderiza as mensagens já digitadas como texto estático */}
+              {loadingMessages.slice(0, currentTypingMessageIndex).map((msg, idx) => (
+                <p key={idx} className="text-base text-gray-400 mt-2">{msg}</p>
+              ))}
+              {/* Renderiza a mensagem atual com animação de digitação */}
+              {currentTypingMessageIndex < loadingMessages.length && (
+                <TypingText 
+                  key={currentTypingMessageIndex} // Key para forçar o re-render e resetar a animação
+                  text={loadingMessages[currentTypingMessageIndex]} 
+                  className="text-base text-gray-400 mt-2" // Tamanho e cor consistentes
+                  speed={28} // Velocidade consistente (60% mais rápido)
+                  onComplete={handleTypingComplete}
+                />
+              )}
             </div>
           ) : (
             <>
