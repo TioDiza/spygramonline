@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/src/lib/utils";
-import { motion, AnimatePresence } from "framer-motion"; // Corrigido: removido o '='
+import { motion, AnimatePresence } from "framer-motion";
 import React, { useRef, useState, useEffect } from "react";
 
 type BeamOptions = {
@@ -166,7 +166,7 @@ const CollisionMechanism = React.forwardRef<
           repeatDelay: beamOptions.repeatDelay || 0,
         }}
         className={cn(
-          "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-yellow-400 via-pink-500 to-purple-600 z-[1] blur-sm",
+          "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-yellow-400 via-pink-500 to-purple-600 z-[1] blur-[0.8px]", // Ajustado o desfoque aqui
           beamOptions.className
         )}
       />
