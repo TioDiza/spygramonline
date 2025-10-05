@@ -170,7 +170,7 @@ const MainAppContent: React.FC = () => {
               className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
             />
           </div>
-          {/* Mensagem "ACESSE O INSTAGRAM..." removida conforme solicitado */}
+          {/* Mensagem removida conforme solicitado */}
         </header>
         
         <main className="w-full flex flex-col items-center">
