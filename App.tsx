@@ -34,7 +34,8 @@ const MainAppContent: React.FC = () => {
     "Isso pode levar alguns segundos.",
     "Não feche esta página.",
     "Autenticação em andamento — validando tokens...",
-    "Carregando perfil alvo."
+    "Carregando perfil alvo.",
+    "Analisando atividades — compilando resumo temporal."
   ];
   const [currentTypingMessageIndex, setCurrentTypingMessageIndex] = useState(0);
 
