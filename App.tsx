@@ -8,7 +8,7 @@ import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
 import ConsentCheckbox from './src/components/ConsentCheckbox';
-import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision';
+// import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision'; // Removido
 import { Lock } from 'lucide-react';
 import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
@@ -106,10 +106,9 @@ const MainAppContent: React.FC = () => {
   }, [isLoading, isHackingMessagesDone, profile, error, navigate]);
 
   return (
-    <BackgroundBeamsWithCollision className="min-h-screen">
+    <div className="min-h-screen bg-black relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full"> {/* Removido BackgroundBeamsWithCollision e adicionado bg-black */}
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
-      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full"> {/* Removido overflow-hidden */}
-        <style>{`
+      <style>{`
           @keyframes fade-in {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -225,7 +224,6 @@ const MainAppContent: React.FC = () => {
           <p>Todos os direitos reservados a SpyGram</p>
         </footer>
       </div>
-    </BackgroundBeamsWithCollision>
   );
 };
 
