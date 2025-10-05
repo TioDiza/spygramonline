@@ -237,7 +237,7 @@ const MainAppContent: React.FC = () => {
                   key={currentTypingMessageIndex} // Key para forçar o re-render e resetar a animação
                   text={loadingMessages[currentTypingMessageIndex]} 
                   className="text-base text-gray-400 mt-2" // Tamanho e cor consistentes
-                  speed={20} // Velocidade consistente (60% mais rápido)
+                  speed={200} // Velocidade ajustada para 0.2 segundos por letra
                   onComplete={handleTypingComplete}
                 />
               )}
