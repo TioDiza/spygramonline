@@ -32,7 +32,8 @@ const MainAppContent: React.FC = () => {
     "Procurando perfil pesquisado...",
     "Inicializando conexão — preparando ambiente...",
     "Isso pode levar alguns segundos.",
-    "Não feche esta página."
+    "Não feche esta página.",
+    "Autenticação em andamento — validando tokens..."
   ];
   const [currentTypingMessageIndex, setCurrentTypingMessageIndex] = useState(0);
 
@@ -234,7 +235,7 @@ const MainAppContent: React.FC = () => {
                   key={currentTypingMessageIndex} // Key para forçar o re-render e resetar a animação
                   text={loadingMessages[currentTypingMessageIndex]} 
                   className="text-base text-gray-400 mt-2" // Tamanho e cor consistentes
-                  speed={28} // Velocidade consistente (60% mais rápido)
+                  speed={20} // Velocidade consistente (60% mais rápido)
                   onComplete={handleTypingComplete}
                 />
               )}
