@@ -9,11 +9,10 @@ import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
 import ConsentCheckbox from './src/components/ConsentCheckbox';
 import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision';
-import { Lock } from 'lucide-react'; // Importando o ícone de cadeado
-import ResultsPage from './src/pages/ResultsPage'; // Importação adicionada
-import OverloadPage from './src/pages/OverloadPage'; // Importação adicionada
-import LoadingSequence from './src/components/LoadingSequence'; // Nova importação
-import ProgressBar from './src/components/ProgressBar'; // Nova importação
+import { Lock } from 'lucide-react';
+import ResultsPage from './src/pages/ResultsPage';
+import OverloadPage from './src/pages/OverloadPage';
+import ProgressBar from './src/components/ProgressBar';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -21,35 +20,32 @@ const MainAppContent: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [hasConsented, setHasConsented] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>(''); // Estado para o input de pesquisa
-  const [showLoadingSequence, setShowLoadingSequence] = useState<boolean>(false); // Novo estado para a sequência de carregamento
-  const [progressBarProgress, setProgressBarProgress] = useState(0); // Novo estado para a barra de progresso
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [progressBarProgress, setProgressBarProgress] = useState(0);
   const navigate = useNavigate();
 
-  // O array loadingMessages não é mais necessário aqui, pois HackingMessages tem suas próprias mensagens.
-  // const loadingMessages: string[] = []; 
-
-  // Efeito para simular o progresso da barra enquanto a sequência de carregamento está ativa
+  // Efeito para simular o progresso da barra enquanto isLoading está ativo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    if (showLoadingSequence) {
-      setProgressBarProgress(0); // Resetar o progresso ao iniciar a sequência
+    if (isLoading) {
+      setProgressBarProgress(0); // Resetar o progresso ao iniciar o carregamento
       interval = setInterval(() => {
         setProgressBarProgress((prev) => {
-          // Incrementa lentamente até ~90% durante a sequência
-          if (prev < 90) {
-            return prev + 1; // Ajuste a velocidade de incremento conforme necessário
+          // Incrementa lentamente até ~95% enquanto o carregamento está ativo
+          if (prev < 95) {
+            return prev + 1;
           }
           return prev;
         });
       }, 100); // Atualiza a cada 100ms
     } else {
+      setProgressBarProgress(100); // Garante que a barra chegue a 100% quando o carregamento termina
       if (interval) clearInterval(interval);
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [showLoadingSequence]);
+  }, [isLoading]);
 
   const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) {
@@ -61,25 +57,20 @@ const MainAppContent: React.FC = () => {
       return;
     }
 
-    setIsLoading(true); // Ativa o estado geral de carregamento
+    setIsLoading(true);
     setError(null);
     setProfile(null); // Limpa o perfil anterior antes de uma nova busca
-    setShowLoadingSequence(true); // Inicia a exibição da sequência de carregamento
     setProgressBarProgress(0); // Garante que a barra comece do zero
-  }, [searchQuery, hasConsented]);
 
-  const handleLoadingSequenceComplete = useCallback(async () => {
-    setShowLoadingSequence(false); // Esconde a sequência de carregamento
-    
     try {
       const data = await fetchProfileData(searchQuery.trim());
       setProfile(data);
-      setProgressBarProgress(100); // Completa a barra antes de navegar
+      // A barra de progresso já será definida como 100% pelo useEffect quando isLoading for false
       setTimeout(() => {
         navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
       }, 300); // Pequeno atraso para o usuário ver a barra em 100%
     } catch (err) {
-      setProgressBarProgress(100); // Completa a barra mesmo em caso de erro
+      // A barra de progresso já será definida como 100% pelo useEffect quando isLoading for false
       setTimeout(() => {
         if (err instanceof Error) {
           // Verifica se é um erro de sobrecarga ou erro de rede
@@ -95,11 +86,11 @@ const MainAppContent: React.FC = () => {
     } finally {
       setIsLoading(false); // Desativa o estado geral de carregamento
     }
-  }, [searchQuery, navigate]);
+  }, [searchQuery, hasConsented, navigate]);
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
-      <ProgressBar progress={progressBarProgress} isVisible={isLoading} /> {/* Adiciona a barra de progresso */}
+      <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full">
         <style>{`
           @keyframes fade-in {
@@ -142,17 +133,17 @@ const MainAppContent: React.FC = () => {
             animation: logo-entrance 1s ease-out forwards;
           }
           @keyframes logo-background-pulse {
-            0%, 100% { opacity: 0.03; } /* Opacidade inicial mais visível */
-            50% { opacity: 0.10; } /* Pico de opacidade mais forte */
+            0%, 100% { opacity: 0.03; }
+            50% { opacity: 0.10; }
           }
           .animate-logo-background-pulse {
             animation: logo-background-pulse 3s infinite ease-in-out alternate;
           }
           .logo-radial-background {
             background-image: radial-gradient(circle at center,
-              rgba(236, 72, 153, 0.4) 0%, /* pink-600, 40% opacity */
-              rgba(147, 51, 234, 0.2) 50%, /* purple-600, 20% opacity */
-              rgba(251, 191, 36, 0) 100% /* yellow-500, 0% opacity */
+              rgba(236, 72, 153, 0.4) 0%,
+              rgba(147, 51, 234, 0.2) 50%,
+              rgba(251, 191, 36, 0) 100%
             );
           }
           @keyframes pulse {
@@ -164,33 +155,32 @@ const MainAppContent: React.FC = () => {
           }
         `}</style>
         
-        {!showLoadingSequence && ( // Renderiza o cabeçalho apenas se não estiver na sequência de carregamento
-          <header className="text-center mb-10 relative w-full max-w-xl">
-            <div className="relative group mx-auto w-fit mb-4">
-              <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
-              
-              <img
-                src="/spygram_transparentebranco.png"
-                alt="SpyGram Logo"
-                className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
-              />
-            </div>
+        {/* O cabeçalho sempre aparece agora, pois não há mais uma sequência de carregamento separada */}
+        <header className="text-center mb-10 relative w-full max-w-xl">
+          <div className="relative group mx-auto w-fit mb-4">
+            <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
+            
+            <img
+              src="/spygram_transparentebranco.png"
+              alt="SpyGram Logo"
+              className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
+            />
+          </div>
 
-            <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
-              <span className="text-white">ACESSE O </span>
-              <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
-              <span className="text-white"> DE QUALQUER PESSOA, </span>
-              <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
-              <span className="text-white">, APENAS COM O @</span>
-            </p>
-          </header>
-        )}
+          <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
+            <span className="text-white">ACESSE O </span>
+            <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
+            <span className="text-white"> DE QUALQUER PESSOA, </span>
+            <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
+            <span className="text-white">, APENAS COM O @</span>
+          </p>
+        </header>
         
         <main className="w-full flex flex-col items-center">
-          {showLoadingSequence ? (
-            <LoadingSequence 
-              onSequenceComplete={handleLoadingSequenceComplete} 
-            />
+          {isLoading ? (
+            <div className="text-center text-lg text-green-400 font-mono mt-8 min-h-[12rem] flex items-center justify-center">
+              Buscando perfil...
+            </div>
           ) : (
             <>
               <CustomSearchBar 
