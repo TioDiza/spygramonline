@@ -14,7 +14,7 @@ import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
 import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
-import TypingText from './components/TypingText'; // Caminho de importação corrigido
+// TypingText removido, pois as mensagens aparecerão por frase
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -24,35 +24,41 @@ const MainAppContent: React.FC = () => {
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
-  const [loadingStartTime, setLoadingStartTime] = useState<string | null>(null); // Novo estado para o horário de início
+  const [loadingStartTime, setLoadingStartTime] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Mensagens para a sequência de carregamento
   const loadingMessages = [
     ">> INVASÃO INICIADA: rompendo defesas...",
     ">> ACESSO FORÇADO: credenciais fictícias localizadas.",
-    "Isso pode levar alguns segundos.",
-    "Não feche esta página.",
-    "Autenticação em andamento — validando tokens...",
-    "Carregando perfil alvo.",
-    "Analisando atividades — compilando resumo temporal."
+    "Estabelecendo conexão segura...",
+    "Verificando protocolos de segurança...",
+    "Autenticando credenciais...",
+    "Carregando dados do perfil...",
+    "Compilando informações para exibição."
   ];
-  const [currentTypingMessageIndex, setCurrentTypingMessageIndex] = useState(0);
+  const [currentMessageDisplayCount, setCurrentMessageDisplayCount] = useState(0); // Renomeado para clareza
 
-  // Efeito para reiniciar a sequência de mensagens quando o carregamento começa
+  // Efeito para controlar a exibição sequencial das mensagens
+  useEffect(() => {
+    let messageTimer: NodeJS.Timeout | null = null;
+    if (isLoading && currentMessageDisplayCount < loadingMessages.length) {
+      const delayPerMessage = 2500; // 2.5 segundos entre cada mensagem
+      messageTimer = setTimeout(() => {
+        setCurrentMessageDisplayCount((prevCount) => prevCount + 1);
+      }, delayPerMessage);
+    }
+    return () => {
+      if (messageTimer) clearTimeout(messageTimer);
+    };
+  }, [isLoading, currentMessageDisplayCount, loadingMessages.length]);
+
+  // Efeito para reiniciar a contagem de mensagens quando o carregamento começa
   useEffect(() => {
     if (isLoading) {
-      setCurrentTypingMessageIndex(0); // Reinicia o índice da mensagem quando o carregamento começa
+      setCurrentMessageDisplayCount(0); // Reinicia a contagem de mensagens quando o carregamento começa
     }
   }, [isLoading]);
-
-  // Callback para quando uma mensagem termina de digitar
-  const handleTypingComplete = useCallback(() => {
-    if (currentTypingMessageIndex < loadingMessages.length - 1) {
-      setCurrentTypingMessageIndex((prevIndex) => prevIndex + 1);
-    }
-  }, [currentTypingMessageIndex, loadingMessages.length]);
-
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
   useEffect(() => {
@@ -227,20 +233,12 @@ const MainAppContent: React.FC = () => {
               {loadingStartTime && (
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
               )}
-              {/* Renderiza as mensagens já digitadas como texto estático */}
-              {loadingMessages.slice(0, currentTypingMessageIndex).map((msg, idx) => (
-                <p key={idx} className="text-base text-gray-400 mt-2">{msg}</p>
+              {/* Renderiza as mensagens uma por uma */}
+              {loadingMessages.slice(0, currentMessageDisplayCount).map((msg, idx) => (
+                <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in">
+                  {msg}
+                </p>
               ))}
-              {/* Renderiza a mensagem atual com animação de digitação */}
-              {currentTypingMessageIndex < loadingMessages.length && (
-                <TypingText 
-                  key={currentTypingMessageIndex} // Key para forçar o re-render e resetar a animação
-                  text={loadingMessages[currentTypingMessageIndex]} 
-                  className="text-base text-gray-400 mt-2" // Tamanho e cor consistentes
-                  speed={200} // Velocidade ajustada para 0.2 segundos por letra
-                  onComplete={handleTypingComplete}
-                />
-              )}
             </div>
           ) : (
             <>
