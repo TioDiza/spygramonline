@@ -14,6 +14,7 @@ import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
 import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
+import TypingText from './components/TypingText'; // Caminho de importação corrigido
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -181,9 +182,15 @@ const MainAppContent: React.FC = () => {
         
         <main className="w-full flex flex-col items-center">
           {isLoading ? (
-            <div className="mt-10 w-full max-w-2xl mx-auto bg-black backdrop-blur-sm border border-white rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]"> {/* Alterado bg-gray-900/50 para bg-black e border-gray-700 para border-white */}
+            <div className="mt-10 w-full max-w-2xl mx-auto bg-black backdrop-blur-sm border border-white rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
               <Loader /> {/* Reutiliza o Loader existente */}
-              <p className="text-xl font-semibold text-white mt-4">Procurando perfil pesquisado...</p>
+              <TypingText 
+                text="Procurando perfil pesquisado..." 
+                className="text-lg font-semibold text-white mt-4" 
+                speed={70} 
+              />
+              <p className="text-base text-gray-400 mt-2">Isso pode levar alguns segundos.</p>
+              <p className="text-base text-gray-400">Não feche esta página.</p>
             </div>
           ) : (
             <>
