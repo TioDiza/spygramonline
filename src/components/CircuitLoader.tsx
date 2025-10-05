@@ -42,28 +42,29 @@ const CircuitLoader: React.FC = () => {
           animation: flow 4s linear infinite;
         }
 
+        /* Cores inspiradas no Instagram */
         .trace-flow.purple {
-          stroke: #9900ff; /* Roxo */
+          stroke: #C13584; /* Instagram Dark Pink/Purple */
           animation-delay: 0s;
         }
 
         .trace-flow.blue {
-          stroke: #00aaff; /* Azul */
+          stroke: #833AB4; /* Instagram Purple */
           animation-delay: 0.5s;
         }
 
         .trace-flow.yellow {
-          stroke: #ffea00; /* Amarelo */
+          stroke: #FCAF45; /* Instagram Yellow/Orange */
           animation-delay: 1s;
         }
 
         .trace-flow.green {
-          stroke: #00ff99; /* Verde */
+          stroke: #E1306C; /* Instagram Pink */
           animation-delay: 1.5s;
         }
 
         .trace-flow.red {
-          stroke: #ff0066; /* Vermelho */
+          stroke: #FD1D1D; /* Instagram Red */
           animation-delay: 2s;
         }
 
@@ -88,9 +89,11 @@ const CircuitLoader: React.FC = () => {
                 <stop offset="100%" stopColor="#0f0f0f"></stop>
               </linearGradient>
 
+              {/* Gradiente para o texto 'Loading' com cores do Instagram */}
               <linearGradient id="textGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#eeeeee"></stop>
-                <stop offset="100%" stopColor="#888888"></stop>
+                <stop offset="0%" stopColor="#FCAF45"></stop> {/* Amarelo/Laranja */}
+                <stop offset="50%" stopColor="#E1306C"></stop> {/* Rosa */}
+                <stop offset="100%" stopColor="#C13584"></stop> {/* Roxo */}
               </linearGradient>
 
               <linearGradient id="pinGradient" x1="1" y1="0" x2="0" y2="0">
@@ -213,7 +216,7 @@ const CircuitLoader: React.FC = () => {
               x="400"
               y="240"
               fontFamily="Arial, sans-serif"
-              fontSize="22"
+              fontSize="36" 
               fill="url(#textGradient)"
               textAnchor="middle"
               alignmentBaseline="middle"
