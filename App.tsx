@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import type { ProfileData } from './types';
 import { fetchProfileData } from './services/apiService';
@@ -48,11 +47,21 @@ const App: React.FC = () => {
         .animate-tilt {
           animation: tilt 10s infinite linear;
         }
+        @keyframes logo-pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.03); }
+          100% { transform: scale(1); }
+        }
+        .animate-logo-pulse {
+          animation: logo-pulse 2s infinite ease-in-out;
+        }
       `}</style>
       <header className="text-center mb-10">
-        <h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 pb-2">
-          SpyGram
-        </h1>
+        <img
+          src="/spygram_transparentebranco.png"
+          alt="SpyGram Logo"
+          className="h-24 md:h-32 mx-auto mb-2 animate-logo-pulse"
+        />
         <p className="text-gray-400 mt-2">Get insights on any Instagram profile.</p>
       </header>
       
