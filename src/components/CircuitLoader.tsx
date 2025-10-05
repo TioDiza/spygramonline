@@ -11,12 +11,12 @@ const CircuitLoader: React.FC = () => {
           align-items: center;
           width: 100%;
           height: 100%;
-          min-height: 300px; /* Aumentado para garantir visibilidade e escala */
+          min-height: 350px; /* Aumentado novamente para maior visibilidade */
         }
 
         .loader {
           width: 100%;
-          max-width: 1000px; /* Aumentado o tamanho máximo do SVG */
+          max-width: 1200px; /* Aumentado novamente o tamanho máximo do SVG */
           height: auto;
         }
 
@@ -216,7 +216,7 @@ const CircuitLoader: React.FC = () => {
               x="400"
               y="240"
               fontFamily="Arial, sans-serif"
-              fontSize="36" 
+              fontSize="28" {/* Diminuído o tamanho da fonte */}
               fill="url(#textGradient)"
               textAnchor="middle"
               alignmentBaseline="middle"
