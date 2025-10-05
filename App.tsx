@@ -13,7 +13,7 @@ import { Lock } from 'lucide-react';
 import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
 import ProgressBar from './src/components/ProgressBar';
-import HackingMessages from './src/components/HackingMessages'; // Importa o novo componente de mensagens
+import HackingMessages from './src/components/HackingMessages';
 import { MIN_LOADING_DURATION } from './constants';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
@@ -24,7 +24,7 @@ const MainAppContent: React.FC = () => {
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
-  const [isHackingMessagesDone, setIsHackingMessagesDone] = useState<boolean>(false); // Novo estado
+  const [isHackingMessagesDone, setIsHackingMessagesDone] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
@@ -108,7 +108,7 @@ const MainAppContent: React.FC = () => {
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
-      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full">
+      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full"> {/* Removido overflow-hidden */}
         <style>{`
           @keyframes fade-in {
             from { opacity: 0; transform: translateY(20px); }
