@@ -28,13 +28,13 @@ const MainAppContent: React.FC = () => {
 
   const loadingMessages = [
     "Inicializando sessão segura...",
-    "Sincronizando com os serviços do Instagram...", // Corrigido: Instagram capitalizado
+    "Sincronizando com os serviços do Instagram...",
     "Validando reCAPTCHA...",
     "Consultando identificador do perfil...",
     "Coletando seguidores e metadados...",
-    "Recuperando dados do perfil...", // Corrigido: Mensagem mais adequada
+    "Obtendo dados de login...",
     "Normalizando dados...",
-    "Finalizando...", // Corrigido: 'Finalizando' em vez de 'Finalizado'
+    "Finalizado...",
   ];
 
   // Efeito para simular o progresso da barra enquanto a sequência de carregamento está ativa
@@ -196,7 +196,7 @@ const MainAppContent: React.FC = () => {
             <LoadingSequence 
               messages={loadingMessages} 
               onSequenceComplete={handleLoadingSequenceComplete} 
-              delayPerMessage={2750} // Aumentado para 2.75 segundos por mensagem
+              delayPerMessage={2750} // Mantido em 2.75 segundos por mensagem
             />
           ) : (
             <>
