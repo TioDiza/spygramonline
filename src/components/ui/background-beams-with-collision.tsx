@@ -35,7 +35,7 @@ export const BackgroundBeamsWithCollision = ({
     { initialX: 1000, translateX: 1000, duration: 4, repeatDelay: 1, className: "h-12" },
     { initialX: 1200, translateX: 1200, duration: 6, repeatDelay: 2, delay: 2, className: "h-6" },
 
-    // Novas vigas para aumentar a frequência e cobertura
+    // Algumas das novas vigas para manter uma boa frequência, mas reduzida
     { initialX: 50, translateX: 50, duration: 5, repeatDelay: 2, delay: 1, className: "h-8" },
     { initialX: 200, translateX: 200, duration: 8, repeatDelay: 5, delay: 3, className: "h-10" },
     { initialX: 350, translateX: 350, duration: 4, repeatDelay: 1, delay: 0, className: "h-16" },
@@ -44,11 +44,6 @@ export const BackgroundBeamsWithCollision = ({
     { initialX: 900, translateX: 900, duration: 10, repeatDelay: 8, delay: 6, className: "h-18" },
     { initialX: 1150, translateX: 1150, duration: 3, repeatDelay: 1, delay: 0.5, className: "h-12" },
     { initialX: 150, translateX: 150, duration: 7, repeatDelay: 3, delay: 1.5, className: "h-9" },
-    { initialX: 450, translateX: 450, duration: 6, repeatDelay: 2, delay: 0.8, className: "h-11" },
-    { initialX: 850, translateX: 850, duration: 5, repeatDelay: 4, delay: 2.5, className: "h-7" },
-    { initialX: 1050, translateX: 1050, duration: 8, repeatDelay: 5, delay: 4.5, className: "h-15" },
-    { initialX: 280, translateX: 280, duration: 4, repeatDelay: 1.5, delay: 0.3, className: "h-13" },
-    { initialX: 650, translateX: 650, duration: 9, repeatDelay: 7, delay: 5.5, className: "h-19" },
   ];
 
   return (
@@ -174,7 +169,7 @@ const CollisionMechanism = React.forwardRef<
           repeatDelay: beamOptions.repeatDelay || 0,
         }}
         className={cn(
-          "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-indigo-500 via-purple-500 to-transparent",
+          "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-indigo-500 via-purple-500 to-transparent z-[1]", // Adicionado z-[1]
           beamOptions.className
         )}
       />
