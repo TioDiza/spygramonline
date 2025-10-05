@@ -13,7 +13,8 @@ import { Lock } from 'lucide-react';
 import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
 import ProgressBar from './src/components/ProgressBar';
-import { MIN_LOADING_DURATION } from './constants'; // Importa a nova constante
+import HackingMessages from './src/components/HackingMessages'; // Importa o novo componente de mensagens
+import { MIN_LOADING_DURATION } from './constants';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -23,6 +24,7 @@ const MainAppContent: React.FC = () => {
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
+  const [isHackingMessagesDone, setIsHackingMessagesDone] = useState<boolean>(false); // Novo estado
   const navigate = useNavigate();
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
@@ -62,6 +64,7 @@ const MainAppContent: React.FC = () => {
     setError(null);
     setProfile(null); // Limpa o perfil anterior antes de uma nova busca
     setProgressBarProgress(0); // Garante que a barra comece do zero
+    setIsHackingMessagesDone(false); // Resetar o estado das mensagens
 
     try {
       const dataPromise = fetchProfileData(searchQuery.trim());
@@ -69,8 +72,7 @@ const MainAppContent: React.FC = () => {
 
       const [data] = await Promise.all([dataPromise, minDurationPromise]);
       
-      setProfile(data);
-      navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
+      setProfile(data); // Armazena os dados do perfil
     } catch (err) {
       // Se ocorrer um erro, ainda esperamos o tempo mínimo de carregamento
       await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
@@ -78,6 +80,7 @@ const MainAppContent: React.FC = () => {
       if (err instanceof Error) {
         // Verifica se é um erro de sobrecarga ou erro de rede
         if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
+          setError('Erro de conexão ou servidor sobrecarregado.'); // Define um erro genérico para a página de sobrecarga
           navigate('/overload'); // Navega para a página de sobrecarga
         } else {
           setError(err.message);
@@ -86,9 +89,21 @@ const MainAppContent: React.FC = () => {
         setError('Ocorreu um erro inesperado.');
       }
     } finally {
-      setIsLoading(false); // Desativa o estado geral de carregamento
+      setIsLoading(false); // Desativa o estado geral de carregamento (API + duração mínima)
     }
   }, [searchQuery, hasConsented, navigate]);
+
+  // Efeito para lidar com a navegação após o carregamento e as mensagens
+  useEffect(() => {
+    if (!isLoading && isHackingMessagesDone) {
+      if (profile) {
+        navigate('/results', { state: { profileData: profile } });
+      } else if (error && !error.includes('Erro de conexão ou servidor sobrecarregado.')) {
+        // Se houver um erro que não seja de sobrecarga, exibe na tela principal
+        // A navegação para /overload já é tratada no catch de handleSearch
+      }
+    }
+  }, [isLoading, isHackingMessagesDone, profile, error, navigate]);
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
@@ -157,7 +172,6 @@ const MainAppContent: React.FC = () => {
           }
         `}</style>
         
-        {/* O cabeçalho sempre aparece agora, pois não há mais uma sequência de carregamento separada */}
         <header className="text-center mb-10 relative w-full max-w-xl">
           <div className="relative group mx-auto w-fit mb-4">
             <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
@@ -180,9 +194,7 @@ const MainAppContent: React.FC = () => {
         
         <main className="w-full flex flex-col items-center">
           {isLoading ? (
-            <div className="text-center text-lg text-green-400 font-mono mt-8 min-h-[12rem] flex items-center justify-center">
-              Buscando perfil...
-            </div>
+            <HackingMessages onComplete={() => setIsHackingMessagesDone(true)} />
           ) : (
             <>
               <CustomSearchBar 
