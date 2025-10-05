@@ -66,14 +66,23 @@ const App: React.FC = () => {
         }
       `}</style>
       <header className="text-center mb-10 relative w-full max-w-xl">
+        {/* Existing general blob background */}
         <div className="absolute inset-0 -z-10 flex items-center justify-center">
           <div className="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 rounded-full blur-3xl opacity-40 animate-blob"></div>
         </div>
-        <img
-          src="/spygram_transparentebranco.png"
-          alt="SpyGram Logo"
-          className="h-48 md:h-64 mx-auto mb-2 animate-logo-float-pulse relative z-10"
-        />
+
+        {/* New wrapper for the logo and its specific background */}
+        <div className="relative group mx-auto w-fit mb-2">
+          {/* The new background for the logo */}
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+          
+          {/* The logo image itself */}
+          <img
+            src="/spygram_transparentebranco.png"
+            alt="SpyGram Logo"
+            className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full"
+          />
+        </div>
         <p className="text-gray-400 mt-2">Get insights on any Instagram profile.</p>
       </header>
       
