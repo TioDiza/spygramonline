@@ -28,13 +28,13 @@ const MainAppContent: React.FC = () => {
 
   const loadingMessages = [
     "Inicializando sessão segura...",
-    "Sincronizando com os serviços do instagram...",
+    "Sincronizando com os serviços do Instagram...", // Corrigido: Instagram capitalizado
     "Validando reCAPTCHA...",
     "Consultando identificador do perfil...",
     "Coletando seguidores e metadados...",
-    "Obtendo dados de login...",
+    "Recuperando dados do perfil...", // Corrigido: Mensagem mais adequada
     "Normalizando dados...",
-    "Finalizado...",
+    "Finalizando...", // Corrigido: 'Finalizando' em vez de 'Finalizado'
   ];
 
   // Efeito para simular o progresso da barra enquanto a sequência de carregamento está ativa
@@ -193,7 +193,11 @@ const MainAppContent: React.FC = () => {
         
         <main className="w-full flex flex-col items-center">
           {showLoadingSequence ? (
-            <LoadingSequence messages={loadingMessages} onSequenceComplete={handleLoadingSequenceComplete} />
+            <LoadingSequence 
+              messages={loadingMessages} 
+              onSequenceComplete={handleLoadingSequenceComplete} 
+              delayPerMessage={2750} // Aumentado para 2.75 segundos por mensagem
+            />
           ) : (
             <>
               <CustomSearchBar 
