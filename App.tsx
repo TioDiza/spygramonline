@@ -13,7 +13,6 @@ import { Lock } from 'lucide-react';
 import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
 import ProgressBar from './src/components/ProgressBar';
-import HackingMessages from './src/components/HackingMessages';
 import { MIN_LOADING_DURATION } from './constants';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
@@ -24,7 +23,6 @@ const MainAppContent: React.FC = () => {
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
-  const [isHackingMessagesDone, setIsHackingMessagesDone] = useState<boolean>(false);
   const navigate = useNavigate();
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
@@ -64,7 +62,6 @@ const MainAppContent: React.FC = () => {
     setError(null);
     setProfile(null); // Limpa o perfil anterior antes de uma nova busca
     setProgressBarProgress(0); // Garante que a barra comece do zero
-    setIsHackingMessagesDone(false); // Resetar o estado das mensagens
 
     try {
       const dataPromise = fetchProfileData(searchQuery.trim());
@@ -73,6 +70,7 @@ const MainAppContent: React.FC = () => {
       const [data] = await Promise.all([dataPromise, minDurationPromise]);
       
       setProfile(data); // Armazena os dados do perfil
+      navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
     } catch (err) {
       // Se ocorrer um erro, ainda esperamos o tempo mínimo de carregamento
       await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
@@ -80,7 +78,6 @@ const MainAppContent: React.FC = () => {
       if (err instanceof Error) {
         // Verifica se é um erro de sobrecarga ou erro de rede
         if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
-          setError('Erro de conexão ou servidor sobrecarregado.'); // Define um erro genérico para a página de sobrecarga
           navigate('/overload'); // Navega para a página de sobrecarga
         } else {
           setError(err.message);
@@ -89,26 +86,14 @@ const MainAppContent: React.FC = () => {
         setError('Ocorreu um erro inesperado.');
       }
     } finally {
-      setIsLoading(false); // Desativa o estado geral de carregamento (API + duração mínima)
+      setIsLoading(false); // Desativa o estado geral de carregamento
     }
   }, [searchQuery, hasConsented, navigate]);
-
-  // Efeito para lidar com a navegação após o carregamento e as mensagens
-  useEffect(() => {
-    if (!isLoading && isHackingMessagesDone) {
-      if (profile) {
-        navigate('/results', { state: { profileData: profile } });
-      } else if (error && !error.includes('Erro de conexão ou servidor sobrecarregado.')) {
-        // Se houver um erro que não seja de sobrecarga, exibe na tela principal
-        // A navegação para /overload já é tratada no catch de handleSearch
-      }
-    }
-  }, [isLoading, isHackingMessagesDone, profile, error, navigate]);
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
-      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full"> {/* Removido overflow-hidden */}
+      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full">
         <style>{`
           @keyframes fade-in {
             from { opacity: 0; transform: translateY(20px); }
@@ -183,18 +168,23 @@ const MainAppContent: React.FC = () => {
             />
           </div>
 
-          <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
-            <span className="text-white">ACESSE O </span>
-            <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
-            <span className="text-white"> DE QUALQUER PESSOA, </span>
-            <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
-            <span className="text-white">, APENAS COM O @</span>
-          </p>
+          {!isLoading && ( // Oculta este parágrafo quando estiver carregando
+            <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
+              <span className="text-white">ACESSE O </span>
+              <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
+              <span className="text-white"> DE QUALQUER PESSOA, </span>
+              <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
+              <span className="text-white">, APENAS COM O @</span>
+            </p>
+          )}
         </header>
         
         <main className="w-full flex flex-col items-center">
           {isLoading ? (
-            <HackingMessages onComplete={() => setIsHackingMessagesDone(true)} />
+            <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
+              <Loader /> {/* Reutiliza o Loader existente */}
+              <p className="text-xl font-semibold text-white mt-4">Procurando perfil pesquisado...</p>
+            </div>
           ) : (
             <>
               <CustomSearchBar 
