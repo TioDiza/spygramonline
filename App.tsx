@@ -37,26 +37,35 @@ const MainAppContent: React.FC = () => {
     "Carregando dados do perfil...",
     "Compilando informações para exibição."
   ];
-  const [currentMessageDisplayCount, setCurrentMessageDisplayCount] = useState(0);
+  const [displayedMessages, setDisplayedMessages] = useState<{ text: string; timestamp: string }[]>([]);
 
   // Efeito para controlar a exibição sequencial das mensagens
   useEffect(() => {
     let messageTimer: NodeJS.Timeout | null = null;
-    if (isLoading && currentMessageDisplayCount < loadingMessages.length) {
-      const delayPerMessage = 2500; // 2.5 segundos entre cada mensagem
+    if (isLoading && displayedMessages.length < loadingMessages.length) {
+      const delayPerMessage = 1500; // 1.5 segundos entre cada mensagem
       messageTimer = setTimeout(() => {
-        setCurrentMessageDisplayCount((prevCount) => prevCount + 1);
+        const nextMessageIndex = displayedMessages.length;
+        const messageText = loadingMessages[nextMessageIndex];
+        const now = new Date();
+        const timestamp = new Intl.DateTimeFormat('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          timeZone: 'America/Sao_Paulo',
+        }).format(now);
+        setDisplayedMessages((prev) => [...prev, { text: messageText, timestamp }]);
       }, delayPerMessage);
     }
     return () => {
       if (messageTimer) clearTimeout(messageTimer);
     };
-  }, [isLoading, currentMessageDisplayCount, loadingMessages.length]);
+  }, [isLoading, displayedMessages.length, loadingMessages.length]);
 
-  // Efeito para reiniciar a contagem de mensagens quando o carregamento começa
+  // Efeito para reiniciar as mensagens quando o carregamento começa
   useEffect(() => {
     if (isLoading) {
-      setCurrentMessageDisplayCount(0); // Reinicia a contagem de mensagens quando o carregamento começa
+      setDisplayedMessages([]); // Reinicia as mensagens quando o carregamento começa
     }
   }, [isLoading]);
 
@@ -234,13 +243,15 @@ const MainAppContent: React.FC = () => {
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
               )}
               {/* Renderiza as mensagens uma por uma, aplicando o estilo de gradiente */}
-              {loadingMessages.slice(0, currentMessageDisplayCount).map((msg, idx) => {
-                const prefixMatch = msg.match(/^(>>[^:]+?:)/); // Captura ">> ... :"
+              {displayedMessages.map((msgObj, idx) => {
+                const { text, timestamp } = msgObj;
+                const prefixMatch = text.match(/^(>>[^:]+?:)/); // Captura ">> ... :"
                 if (prefixMatch) {
                   const prefix = prefixMatch[1];
-                  const suffix = msg.substring(prefix.length);
+                  const suffix = text.substring(prefix.length);
                   return (
                     <p key={idx} className="text-base mt-2 animate-fade-in">
+                      <span className="text-gray-500 mr-2">[{timestamp}]</span>
                       <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
                         {prefix}
                       </span>
@@ -250,7 +261,8 @@ const MainAppContent: React.FC = () => {
                 } else {
                   return (
                     <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in">
-                      {msg}
+                      <span className="text-gray-500 mr-2">[{timestamp}]</span>
+                      {text}
                     </p>
                   );
                 }
