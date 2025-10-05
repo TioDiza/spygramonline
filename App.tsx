@@ -13,6 +13,7 @@ import { Lock } from 'lucide-react';
 import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
 import ProgressBar from './src/components/ProgressBar';
+import { MIN_LOADING_DURATION } from './constants'; // Importa a nova constante
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -63,26 +64,27 @@ const MainAppContent: React.FC = () => {
     setProgressBarProgress(0); // Garante que a barra comece do zero
 
     try {
-      const data = await fetchProfileData(searchQuery.trim());
+      const dataPromise = fetchProfileData(searchQuery.trim());
+      const minDurationPromise = new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
+
+      const [data] = await Promise.all([dataPromise, minDurationPromise]);
+      
       setProfile(data);
-      // A barra de progresso já será definida como 100% pelo useEffect quando isLoading for false
-      setTimeout(() => {
-        navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
-      }, 300); // Pequeno atraso para o usuário ver a barra em 100%
+      navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
     } catch (err) {
-      // A barra de progresso já será definida como 100% pelo useEffect quando isLoading for false
-      setTimeout(() => {
-        if (err instanceof Error) {
-          // Verifica se é um erro de sobrecarga ou erro de rede
-          if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
-            navigate('/overload'); // Navega para a página de sobrecarga
-          } else {
-            setError(err.message);
-          }
+      // Se ocorrer um erro, ainda esperamos o tempo mínimo de carregamento
+      await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
+
+      if (err instanceof Error) {
+        // Verifica se é um erro de sobrecarga ou erro de rede
+        if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
+          navigate('/overload'); // Navega para a página de sobrecarga
         } else {
-          setError('Ocorreu um erro inesperado.');
+          setError(err.message);
         }
-      }, 300); // Pequeno atraso para o usuário ver a barra em 100%
+      } else {
+        setError('Ocorreu um erro inesperado.');
+      }
     } finally {
       setIsLoading(false); // Desativa o estado geral de carregamento
     }
