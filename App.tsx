@@ -74,7 +74,7 @@ const App: React.FC = () => {
         {/* New wrapper for the logo and its specific background */}
         <div className="relative group mx-auto w-fit mb-2">
           {/* The new background for the logo */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur opacity-40 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
           
           {/* The logo image itself */}
           <img
