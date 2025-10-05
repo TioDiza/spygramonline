@@ -18,8 +18,7 @@ import { MIN_LOADING_DURATION } from './constants';
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false); // Estado geral de carregamento
-  const [isApiCallComplete, setIsApiCallComplete] = useState<boolean>(false); // Indica se a chamada da API + duração mínima terminou
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -93,7 +92,7 @@ const MainAppContent: React.FC = () => {
         }
       }, typingSpeed);
     } else if (isLoading && currentMessageIndex >= hackingMessages.length) {
-      setIsHackingMessagesDone(true); // Todas as mensagens foram digitadas
+      setIsHackingMessagesDone(true);
     }
 
     return () => {
@@ -137,12 +136,11 @@ const MainAppContent: React.FC = () => {
       return;
     }
 
-    setIsLoading(true); // Inicia o estado geral de carregamento
-    setIsApiCallComplete(false); // Reseta o estado da API
-    setIsHackingMessagesDone(false); // Reseta o estado das mensagens
+    setIsLoading(true);
     setError(null);
     setProfile(null); // Limpa o perfil anterior antes de uma nova busca
     setProgressBarProgress(0); // Garante que a barra comece do zero
+    setIsHackingMessagesDone(false); // Resetar o estado das mensagens
 
     try {
       const dataPromise = fetchProfileData(searchQuery.trim());
@@ -151,11 +149,9 @@ const MainAppContent: React.FC = () => {
       const [data] = await Promise.all([dataPromise, minDurationPromise]);
       
       setProfile(data); // Armazena os dados do perfil
-      setIsApiCallComplete(true); // Marca a chamada da API como completa
     } catch (err) {
       // Se ocorrer um erro, ainda esperamos o tempo mínimo de carregamento
       await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
-      setIsApiCallComplete(true); // Marca a chamada da API como completa (mesmo com erro)
 
       if (err instanceof Error) {
         // Verifica se é um erro de sobrecarga ou erro de rede
@@ -168,23 +164,21 @@ const MainAppContent: React.FC = () => {
         setError('Ocorreu um erro inesperado.');
       }
     } finally {
-      // Não desativamos isLoading aqui. Ele será desativado no useEffect de navegação
-      // quando isApiCallComplete e isHackingMessagesDone forem ambos true.
+      // A navegação agora depende de isLoading e isHackingMessagesDone
+      // Não desativamos isLoading aqui, pois ele é usado para controlar a exibição das mensagens
+      // e a barra de progresso. Ele será desativado quando a navegação ocorrer.
     }
   }, [searchQuery, hasConsented, navigate]);
 
   // Efeito para lidar com a navegação após o carregamento e as mensagens
   useEffect(() => {
-    if (isApiCallComplete && isHackingMessagesDone) {
-      setIsLoading(false); // Desativa o estado geral de carregamento
-      if (profile) {
-        navigate('/results', { state: { profileData: profile } });
-      } else if (error) {
-        // Se houver um erro e as mensagens terminaram, e não navegamos para overload, exibe o erro
-        // A navegação para /overload já é tratada no catch de handleSearch
-      }
+    if (!isLoading && isHackingMessagesDone && profile) {
+      navigate('/results', { state: { profileData: profile } });
+    } else if (!isLoading && isHackingMessagesDone && error) {
+      // Se houver um erro e as mensagens terminaram, e não navegamos para overload, exibe o erro
+      // A navegação para /overload já é tratada no catch de handleSearch
     }
-  }, [isApiCallComplete, isHackingMessagesDone, profile, error, navigate]);
+  }, [isLoading, isHackingMessagesDone, profile, error, navigate]);
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
@@ -279,7 +273,7 @@ const MainAppContent: React.FC = () => {
           {isLoading ? (
             <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col justify-start items-center min-h-[20rem]">
               {typedMessages.map((msg, index) => (
-                <p key={index} className="text-lg text-green-400 font-mono text-center">
+                <p key={index} className="text-lg text-green-400 font-mono animate-fade-in text-center">
                   {msg}
                 </p>
               ))}
