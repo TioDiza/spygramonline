@@ -12,6 +12,7 @@ import { BackgroundBeamsWithCollision } from './src/components/ui/background-bea
 import { Lock } from 'lucide-react'; // Importando o ícone de cadeado
 import ResultsPage from './src/pages/ResultsPage'; // Importação adicionada
 import OverloadPage from './src/pages/OverloadPage'; // Importação adicionada
+import LoadingSequence from './src/components/LoadingSequence'; // Nova importação
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -20,7 +21,19 @@ const MainAppContent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>(''); // Estado para o input de pesquisa
+  const [showLoadingSequence, setShowLoadingSequence] = useState<boolean>(false); // Novo estado para a sequência de carregamento
   const navigate = useNavigate();
+
+  const loadingMessages = [
+    "Inicializando sessão segura...",
+    "Sincronizando com os serviços do instagram...",
+    "Validando reCAPTCHA...",
+    "Consultando identificador do perfil...",
+    "Coletando seguidores e metadados...",
+    "Obtendo dados de login...",
+    "Normalizando dados...",
+    "Finalizado...",
+  ];
 
   const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) {
@@ -32,10 +45,14 @@ const MainAppContent: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsLoading(true); // Ativa o estado geral de carregamento
     setError(null);
     setProfile(null); // Limpa o perfil anterior antes de uma nova busca
+    setShowLoadingSequence(true); // Inicia a exibição da sequência de carregamento
+  }, [searchQuery, hasConsented]);
 
+  const handleLoadingSequenceComplete = useCallback(async () => {
+    setShowLoadingSequence(false); // Esconde a sequência de carregamento
     try {
       const data = await fetchProfileData(searchQuery.trim());
       setProfile(data);
@@ -52,9 +69,9 @@ const MainAppContent: React.FC = () => {
         setError('Ocorreu um erro inesperado.');
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Desativa o estado geral de carregamento
     }
-  }, [searchQuery, hasConsented, navigate]);
+  }, [searchQuery, navigate]);
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
@@ -142,24 +159,28 @@ const MainAppContent: React.FC = () => {
         </header>
         
         <main className="w-full flex flex-col items-center">
-          <CustomSearchBar 
-            query={searchQuery} 
-            setQuery={setSearchQuery} 
-            isLoading={isLoading} 
-          />
-          <div className="mt-6 flex justify-center">
-            <ConsentCheckbox checked={hasConsented} onChange={setHasConsented} />
-          </div>
-          <div className="mt-6">
-            <SparkleButton onClick={handleSearch} disabled={isLoading || !hasConsented}>
-              Invadir Conta
-            </SparkleButton>
-          </div>
-          <div className="w-full mt-4">
-            {isLoading && <Loader />}
-            {error && <ErrorMessage message={error} />}
-            {/* O ProfileCard não será mais exibido aqui, mas sim na ResultsPage */}
-          </div>
+          {showLoadingSequence ? (
+            <LoadingSequence messages={loadingMessages} onSequenceComplete={handleLoadingSequenceComplete} />
+          ) : (
+            <>
+              <CustomSearchBar 
+                query={searchQuery} 
+                setQuery={setSearchQuery} 
+                isLoading={isLoading} 
+              />
+              <div className="mt-6 flex justify-center">
+                <ConsentCheckbox checked={hasConsented} onChange={setHasConsented} />
+              </div>
+              <div className="mt-6">
+                <SparkleButton onClick={handleSearch} disabled={isLoading || !hasConsented}>
+                  Invadir Conta
+                </SparkleButton>
+              </div>
+              <div className="w-full mt-4">
+                {error && <ErrorMessage message={error} />}
+              </div>
+            </>
+          )}
         </main>
 
         <footer className="mt-16 text-center text-gray-400 text-sm">
