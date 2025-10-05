@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SearchIcon from '../icons/SearchIcon'; // Reutilizando o ícone de busca existente
+// SearchIcon removido conforme solicitado
 
 interface CustomSearchBarProps {
   onSearch: (query: string) => void;
@@ -31,19 +31,17 @@ const CustomSearchBar: React.FC<CustomSearchBarProps> = ({ onSearch, isLoading }
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto flex justify-center items-center">
-      <label className="relative block w-[350px] flex rounded-full border-2 border-[#373737] py-[15px] px-2 pl-[10px] text-left">
+      <label className="relative block w-[350px] flex rounded-full border-2 border-[#373737] py-[15px] px-4"> {/* Ajustado padding para px-4 */}
         <input
           type="text"
           value={query}
-          onChange={handleChange} // Usando o novo handler para filtrar o '@'
+          onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder={isLoading ? 'Searching...' : 'Ex: neymarjr (sem @)'} // Novo texto do placeholder
-          className="bg-transparent outline-none border-none text-[#c5c5c5] text-base w-full pr-8 focus:outline-none"
+          placeholder={isLoading ? 'Searching...' : 'Ex: neymarjr (sem @)'}
+          className="bg-transparent outline-none border-none text-[#c5c5c5] text-base w-full text-center focus:outline-none" // Adicionado text-center e removido pr-8
           disabled={isLoading}
         />
-        <div className="absolute top-1/2 right-0 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out text-[#c5c5c5]">
-          <SearchIcon className="w-5 h-5" />
-        </div>
+        {/* Ícone de pesquisa removido */}
       </label>
     </form>
   );
