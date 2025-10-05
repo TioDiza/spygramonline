@@ -20,9 +20,20 @@ const TypingText: React.FC<TypingTextProps> = ({ text, speed = 70, className }) 
     }
   }, [index, text, speed]);
 
+  // Função para aplicar o gradiente à palavra "Instagram"
+  const renderTextWithGradient = (currentText: string) => {
+    const instagramGradientSpan = `
+      <span class="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
+        Instagram
+      </span>
+    `;
+    // Substitui a palavra "Instagram" pelo span com gradiente
+    return currentText.replace(/Instagram/g, instagramGradientSpan);
+  };
+
   return (
     <p className={className}>
-      {displayedText}
+      <span dangerouslySetInnerHTML={{ __html: renderTextWithGradient(displayedText) }} />
       {index < text.length && <span className="animate-pulse">|</span>} {/* Cursor piscando */}
     </p>
   );
