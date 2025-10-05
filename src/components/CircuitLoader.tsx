@@ -212,11 +212,12 @@ const CircuitLoader: React.FC = () => {
               ></rect>
             </g>
 
+            {/* Diminuído o tamanho da fonte */}
             <text
               x="400"
               y="240"
               fontFamily="Arial, sans-serif"
-              fontSize="28" {/* Diminuído o tamanho da fonte */}
+              fontSize="28" 
               fill="url(#textGradient)"
               textAnchor="middle"
               alignmentBaseline="middle"
