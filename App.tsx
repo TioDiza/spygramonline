@@ -30,51 +30,15 @@ const MainAppContent: React.FC = () => {
 
   // Mensagens para a sequência de carregamento
   const loadingMessages = [
-    "1 >> INTRUSÃO SIMULADA: rompendo defesas...",
-    "2 >> ACESSO FORÇADO: credenciais localizadas.",
-    "3 >> VARREDURA INTENSA: exfiltrando artefatos — stream ativo.",
-    "4 >> QUEBRA DE CAMADAS: token mock capturado — elevando privilégios.",
-    "5 >> MINERANDO HISTÓRICO: reconstruindo contatos e conversas (simulado).",
-    "6 >> ENTRADA COMPROMETIDA: mantendo backdoor temporário.",
-    "7 >> OPERAÇÃO CONCLUÍDA: implante fantasma removido — rastros limpos."
+    "Procurando perfil pesquisado...",
+    "Inicializando conexão — preparando ambiente...",
+    "Isso pode levar alguns segundos.",
+    "Não feche esta página.",
+    "Autenticação em andamento — validando tokens...",
+    "Carregando perfil alvo.",
+    "Analisando atividades — compilando resumo temporal.",
+    "Gerando relatório — montagem dos painéis de exibição."
   ];
-
-  // Cores para as palavras em CAPS LOCK
-  const highlightColors = [
-    "text-pink-500",
-    "text-purple-500",
-    "text-yellow-400",
-    "text-blue-400",
-    "text-green-400",
-    "text-red-400",
-    "text-orange-400"
-  ];
-
-  // Função para formatar a mensagem, colorindo as palavras em CAPS LOCK
-  const formatMessage = (message: string, index: number) => {
-    const parts = message.split(' ');
-    const formattedParts: React.ReactNode[] = [];
-    const colorClass = highlightColors[index % highlightColors.length]; // Cicla pelas cores
-
-    parts.forEach((part, i) => {
-      // Regex para identificar palavras em CAPS LOCK, ignorando números e pontuação inicial/final
-      const match = part.match(/^(\d*\s*>>\s*)?([A-ZÀ-ÚÇ\s-]+)([:.,—]?)$/);
-      if (match && match[2] && match[2].trim() === match[2].trim().toUpperCase() && match[2].trim().length > 1) {
-        formattedParts.push(
-          <span key={`${index}-${i}-highlight`} className={colorClass}>
-            {match[1]}{match[2]}{match[3]}
-          </span>
-        );
-      } else {
-        formattedParts.push(<span key={`${index}-${i}`}>{part}</span>);
-      }
-      if (i < parts.length - 1) {
-        formattedParts.push(' '); // Adiciona espaço entre as palavras
-      }
-    });
-    return <>{formattedParts}</>;
-  };
-
 
   // Efeito para exibir as mensagens frase por frase
   useEffect(() => {
@@ -267,11 +231,9 @@ const MainAppContent: React.FC = () => {
               {loadingStartTime && (
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
               )}
-              {/* Renderiza as mensagens visíveis, aplicando a formatação de cor */}
+              {/* Renderiza as mensagens visíveis */}
               {visibleMessages.map((msg, idx) => (
-                <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in">
-                  {formatMessage(msg, idx)}
-                </p>
+                <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in">{msg}</p>
               ))}
             </div>
           ) : (
