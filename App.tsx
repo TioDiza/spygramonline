@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import type { ProfileData } from './types';
 import { fetchProfileData } from './services/apiService';
@@ -13,6 +13,7 @@ import { Lock } from 'lucide-react'; // Importando o ícone de cadeado
 import ResultsPage from './src/pages/ResultsPage'; // Importação adicionada
 import OverloadPage from './src/pages/OverloadPage'; // Importação adicionada
 import LoadingSequence from './src/components/LoadingSequence'; // Nova importação
+import ProgressBar from './src/components/ProgressBar'; // Nova importação
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -22,6 +23,7 @@ const MainAppContent: React.FC = () => {
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>(''); // Estado para o input de pesquisa
   const [showLoadingSequence, setShowLoadingSequence] = useState<boolean>(false); // Novo estado para a sequência de carregamento
+  const [progressBarProgress, setProgressBarProgress] = useState(0); // Novo estado para a barra de progresso
   const navigate = useNavigate();
 
   const loadingMessages = [
@@ -34,6 +36,28 @@ const MainAppContent: React.FC = () => {
     "Normalizando dados...",
     "Finalizado...",
   ];
+
+  // Efeito para simular o progresso da barra enquanto a sequência de carregamento está ativa
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (showLoadingSequence) {
+      setProgressBarProgress(0); // Resetar o progresso ao iniciar a sequência
+      interval = setInterval(() => {
+        setProgressBarProgress((prev) => {
+          // Incrementa lentamente até ~90% durante a sequência
+          if (prev < 90) {
+            return prev + 1; // Ajuste a velocidade de incremento conforme necessário
+          }
+          return prev;
+        });
+      }, 100); // Atualiza a cada 100ms
+    } else {
+      if (interval) clearInterval(interval);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [showLoadingSequence]);
 
   const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) {
@@ -49,25 +73,33 @@ const MainAppContent: React.FC = () => {
     setError(null);
     setProfile(null); // Limpa o perfil anterior antes de uma nova busca
     setShowLoadingSequence(true); // Inicia a exibição da sequência de carregamento
+    setProgressBarProgress(0); // Garante que a barra comece do zero
   }, [searchQuery, hasConsented]);
 
   const handleLoadingSequenceComplete = useCallback(async () => {
     setShowLoadingSequence(false); // Esconde a sequência de carregamento
+    
     try {
       const data = await fetchProfileData(searchQuery.trim());
       setProfile(data);
-      navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
+      setProgressBarProgress(100); // Completa a barra antes de navegar
+      setTimeout(() => {
+        navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
+      }, 300); // Pequeno atraso para o usuário ver a barra em 100%
     } catch (err) {
-      if (err instanceof Error) {
-        // Verifica se é um erro de sobrecarga ou erro de rede
-        if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
-          navigate('/overload'); // Navega para a página de sobrecarga
+      setProgressBarProgress(100); // Completa a barra mesmo em caso de erro
+      setTimeout(() => {
+        if (err instanceof Error) {
+          // Verifica se é um erro de sobrecarga ou erro de rede
+          if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
+            navigate('/overload'); // Navega para a página de sobrecarga
+          } else {
+            setError(err.message);
+          }
         } else {
-          setError(err.message);
+          setError('Ocorreu um erro inesperado.');
         }
-      } else {
-        setError('Ocorreu um erro inesperado.');
-      }
+      }, 300); // Pequeno atraso para o usuário ver a barra em 100%
     } finally {
       setIsLoading(false); // Desativa o estado geral de carregamento
     }
@@ -75,6 +107,7 @@ const MainAppContent: React.FC = () => {
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
+      <ProgressBar progress={progressBarProgress} isVisible={isLoading} /> {/* Adiciona a barra de progresso */}
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full">
         <style>{`
           @keyframes fade-in {
