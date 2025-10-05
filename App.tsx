@@ -7,7 +7,7 @@ import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
 import ConsentCheckbox from './src/components/ConsentCheckbox';
-import { BackgroundBeamsWithCollision } from './components/ui/background-beams-with-collision'; // Importando o novo componente
+import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision'; // Caminho corrigido
 
 const App: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
