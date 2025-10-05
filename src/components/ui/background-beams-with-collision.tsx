@@ -169,7 +169,7 @@ const CollisionMechanism = React.forwardRef<
           repeatDelay: beamOptions.repeatDelay || 0,
         }}
         className={cn(
-          "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-indigo-500 via-purple-500 to-transparent z-[1]", // Adicionado z-[1]
+          "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-indigo-500 via-purple-500 to-transparent z-[1]",
           beamOptions.className
         )}
       />
@@ -177,7 +177,7 @@ const CollisionMechanism = React.forwardRef<
         {collision.detected && collision.coordinates && (
           <Explosion
             key={`${collision.coordinates.x}-${collision.coordinates.y}`}
-            className=""
+            className="z-[2]" // Ajustado o z-index para 2
             style={{
               left: `${collision.coordinates.x}px`,
               top: `${collision.coordinates.y}px`,
@@ -202,7 +202,7 @@ const Explosion = ({ ...props }: React.HTMLProps<HTMLDivElement>) => {
   }));
 
   return (
-    <div {...props} className={cn("absolute z-50 h-2 w-2", props.className)}>
+    <div {...props} className={cn("absolute h-2 w-2", props.className)}> {/* Removido z-50 daqui */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
