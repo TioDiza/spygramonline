@@ -29,7 +29,7 @@ const MainAppContent: React.FC = () => {
 
   // Mensagens para a sequência de carregamento
   const loadingMessages = [
-    "Procurando perfil pesquisado...",
+    ">> INVASÃO INICIADA: rompendo defesas...",
     "Inicializando conexão — preparando ambiente...",
     "Isso pode levar alguns segundos.",
     "Não feche esta página.",
