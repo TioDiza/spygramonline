@@ -60,7 +60,7 @@ const App: React.FC = () => {
         <img
           src="/spygram_transparentebranco.png"
           alt="SpyGram Logo"
-          className="h-24 md:h-32 mx-auto mb-2 animate-logo-pulse"
+          className="h-32 md:h-48 mx-auto mb-2 animate-logo-pulse"
         />
         <p className="text-gray-400 mt-2">Get insights on any Instagram profile.</p>
       </header>
