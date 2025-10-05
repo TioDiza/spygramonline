@@ -33,7 +33,8 @@ const MainAppContent: React.FC = () => {
     "Inicializando conexão — preparando ambiente...",
     "Isso pode levar alguns segundos.",
     "Não feche esta página.",
-    "Autenticação em andamento — validando tokens..."
+    "Autenticação em andamento — validando tokens...",
+    "Carregando perfil alvo."
   ];
   const [currentTypingMessageIndex, setCurrentTypingMessageIndex] = useState(0);
 
