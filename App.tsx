@@ -115,7 +115,7 @@ const App: React.FC = () => {
         <TypingText
           text="ACESSE O INSTAGRAM DE QUALQUER PESSOA, SEM SENHA, APENAS COM O @"
           speed={70} // Ajuste a velocidade conforme desejar (ms por caractere)
-          className="text-white font-bold text-lg mt-2"
+          className="font-bold text-lg mt-2" // Removido 'text-white' daqui
         />
       </header>
       

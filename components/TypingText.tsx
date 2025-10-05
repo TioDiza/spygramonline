@@ -20,15 +20,23 @@ const TypingText: React.FC<TypingTextProps> = ({ text, speed = 70, className }) 
     }
   }, [index, text, speed]);
 
-  // Função para aplicar o gradiente à palavra "Instagram"
+  // Função para aplicar o gradiente à palavra "Instagram" e text-white ao restante
   const renderTextWithGradient = (currentText: string) => {
-    const instagramGradientSpan = `
-      <span class="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
-        Instagram
-      </span>
-    `;
-    // Substitui a palavra "Instagram" pelo span com gradiente
-    return currentText.replace(/Instagram/g, instagramGradientSpan);
+    // Divide o texto em partes, mantendo "Instagram" como um item separado
+    const parts = currentText.split(/(Instagram)/g); 
+    
+    return parts.map((part, idx) => {
+      if (part === 'Instagram') {
+        return `
+          <span key=${idx} class="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
+            ${part}
+          </span>
+        `;
+      } else {
+        // Aplica text-white às outras partes do texto
+        return `<span key=${idx} class="text-white">${part}</span>`;
+      }
+    }).join('');
   };
 
   return (
