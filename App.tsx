@@ -26,16 +26,7 @@ const MainAppContent: React.FC = () => {
   const [progressBarProgress, setProgressBarProgress] = useState(0); // Novo estado para a barra de progresso
   const navigate = useNavigate();
 
-  const loadingMessages = [
-    "Inicializando sessão segura...",
-    "Sincronizando com os serviços do Instagram...",
-    "Validando reCAPTCHA...",
-    "Consultando identificador do perfil...",
-    "Coletando seguidores e metadados...",
-    "Obtendo dados de login...",
-    "Normalizando dados...",
-    "Finalizado...",
-  ];
+  const loadingMessages: string[] = []; // Array de mensagens vazio, conforme solicitado
 
   // Efeito para simular o progresso da barra enquanto a sequência de carregamento está ativa
   useEffect(() => {
@@ -196,7 +187,7 @@ const MainAppContent: React.FC = () => {
             <LoadingSequence 
               messages={loadingMessages} 
               onSequenceComplete={handleLoadingSequenceComplete} 
-              delayPerMessage={2750} // Mantido em 2.75 segundos por mensagem
+              minDisplayTime={10000} // A animação durará 10 segundos
             />
           ) : (
             <>
