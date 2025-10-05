@@ -31,7 +31,7 @@ const MainAppContent: React.FC = () => {
   const loadingMessages = [
     ">> INVASÃO INICIADA: rompendo defesas...",
     ">> ACESSO FORÇADO: credenciais localizadas.",
-    "Estabelecendo conexão segura...",
+    ">> VARREDURA INTENSA: exfiltrando artefatos — stream ativo.",
     "Verificando protocolos de segurança...",
     "Autenticando credenciais...",
     "Carregando dados do perfil...",
