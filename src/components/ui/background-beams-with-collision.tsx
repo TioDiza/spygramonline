@@ -26,63 +26,36 @@ export const BackgroundBeamsWithCollision = ({
   const parentRef = useRef<HTMLDivElement>(null);
 
   const beams: BeamOptions[] = [
-    {
-      initialX: 10,
-      translateX: 10,
-      duration: 7,
-      repeatDelay: 3,
-      delay: 2,
-    },
-    {
-      initialX: 600,
-      translateX: 600,
-      duration: 3,
-      repeatDelay: 3,
-      delay: 4,
-    },
-    {
-      initialX: 100,
-      translateX: 100,
-      duration: 7,
-      repeatDelay: 7,
-      className: "h-6",
-    },
-    {
-      initialX: 400,
-      translateX: 400,
-      duration: 5,
-      repeatDelay: 14,
-      delay: 4,
-    },
-    {
-      initialX: 800,
-      translateX: 800,
-      duration: 11,
-      repeatDelay: 2,
-      className: "h-20",
-    },
-    {
-      initialX: 1000,
-      translateX: 1000,
-      duration: 4,
-      repeatDelay: 2,
-      className: "h-12",
-    },
-    {
-      initialX: 1200,
-      translateX: 1200,
-      duration: 6,
-      repeatDelay: 4,
-      delay: 2,
-      className: "h-6",
-    },
+    // Vigas existentes com repeatDelay ajustado
+    { initialX: 10, translateX: 10, duration: 7, repeatDelay: 2, delay: 2 },
+    { initialX: 600, translateX: 600, duration: 3, repeatDelay: 2, delay: 4 },
+    { initialX: 100, translateX: 100, duration: 7, repeatDelay: 4, className: "h-6" },
+    { initialX: 400, translateX: 400, duration: 5, repeatDelay: 7, delay: 4 },
+    { initialX: 800, translateX: 800, duration: 11, repeatDelay: 1, className: "h-20" },
+    { initialX: 1000, translateX: 1000, duration: 4, repeatDelay: 1, className: "h-12" },
+    { initialX: 1200, translateX: 1200, duration: 6, repeatDelay: 2, delay: 2, className: "h-6" },
+
+    // Novas vigas para aumentar a frequência e cobertura
+    { initialX: 50, translateX: 50, duration: 5, repeatDelay: 2, delay: 1, className: "h-8" },
+    { initialX: 200, translateX: 200, duration: 8, repeatDelay: 5, delay: 3, className: "h-10" },
+    { initialX: 350, translateX: 350, duration: 4, repeatDelay: 1, delay: 0, className: "h-16" },
+    { initialX: 550, translateX: 550, duration: 9, repeatDelay: 6, delay: 5, className: "h-6" },
+    { initialX: 700, translateX: 700, duration: 6, repeatDelay: 3, delay: 2, className: "h-14" },
+    { initialX: 900, translateX: 900, duration: 10, repeatDelay: 8, delay: 6, className: "h-18" },
+    { initialX: 1150, translateX: 1150, duration: 3, repeatDelay: 1, delay: 0.5, className: "h-12" },
+    { initialX: 150, translateX: 150, duration: 7, repeatDelay: 3, delay: 1.5, className: "h-9" },
+    { initialX: 450, translateX: 450, duration: 6, repeatDelay: 2, delay: 0.8, className: "h-11" },
+    { initialX: 850, translateX: 850, duration: 5, repeatDelay: 4, delay: 2.5, className: "h-7" },
+    { initialX: 1050, translateX: 1050, duration: 8, repeatDelay: 5, delay: 4.5, className: "h-15" },
+    { initialX: 280, translateX: 280, duration: 4, repeatDelay: 1.5, delay: 0.3, className: "h-13" },
+    { initialX: 650, translateX: 650, duration: 9, repeatDelay: 7, delay: 5.5, className: "h-19" },
   ];
 
   return (
     <div
       ref={parentRef}
       className={cn(
-        "min-h-screen bg-black relative flex items-center w-full justify-center overflow-hidden", // Alterado para bg-black
+        "min-h-screen bg-black relative flex items-center w-full justify-center overflow-hidden",
         className
       )}
     >
@@ -98,7 +71,7 @@ export const BackgroundBeamsWithCollision = ({
       {children}
       <div
         ref={containerRef}
-        className="absolute bottom-0 bg-black w-full inset-x-0 pointer-events-none" // Alterado para bg-black
+        className="absolute bottom-0 bg-black w-full inset-x-0 pointer-events-none"
         style={{
           boxShadow:
             "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset",
@@ -182,7 +155,7 @@ const CollisionMechanism = React.forwardRef<
         animate="animate"
         initial={{
           translateY: beamOptions.initialY || "-200px",
-          translateX: beamOptions.initialX || "0px",
+          translateX: beamOptions.translateX || "0px",
           rotate: beamOptions.rotate || 0,
         }}
         variants={{
