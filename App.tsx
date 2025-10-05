@@ -97,7 +97,8 @@ const App: React.FC = () => {
       <header className="text-center mb-10 relative w-full max-w-xl">
         {/* Existing general blob background */}
         <div className="absolute inset-0 -z-10 flex items-center justify-center">
-          <div className="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 rounded-full blur-3xl opacity-40 animate-blob"></div>
+          {/* Aumentado o tamanho do blob e diminuído a opacidade para um efeito mais difuso */}
+          <div className="w-80 h-80 md:w-96 md:h-96 bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 rounded-full blur-3xl opacity-30 animate-blob"></div>
         </div>
 
         {/* New wrapper for the logo and its specific background */}
