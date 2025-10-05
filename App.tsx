@@ -187,7 +187,9 @@ const MainAppContent: React.FC = () => {
               <TypingText 
                 text="Procurando perfil pesquisado..." 
                 className="text-lg font-semibold text-white mt-4" 
-                speed={70} 
+                speed={28} // 60% mais rápido
+                showTime={true} // Ativa a exibição do horário
+                timeZone="America/Sao_Paulo" // Define o fuso horário de Brasília
               />
               <p className="text-base text-gray-400 mt-2">Isso pode levar alguns segundos.</p>
               <p className="text-base text-gray-400">Não feche esta página.</p>
