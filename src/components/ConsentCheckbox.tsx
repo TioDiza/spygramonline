@@ -61,6 +61,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           stroke-dashoffset: 13; /* Ajustado */
           transform-origin: center;
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          opacity: 0; /* Adicionado: Oculta o checkmark por padrão */
         }
 
         .neon-checkbox__glow {
@@ -169,6 +170,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
         .neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__check {
           stroke-dashoffset: 0;
           transform: scale(1.1);
+          opacity: 1; /* Adicionado: Torna o checkmark visível quando marcado */
         }
 
         .neon-checkbox input:checked ~ .neon-checkbox__frame .neon-checkbox__glow {
