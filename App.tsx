@@ -181,7 +181,7 @@ const MainAppContent: React.FC = () => {
         
         <main className="w-full flex flex-col items-center">
           {isLoading ? (
-            <div className="mt-10 w-[350px] mx-auto bg-gray-900/50 backdrop-blur-sm border-2 border-[#373737] rounded-full p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]"> {/* Estilo do card de carregamento atualizado */}
+            <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]"> {/* Alterado bg-gray-800 para bg-gray-900 e border-white para border-gray-700 */}
               <Loader /> {/* Reutiliza o Loader existente */}
               <p className="text-xl font-semibold text-white mt-4">Procurando perfil pesquisado...</p>
             </div>
