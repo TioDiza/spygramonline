@@ -26,7 +26,8 @@ const MainAppContent: React.FC = () => {
   const [progressBarProgress, setProgressBarProgress] = useState(0); // Novo estado para a barra de progresso
   const navigate = useNavigate();
 
-  const loadingMessages: string[] = []; // Array de mensagens vazio, conforme solicitado
+  // O array loadingMessages não é mais necessário aqui, pois HackingMessages tem suas próprias mensagens.
+  // const loadingMessages: string[] = []; 
 
   // Efeito para simular o progresso da barra enquanto a sequência de carregamento está ativa
   useEffect(() => {
@@ -185,9 +186,7 @@ const MainAppContent: React.FC = () => {
         <main className="w-full flex flex-col items-center">
           {showLoadingSequence ? (
             <LoadingSequence 
-              messages={loadingMessages} 
               onSequenceComplete={handleLoadingSequenceComplete} 
-              minDisplayTime={10000} // A animação durará 10 segundos
             />
           ) : (
             <>
