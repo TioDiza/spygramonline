@@ -9,7 +9,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
   return (
     <>
       <style>{`
-        /* From Uiverse.io by PriyanshuGupta28 */ 
+        /* From Uiverse.io by PriyanshuGupta28 - Adaptado por Dyad */ 
         .checkbox-wrapper:hover .check {
           stroke-dashoffset: 0;
         }
@@ -17,12 +17,12 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
         .checkbox-wrapper {
           position: relative;
           display: inline-block;
-          width: 40px;
-          height: 40px;
+          width: 28px; /* Tamanho reduzido */
+          height: 28px; /* Tamanho reduzido */
         }
 
         .checkbox-wrapper .background {
-          fill: rgb(75, 50, 121);
+          fill: #4A2C70; /* Roxo escuro, inspirado no Instagram */
           transition: ease all 0.6s;
           -webkit-transition: ease all 0.6s;
         }
@@ -67,7 +67,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
         }
 
         .checkbox-wrapper input[type=checkbox]:checked + svg .background {
-          fill: #421c64;
+          fill: #C13584; /* Rosa/Roxo vibrante, inspirado no Instagram */
         }
 
         .checkbox-wrapper input[type=checkbox]:checked + svg .stroke {
