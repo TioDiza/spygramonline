@@ -11,7 +11,7 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
   return (
     <div className="relative group w-[350px]"> {/* Wrapper para conter o brilho e o botão */}
       {/* O div para o brilho desfocado */}
-      <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur-xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+      <div className="absolute inset-2 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
       
       <button
         onClick={onClick}
