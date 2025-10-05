@@ -10,6 +10,8 @@ import ErrorMessage from './components/ErrorMessage';
 import ConsentCheckbox from './src/components/ConsentCheckbox';
 import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision';
 import { Lock } from 'lucide-react'; // Importando o ícone de cadeado
+import ResultsPage from './src/pages/ResultsPage'; // Importação adicionada
+import OverloadPage from './src/pages/OverloadPage'; // Importação adicionada
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
