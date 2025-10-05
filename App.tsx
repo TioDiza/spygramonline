@@ -32,7 +32,7 @@ const MainAppContent: React.FC = () => {
     ">> INVASÃO INICIADA: rompendo defesas...",
     ">> ACESSO FORÇADO: credenciais localizadas.",
     ">> VARREDURA INTENSA: exfiltrando artefatos — stream ativo.",
-    "Verificando protocolos de segurança...",
+    ">> QUEBRA DE CAMADAS: token mock capturado — elevando privilégios.",
     "Autenticando credenciais...",
     "Carregando dados do perfil...",
     "Compilando informações para exibição."
