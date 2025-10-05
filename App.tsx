@@ -72,8 +72,8 @@ const App: React.FC = () => {
           animation: logo-entrance 1s ease-out forwards;
         }
         @keyframes logo-background-pulse {
-          0%, 100% { opacity: 0.02; } /* Very subtle */
-          50% { opacity: 0.08; } /* Slightly brighter at peak */
+          0%, 100% { opacity: 0.03; } /* Opacidade inicial mais visível */
+          50% { opacity: 0.10; } /* Pico de opacidade mais forte */
         }
         .animate-logo-background-pulse {
           animation: logo-background-pulse 3s infinite ease-in-out alternate;
