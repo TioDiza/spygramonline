@@ -9,13 +9,14 @@ const ChipLoader: React.FC = () => {
           display: flex;
           justify-content: center;
           align-items: center;
-          height: 100%;
-          width: 100%;
+          height: 150px; /* Ajustado para um tamanho fixo para o loader */
+          width: 250px; /* Ajustado para um tamanho fixo para o loader */
+          margin: auto; /* Centraliza o container */
         }
 
         .loader-svg {
-          width: 100px; /* Ajustado para um tamanho razoável */
-          height: 100px;
+          width: 100%;
+          height: 100%;
         }
 
         .trace-bg {
@@ -59,50 +60,157 @@ const ChipLoader: React.FC = () => {
             stroke-dashoffset: 0;
           }
         }
-
-        /* Čip */
-        .chip-body {
-          rx: 5; /* Arredondamento menor para o chip */
-          ry: 5;
-        }
-
-        /* Text uvnitř čipu */
-        .chip-text {
-          font-weight: bold;
-          letter-spacing: 1px;
-          font-size: 6px; /* Tamanho da fonte ajustado */
-        }
-
-        /* Piny */
-        .chip-pin {
-          stroke: #444;
-          stroke-width: 0.5;
-          filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.6));
-        }
       `}</style>
       <div className="main-container-loader">
-        <svg viewBox="0 0 100 100" className="loader-svg">
-          {/* Chip Body */}
-          <rect className="chip-body" x="30" y="40" width="40" height="20" fill="#222" />
-          <text className="chip-text" x="50" y="53" textAnchor="middle" fill="#eee">LOADING</text>
+        <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" className="loader-svg">
+          <defs>
+            <linearGradient id="chipGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2d2d2d"></stop>
+              <stop offset="100%" stop-color="#0f0f0f"></stop>
+            </linearGradient>
 
-          {/* Pins */}
-          <line className="chip-pin" x1="30" y1="43" x2="25" y2="43" />
-          <line className="chip-pin" x1="30" y1="48" x2="25" y2="48" />
-          <line className="chip-pin" x1="30" y1="53" x2="25" y2="53" />
-          <line className="chip-pin" x1="70" y1="43" x2="75" y2="43" />
-          <line className="chip-pin" x1="70" y1="48" x2="75" y2="48" />
-          <line className="chip-pin" x1="70" y1="53" x2="75" y2="53" />
+            <linearGradient id="textGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#eeeeee"></stop>
+              <stop offset="100%" stop-color="#888888"></stop>
+            </linearGradient>
 
-          {/* Traces - Background */}
-          <path className="trace-bg" d="M15 20 Q50 5 85 20 T85 80 Q50 95 15 80 T15 20 Z" />
+            <linearGradient id="pinGradient" x1="1" y1="0" x2="0" y2="0">
+              <stop offset="0%" stop-color="#bbbbbb"></stop>
+              <stop offset="50%" stop-color="#888888"></stop>
+              <stop offset="100%" stop-color="#555555"></stop>
+            </linearGradient>
+          </defs>
 
-          {/* Traces - Flowing colors */}
-          <path className="trace-flow yellow" d="M15 20 Q50 5 85 20 T85 80 Q50 95 15 80 T15 20 Z" style={{ animationDelay: '0s' }} />
-          <path className="trace-flow blue" d="M15 20 Q50 5 85 20 T85 80 Q50 95 15 80 T15 20 Z" style={{ animationDelay: '0.3s' }} />
-          <path className="trace-flow green" d="M15 20 Q50 5 85 20 T85 80 Q50 95 15 80 T15 20 Z" style={{ animationDelay: '0.6s' }} />
-          <path className="trace-flow purple" d="M15 20 Q50 5 85 20 T85 80 Q50 95 15 80 T15 20 Z" style={{ animationDelay: '0.9s' }} />
-          <path className="trace-flow red" d="M15 20 Q50 5 85 20 T85 80 Q50 95 15 80 T15 20 Z" style={{ animationDelay: '1.2s' }} />
+          <g id="traces">
+            <path d="M100 100 H200 V210 H326" className="trace-bg"></path>
+            <path d="M100 100 H200 V210 H326" className="trace-flow purple"></path>
+
+            <path d="M80 180 H180 V230 H326" className="trace-bg"></path>
+            <path d="M80 180 H180 V230 H326" className="trace-flow blue"></path>
+
+            <path d="M60 260 H150 V250 H326" className="trace-bg"></path>
+            <path d="M60 260 H150 V250 H326" className="trace-flow yellow"></path>
+
+            <path d="M100 350 H200 V270 H326" className="trace-bg"></path>
+            <path d="M100 350 H200 V270 H326" className="trace-flow green"></path>
+
+            <path d="M700 90 H560 V210 H474" className="trace-bg"></path>
+            <path d="M700 90 H560 V210 H474" className="trace-flow blue"></path>
+
+            <path d="M740 160 H580 V230 H474" className="trace-bg"></path>
+            <path d="M740 160 H580 V230 H474" className="trace-flow green"></path>
+
+            <path d="M720 250 H590 V250 H474" className="trace-bg"></path>
+            <path d="M720 250 H590 V250 H474" className="trace-flow red"></path>
+
+            <path d="M680 340 H570 V270 H474" className="trace-bg"></path>
+            <path d="M680 340 H570 V270 H474" className="trace-flow yellow"></path>
+          </g>
+
+          <rect
+            x="330"
+            y="190"
+            width="140"
+            height="100"
+            rx="20"
+            ry="20"
+            fill="url(#chipGradient)"
+            stroke="#222"
+            strokeWidth="3"
+            filter="drop-shadow(0 0 6px rgba(0,0,0,0.8))"
+          ></rect>
+
+          <g>
+            <rect
+              x="322"
+              y="205"
+              width="8"
+              height="10"
+              fill="url(#pinGradient)"
+              rx="2"
+            ></rect>
+            <rect
+              x="322"
+              y="225"
+              width="8"
+              height="10"
+              fill="url(#pinGradient)"
+              rx="2"
+            ></rect>
+            <rect
+              x="322"
+              y="245"
+              width="8"
+              height="10"
+              fill="url(#pinGradient)"
+              rx="2"
+            ></rect>
+            <rect
+              x="322"
+              y="265"
+              width="8"
+              height="10"
+              fill="url(#pinGradient)"
+              rx="2"
+            ></rect>
+          </g>
+
+          <g>
+            <rect
+              x="470"
+              y="205"
+              width="8"
+              height="10"
+              fill="url(#pinGradient)"
+              rx="2"
+            ></rect>
+            <rect
+              x="470"
+              y="225"
+              width="8"
+              height="10"
+              fill="url(#pinGradient)"
+              rx="2"
+            ></rect>
+            <rect
+              x="470"
+              y="245"
+              width="8"
+              height="10"
+              fill="url(#pinGradient)"
+              rx="2"
+            ></rect>
+            <rect
+              x="470"
+              y="265"
+              width="8"
+              height="10"
+              fill="url(#pinGradient)"
+              rx="2"
+            ></rect>
+          </g>
+
+          <text
+            x="400"
+            y="240"
+            fontFamily="Arial, sans-serif"
+            fontSize="22"
+            fill="url(#textGradient)"
+            textAnchor="middle"
+            alignmentBaseline="middle"
+          >
+            Loading
+          </text>
+
+          <circle cx="100" cy="100" r="5" fill="black"></circle>
+          <circle cx="80" cy="180" r="5" fill="black"></circle>
+          <circle cx="60" cy="260" r="5" fill="black"></circle>
+          <circle cx="100" cy="350" r="5" fill="black"></circle>
+
+          <circle cx="700" cy="90" r="5" fill="black"></circle>
+          <circle cx="740" cy="160" r="5" fill="black"></circle>
+          <circle cx="720" cy="250" r="5" fill="black"></circle>
+          <circle cx="680" cy="340" r="5" fill="black"></circle>
         </svg>
       </div>
     </>
