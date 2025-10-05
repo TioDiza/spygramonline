@@ -13,7 +13,7 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
       onClick={onClick}
       disabled={disabled}
       className="relative flex items-center justify-center gap-1 whitespace-nowrap rounded-full border-none cursor-pointer
-                 w-[250px] px-6 py-3 text-lg font-medium text-white
+                 w-[350px] px-6 py-3 text-lg font-medium text-white
                  bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400
                  transition-all duration-300 ease-in-out
                  hover:scale-105 hover:ring-4 hover:ring-purple-500/50

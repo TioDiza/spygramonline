@@ -31,7 +31,7 @@ const CustomSearchBar: React.FC<CustomSearchBarProps> = ({ onSearch, isLoading }
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto flex justify-center items-center">
-      <label className="relative block w-[250px] flex rounded-md border-2 border-[#373737] py-[15px] px-2 pl-[10px] text-left">
+      <label className="relative block w-[350px] flex rounded-full border-2 border-[#373737] py-[15px] px-2 pl-[10px] text-left">
         <input
           type="text"
           value={query}
