@@ -28,6 +28,7 @@ const HackingMessages: React.FC<HackingMessagesProps> = ({ onComplete }) => {
     let charIndex = 0;
     setCurrentTypingText('');
     setIsTyping(true);
+    console.log(`HackingMessages: Iniciando digitação para a mensagem: "${message}"`);
 
     const typingInterval = setInterval(() => {
       if (charIndex < message.length) {
@@ -36,9 +37,8 @@ const HackingMessages: React.FC<HackingMessagesProps> = ({ onComplete }) => {
       } else {
         clearInterval(typingInterval);
         setIsTyping(false);
-        // Uma vez que a digitação de uma mensagem é completa, adicione-a às mensagens digitadas
         setTypedMessages((prev) => [...prev, message]);
-        // Em seguida, passe para a próxima mensagem após um atraso
+        console.log(`HackingMessages: Digitação finalizada para a mensagem: "${message}"`);
         const nextMessageTimeout = setTimeout(() => {
           setCurrentMessageIndex((prev) => prev + 1);
         }, delayAfterMessage);
@@ -50,19 +50,19 @@ const HackingMessages: React.FC<HackingMessagesProps> = ({ onComplete }) => {
   }, [typingSpeed, delayAfterMessage]);
 
   useEffect(() => {
+    console.log('HackingMessages: useEffect disparado. currentMessageIndex:', currentMessageIndex);
     if (currentMessageIndex < messages.length) {
       const cleanupTyping = startTypingEffect(messages[currentMessageIndex]);
       return cleanupTyping;
     } else {
-      // Todas as mensagens foram digitadas e adicionadas a typedMessages
-      // Limpa o texto de digitação atual e chama onComplete
+      console.log('HackingMessages: Sequência de mensagens completa. Chamando onComplete.');
       setCurrentTypingText('');
       onComplete();
     }
   }, [currentMessageIndex, messages, onComplete, startTypingEffect]);
 
   return (
-    <div className="text-center mt-4 min-h-[12rem] flex flex-col justify-start items-center space-y-2">
+    <div className="text-center mt-4 min-h-[12rem] flex flex-col justify-start items-center space-y-2 border border-red-500"> {/* Adicionada borda temporária para depuração */}
       {typedMessages.map((msg, index) => (
         <p key={index} className="text-lg text-green-400 font-mono animate-fade-in">
           {msg}
