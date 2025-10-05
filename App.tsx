@@ -5,6 +5,7 @@ import SearchBar from './components/SearchBar';
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
+import TypingText from './components/TypingText'; // Caminho de importação corrigido para a pasta components/
 
 const App: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -85,6 +86,13 @@ const App: React.FC = () => {
             rgba(251, 191, 36, 0) 100% /* yellow-500, 0% opacity */
           );
         }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        .animate-pulse {
+          animation: pulse 1s infinite;
+        }
       `}</style>
       <header className="text-center mb-10 relative w-full max-w-xl">
         {/* Existing general blob background */}
@@ -104,7 +112,11 @@ const App: React.FC = () => {
             className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
           />
         </div>
-        <p className="text-white font-bold text-lg mt-2">ACESSE O INSTAGRAM DE QUALQUER PESSOA, SEM SENHA, APENAS COM O @</p>
+        <TypingText
+          text="ACESSE O INSTAGRAM DE QUALQUER PESSOA, SEM SENHA, APENAS COM O @"
+          speed={70} // Ajuste a velocidade conforme desejar (ms por caractere)
+          className="text-white font-bold text-lg mt-2"
+        />
       </header>
       
       <main className="w-full flex flex-col items-center">
