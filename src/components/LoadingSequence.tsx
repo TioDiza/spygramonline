@@ -8,7 +8,7 @@ interface LoadingSequenceProps {
 
 const LoadingSequence: React.FC<LoadingSequenceProps> = ({ onSequenceComplete }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-8 text-center min-h-[150px]">
+    <div className="flex flex-col items-center justify-center p-8 text-center min-h-[25rem]"> {/* Aumentado min-h para acomodar loader e mensagens */}
       <div className="mb-4"> {/* Container para o ChipLoader */}
         <ChipLoader />
       </div>

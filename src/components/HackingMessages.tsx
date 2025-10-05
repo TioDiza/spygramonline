@@ -6,37 +6,39 @@ interface HackingMessagesProps {
 
 const HackingMessages: React.FC<HackingMessagesProps> = ({ onComplete }) => {
   const messages = [
-    "Acessando rede neural do Instagram...",
-    "Bypass de segurança iniciado...",
-    "Decifrando hash de usuário...",
-    "Estabelecendo conexão com o perfil alvo...",
-    "Extraindo dados de seguidores e seguidos...",
-    "Compilando informações de posts e mídias...",
-    "Ignorando restrições de privacidade...",
-    "Acesso completo ao perfil concedido!",
+    "Inicializando sessão segura...",
+    "Sincronizando com os serviços do Instagram...",
+    "Validando reCAPTCHA...",
+    "Consultando identificador do perfil...",
+    "Coletando seguidores e metadados...",
+    "Obtendo dados de login...",
+    "Normalizando dados...",
+    "Finalizado...",
   ];
 
   const typingSpeed = 50; // ms por caractere
-  const delayAfterMessage = 1500; // ms após a mensagem ser digitada
+  const delayAfterMessage = 1000; // ms após a mensagem ser digitada antes de começar a próxima
 
+  const [typedMessages, setTypedMessages] = useState<string[]>([]); // Armazena as mensagens completas
+  const [currentTypingText, setCurrentTypingText] = useState(''); // Texto atualmente sendo digitado
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [displayedText, setDisplayedText] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
-  const [messageKey, setMessageKey] = useState(0); // Key para forçar re-render da animação de fade
+  const [isTyping, setIsTyping] = useState(false);
 
-  const startTyping = useCallback((message: string) => {
+  const startTypingEffect = useCallback((message: string) => {
     let charIndex = 0;
-    setDisplayedText('');
+    setCurrentTypingText('');
     setIsTyping(true);
-    setMessageKey(prev => prev + 1); // Atualiza a key para reiniciar a animação de fade
 
     const typingInterval = setInterval(() => {
       if (charIndex < message.length) {
-        setDisplayedText((prev) => prev + message[charIndex]);
+        setCurrentTypingText((prev) => prev + message[charIndex]);
         charIndex++;
       } else {
         clearInterval(typingInterval);
         setIsTyping(false);
+        // Uma vez que a digitação de uma mensagem é completa, adicione-a às mensagens digitadas
+        setTypedMessages((prev) => [...prev, message]);
+        // Em seguida, passe para a próxima mensagem após um atraso
         const nextMessageTimeout = setTimeout(() => {
           setCurrentMessageIndex((prev) => prev + 1);
         }, delayAfterMessage);
@@ -49,32 +51,36 @@ const HackingMessages: React.FC<HackingMessagesProps> = ({ onComplete }) => {
 
   useEffect(() => {
     if (currentMessageIndex < messages.length) {
-      const cleanupTyping = startTyping(messages[currentMessageIndex]);
+      const cleanupTyping = startTypingEffect(messages[currentMessageIndex]);
       return cleanupTyping;
     } else {
-      // Todas as mensagens foram exibidas
+      // Todas as mensagens foram digitadas e adicionadas a typedMessages
+      // Limpa o texto de digitação atual e chama onComplete
+      setCurrentTypingText('');
       onComplete();
     }
-  }, [currentMessageIndex, messages, onComplete, startTyping]);
+  }, [currentMessageIndex, messages, onComplete, startTypingEffect]);
 
   return (
-    <div className="text-center mt-4 min-h-[6rem] flex flex-col justify-center items-center">
-      <p 
-        key={messageKey} // Usa a key para reiniciar a animação de fade
-        className="text-lg text-green-400 font-mono animate-fade-in-out"
-      >
-        {displayedText}
-        {isTyping && <span className="animate-pulse ml-1">|</span>}
-      </p>
+    <div className="text-center mt-4 min-h-[12rem] flex flex-col justify-start items-center space-y-2">
+      {typedMessages.map((msg, index) => (
+        <p key={index} className="text-lg text-green-400 font-mono animate-fade-in">
+          {msg}
+        </p>
+      ))}
+      {currentMessageIndex < messages.length && (
+        <p className="text-lg text-green-400 font-mono">
+          {currentTypingText}
+          {isTyping && <span className="animate-pulse ml-1">|</span>}
+        </p>
+      )}
       <style>{`
-        @keyframes fade-in-out {
-          0% { opacity: 0; transform: translateY(10px); }
-          10% { opacity: 1; transform: translateY(0); }
-          90% { opacity: 1; transform: translateY(0); }
-          100% { opacity: 0; transform: translateY(-10px); }
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in-out {
-          animation: fade-in-out ${typingSpeed * (messages[currentMessageIndex]?.length || 0) + delayAfterMessage}ms ease-in-out forwards;
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out forwards;
         }
       `}</style>
     </div>
