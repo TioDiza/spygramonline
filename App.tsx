@@ -71,6 +71,13 @@ const App: React.FC = () => {
         .animate-logo-entrance {
           animation: logo-entrance 1s ease-out forwards;
         }
+        @keyframes logo-background-pulse {
+          0%, 100% { opacity: 0.02; } /* Very subtle */
+          50% { opacity: 0.08; } /* Slightly brighter at peak */
+        }
+        .animate-logo-background-pulse {
+          animation: logo-background-pulse 3s infinite ease-in-out alternate;
+        }
       `}</style>
       <header className="text-center mb-10 relative w-full max-w-xl">
         {/* Existing general blob background */}
@@ -81,7 +88,7 @@ const App: React.FC = () => {
         {/* New wrapper for the logo and its specific background */}
         <div className="relative group mx-auto w-fit mb-2">
           {/* The new background for the logo */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur opacity-5 group-hover:opacity-10 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 blur animate-tilt animate-blob animate-logo-background-pulse"></div>
           
           {/* The logo image itself */}
           <img
