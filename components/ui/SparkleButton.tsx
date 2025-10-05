@@ -1,5 +1,6 @@
 import React from 'react';
-import { Sparkles } from 'lucide-react'; // Importando o novo ícone
+import { Sparkles } from 'lucide-react';
+import { cn } from '../../src/lib/utils'; // Importando a função cn
 
 interface SparkleButtonProps {
   children: React.ReactNode;
@@ -9,7 +10,7 @@ interface SparkleButtonProps {
 
 const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabled = false }) => {
   return (
-    <div className="relative group w-[350px]"> {/* Wrapper para conter o brilho e o botão */}
+    <div className={cn("relative w-[350px]", !disabled && "group")}> {/* Aplica 'group' condicionalmente */}
       {/* O div para o brilho desfocado */}
       <div className="absolute inset-2 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
       
