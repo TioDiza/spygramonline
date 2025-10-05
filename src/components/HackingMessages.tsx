@@ -62,14 +62,14 @@ const HackingMessages: React.FC<HackingMessagesProps> = ({ onComplete }) => {
   }, [currentMessageIndex, messages, onComplete, startTypingEffect]);
 
   return (
-    <div className="text-center mt-4 min-h-[12rem] flex flex-col justify-start items-center space-y-2">
+    <div className="text-center mt-4 min-h-[20rem] flex flex-col justify-start items-center space-y-2"> {/* Aumentado min-h */}
       {typedMessages.map((msg, index) => (
         <p key={index} className="text-lg text-green-400 font-mono animate-fade-in">
           {msg}
         </p>
       ))}
       {currentMessageIndex < messages.length && (
-        <p className="text-lg text-green-400 font-mono">
+        <p className="text-lg text-green-400 font-mono min-h-[1.5rem]"> {/* Adicionado min-h para garantir espaço */}
           {currentTypingText}
           {isTyping && <span className="animate-pulse ml-1">|</span>}
         </p>
