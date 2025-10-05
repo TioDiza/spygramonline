@@ -7,7 +7,8 @@ import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
 import ConsentCheckbox from './src/components/ConsentCheckbox';
-import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision'; // Caminho corrigido
+import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision';
+import { Lock } from 'lucide-react'; // Importando o ícone de cadeado
 
 const App: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -34,8 +35,8 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <BackgroundBeamsWithCollision className="min-h-screen"> {/* Envolvendo o app com o novo componente */}
-      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full"> {/* Removido min-h-screen e bg-black, adicionado relative z-10 */}
+    <BackgroundBeamsWithCollision className="min-h-screen">
+      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full">
         <style>{`
           @keyframes fade-in {
             from { opacity: 0; transform: translateY(20px); }
@@ -99,14 +100,9 @@ const App: React.FC = () => {
           }
         `}</style>
         <header className="text-center mb-10 relative w-full max-w-xl">
-          {/* Removido o blob de fundo geral, pois o BackgroundBeamsWithCollision já gerencia o fundo */}
-          
-          {/* New wrapper for the logo and its specific background */}
-          <div className="relative group mx-auto w-fit mb-4"> {/* Adicionado mb-4 para espaçamento */}
-            {/* The new background for the logo */}
+          <div className="relative group mx-auto w-fit mb-4">
             <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
             
-            {/* The logo image itself */}
             <img
               src="/spygram_transparentebranco.png"
               alt="SpyGram Logo"
@@ -114,7 +110,6 @@ const App: React.FC = () => {
             />
           </div>
 
-          {/* Nova frase adicionada aqui */}
           <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
             <span className="text-white">ACESSE O </span>
             <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
@@ -140,6 +135,14 @@ const App: React.FC = () => {
             {profile && <ProfileCard data={profile} />}
           </div>
         </main>
+
+        <footer className="mt-16 text-center text-gray-400 text-sm">
+          <div className="flex items-center justify-center mb-2">
+            <Lock className="w-4 h-4 mr-1 text-green-500" />
+            <span>SSL Verificado</span>
+          </div>
+          <p>Todos os direitos reservados a SpyGram</p>
+        </footer>
       </div>
     </BackgroundBeamsWithCollision>
   );
