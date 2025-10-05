@@ -4,214 +4,119 @@ const ChipLoader: React.FC = () => {
   return (
     <>
       <style>{`
-        /* From Uiverse.io by Vosoone - Adaptado por Dyad */ 
-        .main-container-loader {
+        /* From Uiverse.io by vinodjangid07 - Adaptado por Dyad */ 
+        .loader {
           display: flex;
           justify-content: center;
           align-items: center;
           height: 150px; /* Ajustado para um tamanho fixo para o loader */
-          width: 250px; /* Ajustado para um tamanho fixo para o loader */
+          width: 150px; /* Ajustado para um tamanho fixo para o loader */
           margin: auto; /* Centraliza o container */
         }
 
-        .loader-svg {
+        .loaderMiniContainer {
+          position: relative;
+          width: 100px;
+          height: 100px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .barContainer {
+          position: absolute;
           width: 100%;
           height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          animation: rotate 2s linear infinite;
         }
 
-        .trace-bg {
-          stroke: #333;
-          stroke-width: 1.8;
+        .bar {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border: 7px solid transparent;
+          border-top-color: #ffea00; /* Amarelo */
+          border-radius: 50%;
+          animation: spin 1.5s linear infinite;
+        }
+
+        .bar2 {
+          border-top-color: #9900ff; /* Roxo */
+          animation-delay: 0.5s;
+        }
+
+        .svgIcon {
+          position: absolute;
+          width: 50px; /* Ajustado para caber dentro do loader */
+          height: 50px;
           fill: none;
+          stroke: #E1306C; /* Rosa Instagram */
+          stroke-width: 7;
+          animation: pulse 1.5s ease-in-out infinite alternate;
         }
 
-        .trace-flow {
-          stroke-width: 1.8;
-          fill: none;
-          stroke-dasharray: 40 400;
-          stroke-dashoffset: 438;
-          filter: drop-shadow(0 0 6px currentColor);
-          animation: flow 3s cubic-bezier(0.5, 0, 0.9, 1) infinite;
+        @keyframes rotate {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
 
-        .yellow {
-          stroke: #ffea00;
-          color: #ffea00;
-        }
-        .blue {
-          stroke: #00ccff;
-          color: #00ccff;
-        }
-        .green {
-          stroke: #00ff15;
-          color: #00ff15;
-        }
-        .purple {
-          stroke: #9900ff;
-          color: #9900ff;
-        }
-        .red {
-          stroke: #ff3300;
-          color: #ff3300;
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
 
-        @keyframes flow {
-          to {
-            stroke-dashoffset: 0;
+        @keyframes pulse {
+          0% {
+            transform: scale(0.8);
+            opacity: 0.7;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
           }
         }
       `}</style>
-      <div className="main-container-loader">
-        <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" className="loader-svg">
-          <defs>
-            <linearGradient id="chipGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#2d2d2d"></stop>
-              <stop offset="100%" stop-color="#0f0f0f"></stop>
-            </linearGradient>
-
-            <linearGradient id="textGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#eeeeee"></stop>
-              <stop offset="100%" stop-color="#888888"></stop>
-            </linearGradient>
-
-            <linearGradient id="pinGradient" x1="1" y1="0" x2="0" y2="0">
-              <stop offset="0%" stop-color="#bbbbbb"></stop>
-              <stop offset="50%" stop-color="#888888"></stop>
-              <stop offset="100%" stop-color="#555555"></stop>
-            </linearGradient>
-          </defs>
-
-          <g id="traces">
-            <path d="M100 100 H200 V210 H326" className="trace-bg"></path>
-            <path d="M100 100 H200 V210 H326" className="trace-flow purple"></path>
-
-            <path d="M80 180 H180 V230 H326" className="trace-bg"></path>
-            <path d="M80 180 H180 V230 H326" className="trace-flow blue"></path>
-
-            <path d="M60 260 H150 V250 H326" className="trace-bg"></path>
-            <path d="M60 260 H150 V250 H326" className="trace-flow yellow"></path>
-
-            <path d="M100 350 H200 V270 H326" className="trace-bg"></path>
-            <path d="M100 350 H200 V270 H326" className="trace-flow green"></path>
-
-            <path d="M700 90 H560 V210 H474" className="trace-bg"></path>
-            <path d="M700 90 H560 V210 H474" className="trace-flow blue"></path>
-
-            <path d="M740 160 H580 V230 H474" className="trace-bg"></path>
-            <path d="M740 160 H580 V230 H474" className="trace-flow green"></path>
-
-            <path d="M720 250 H590 V250 H474" className="trace-bg"></path>
-            <path d="M720 250 H590 V250 H474" className="trace-flow red"></path>
-
-            <path d="M680 340 H570 V270 H474" className="trace-bg"></path>
-            <path d="M680 340 H570 V270 H474" className="trace-flow yellow"></path>
-          </g>
-
-          <rect
-            x="330"
-            y="190"
-            width="140"
-            height="100"
-            rx="20"
-            ry="20"
-            fill="url(#chipGradient)"
-            stroke="#222"
-            strokeWidth="3"
-            filter="drop-shadow(0 0 6px rgba(0,0,0,0.8))"
-          ></rect>
-
-          <g>
-            <rect
-              x="322"
-              y="205"
-              width="8"
-              height="10"
-              fill="url(#pinGradient)"
-              rx="2"
-            ></rect>
-            <rect
-              x="322"
-              y="225"
-              width="8"
-              height="10"
-              fill="url(#pinGradient)"
-              rx="2"
-            ></rect>
-            <rect
-              x="322"
-              y="245"
-              width="8"
-              height="10"
-              fill="url(#pinGradient)"
-              rx="2"
-            ></rect>
-            <rect
-              x="322"
-              y="265"
-              width="8"
-              height="10"
-              fill="url(#pinGradient)"
-              rx="2"
-            ></rect>
-          </g>
-
-          <g>
-            <rect
-              x="470"
-              y="205"
-              width="8"
-              height="10"
-              fill="url(#pinGradient)"
-              rx="2"
-            ></rect>
-            <rect
-              x="470"
-              y="225"
-              width="8"
-              height="10"
-              fill="url(#pinGradient)"
-              rx="2"
-            ></rect>
-            <rect
-              x="470"
-              y="245"
-              width="8"
-              height="10"
-              fill="url(#pinGradient)"
-              rx="2"
-            ></rect>
-            <rect
-              x="470"
-              y="265"
-              width="8"
-              height="10"
-              fill="url(#pinGradient)"
-              rx="2"
-            ></rect>
-          </g>
-
-          <text
-            x="400"
-            y="240"
-            fontFamily="Arial, sans-serif"
-            fontSize="22"
-            fill="url(#textGradient)"
-            textAnchor="middle"
-            alignmentBaseline="middle"
+      <div className="loader">
+        <div className="loaderMiniContainer">
+          <div className="barContainer">
+            <span className="bar"></span>
+            <span className="bar bar2"></span>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 101 114"
+            className="svgIcon"
           >
-            Loading
-          </text>
-
-          <circle cx="100" cy="100" r="5" fill="black"></circle>
-          <circle cx="80" cy="180" r="5" fill="black"></circle>
-          <circle cx="60" cy="260" r="5" fill="black"></circle>
-          <circle cx="100" cy="350" r="5" fill="black"></circle>
-
-          <circle cx="700" cy="90" r="5" fill="black"></circle>
-          <circle cx="740" cy="160" r="5" fill="black"></circle>
-          <circle cx="720" cy="250" r="5" fill="black"></circle>
-          <circle cx="680" cy="340" r="5" fill="black"></circle>
-        </svg>
+            <circle
+              strokeWidth="7"
+              stroke="currentColor" /* Usando currentColor para herdar a cor do CSS */
+              transform="rotate(36.0692 46.1726 46.1727)"
+              r="29.5497"
+              cy="46.1727"
+              cx="46.1726"
+            ></circle>
+            <line
+              strokeWidth="7"
+              stroke="currentColor" /* Usando currentColor para herdar a cor do CSS */
+              y2="111.784"
+              x2="97.7088"
+              y1="67.7837"
+              x1="61.7089"
+            ></line>
+          </svg>
+        </div>
       </div>
     </>
   );
