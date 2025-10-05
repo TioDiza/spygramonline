@@ -100,7 +100,7 @@ const App: React.FC = () => {
         </div>
 
         {/* New wrapper for the logo and its specific background */}
-        <div className="relative group mx-auto w-fit mb-2">
+        <div className="relative group mx-auto w-fit mb-4"> {/* Adicionado mb-4 para espaçamento */}
           {/* The new background for the logo */}
           <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
           
@@ -111,6 +111,15 @@ const App: React.FC = () => {
             className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
           />
         </div>
+
+        {/* Nova frase adicionada aqui */}
+        <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
+          <span className="text-white">ACESSE O </span>
+          <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
+          <span className="text-white"> DE QUALQUER PESSOA, </span>
+          <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
+          <span className="text-white">, APENAS COM O @</span>
+        </p>
       </header>
       
       <main className="w-full flex flex-col items-center">
