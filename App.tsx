@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import type { ProfileData } from './types';
 import { fetchProfileData } from './services/apiService';
 import CustomSearchBar from './components/ui/CustomSearchBar';
@@ -10,29 +11,48 @@ import ConsentCheckbox from './src/components/ConsentCheckbox';
 import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision';
 import { Lock } from 'lucide-react'; // Importando o ícone de cadeado
 
-const App: React.FC = () => {
+// Componente principal que contém a lógica de pesquisa e roteamento
+const MainAppContent: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [hasConsented, setHasConsented] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>(''); // Estado para o input de pesquisa
+  const navigate = useNavigate();
 
-  const handleSearch = useCallback(async (query: string) => {
+  const handleSearch = useCallback(async () => {
+    if (!searchQuery.trim()) {
+      setError('Por favor, insira um nome de usuário.');
+      return;
+    }
+    if (!hasConsented) {
+      setError('Você precisa consentir para acessar o perfil.');
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
-    setProfile(null);
+    setProfile(null); // Limpa o perfil anterior antes de uma nova busca
+
     try {
-      const data = await fetchProfileData(query);
+      const data = await fetchProfileData(searchQuery.trim());
       setProfile(data);
+      navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        // Verifica se é um erro de sobrecarga ou erro de rede
+        if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
+          navigate('/overload'); // Navega para a página de sobrecarga
+        } else {
+          setError(err.message);
+        }
       } else {
-        setError('An unexpected error occurred.');
+        setError('Ocorreu um erro inesperado.');
       }
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [searchQuery, hasConsented, navigate]);
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
@@ -120,19 +140,23 @@ const App: React.FC = () => {
         </header>
         
         <main className="w-full flex flex-col items-center">
-          <CustomSearchBar onSearch={handleSearch} isLoading={isLoading} />
+          <CustomSearchBar 
+            query={searchQuery} 
+            setQuery={setSearchQuery} 
+            isLoading={isLoading} 
+          />
           <div className="mt-6 flex justify-center">
             <ConsentCheckbox checked={hasConsented} onChange={setHasConsented} />
           </div>
           <div className="mt-6">
-            <SparkleButton onClick={() => console.log('Botão Invadir Conta clicado!')} disabled={isLoading || !hasConsented}>
+            <SparkleButton onClick={handleSearch} disabled={isLoading || !hasConsented}>
               Invadir Conta
             </SparkleButton>
           </div>
           <div className="w-full mt-4">
             {isLoading && <Loader />}
             {error && <ErrorMessage message={error} />}
-            {profile && <ProfileCard data={profile} />}
+            {/* O ProfileCard não será mais exibido aqui, mas sim na ResultsPage */}
           </div>
         </main>
 
@@ -145,6 +169,19 @@ const App: React.FC = () => {
         </footer>
       </div>
     </BackgroundBeamsWithCollision>
+  );
+};
+
+// Componente App que configura o Router
+const App: React.FC = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<MainAppContent />} />
+        <Route path="/results" element={<ResultsPage />} />
+        <Route path="/overload" element={<OverloadPage />} />
+      </Routes>
+    </Router>
   );
 };
 

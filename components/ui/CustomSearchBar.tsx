@@ -1,36 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 // SearchIcon removido conforme solicitado
 
 interface CustomSearchBarProps {
-  onSearch: (query: string) => void;
+  query: string; // Recebe o query como prop
+  setQuery: (query: string) => void; // Recebe a função para atualizar o query
   isLoading: boolean;
 }
 
-const CustomSearchBar: React.FC<CustomSearchBarProps> = ({ onSearch, isLoading }) => {
-  const [query, setQuery] = useState('');
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (query.trim()) {
-      onSearch(query.trim());
-    }
-  };
+const CustomSearchBar: React.FC<CustomSearchBarProps> = ({ query, setQuery, isLoading }) => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
       e.preventDefault();
-      onSearch(query.trim());
+      // A ação de pesquisa será disparada pelo SparkleButton, não pelo Enter aqui
+      // Mas podemos manter a prevenção de default para evitar submissão de formulário
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Remove o caractere '@' da entrada do usuário
     const sanitizedValue = e.target.value.replace(/@/g, '');
-    setQuery(sanitizedValue);
+    setQuery(sanitizedValue); // Atualiza o estado do query no App.tsx
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto flex justify-center items-center">
+    <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-md mx-auto flex justify-center items-center">
       <label className="relative block w-[350px] flex rounded-full border-2 border-[#373737] py-[15px] px-4"> {/* Ajustado padding para px-4 */}
         <input
           type="text"
