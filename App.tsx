@@ -30,14 +30,14 @@ const MainAppContent: React.FC = () => {
   // Mensagens para a sequência de carregamento
   const loadingMessages = [
     ">> INVASÃO INICIADA: rompendo defesas...",
-    ">> ACESSO FORÇADO: credenciais fictícias localizadas.",
+    ">> ACESSO FORÇADO: credenciais localizadas.",
     "Estabelecendo conexão segura...",
     "Verificando protocolos de segurança...",
     "Autenticando credenciais...",
     "Carregando dados do perfil...",
     "Compilando informações para exibição."
   ];
-  const [currentMessageDisplayCount, setCurrentMessageDisplayCount] = useState(0); // Renomeado para clareza
+  const [currentMessageDisplayCount, setCurrentMessageDisplayCount] = useState(0);
 
   // Efeito para controlar a exibição sequencial das mensagens
   useEffect(() => {
@@ -233,12 +233,28 @@ const MainAppContent: React.FC = () => {
               {loadingStartTime && (
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
               )}
-              {/* Renderiza as mensagens uma por uma */}
-              {loadingMessages.slice(0, currentMessageDisplayCount).map((msg, idx) => (
-                <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in">
-                  {msg}
-                </p>
-              ))}
+              {/* Renderiza as mensagens uma por uma, aplicando o estilo de gradiente */}
+              {loadingMessages.slice(0, currentMessageDisplayCount).map((msg, idx) => {
+                const prefixMatch = msg.match(/^(>>[^:]+?:)/); // Captura ">> ... :"
+                if (prefixMatch) {
+                  const prefix = prefixMatch[1];
+                  const suffix = msg.substring(prefix.length);
+                  return (
+                    <p key={idx} className="text-base mt-2 animate-fade-in">
+                      <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
+                        {prefix}
+                      </span>
+                      <span className="text-gray-400">{suffix}</span>
+                    </p>
+                  );
+                } else {
+                  return (
+                    <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in">
+                      {msg}
+                    </p>
+                  );
+                }
+              })}
             </div>
           ) : (
             <>
