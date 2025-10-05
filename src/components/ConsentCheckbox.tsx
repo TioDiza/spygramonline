@@ -78,7 +78,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           stroke-dashoffset: 0;
         }
       `}</style>
-      <label className="flex items-center space-x-3 cursor-pointer">
+      <label className="flex items-center space-x-2 cursor-pointer"> {/* Alterado para space-x-2 */}
         <div className="checkbox-wrapper">
           <input
             type="checkbox"
@@ -94,7 +94,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
             <polyline className="check" points="11.5,20 15,24.5 20.5,17.5"></polyline>
           </svg>
         </div>
-        <span className="text-gray-300 text-base">Realmente quero ter acesso ao perfil acima.</span>
+        <span className="text-gray-300 text-sm">Realmente quero ter acesso ao perfil acima.</span> {/* Alterado para text-sm */}
       </label>
     </>
   );
