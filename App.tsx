@@ -35,7 +35,7 @@ const App: React.FC = () => {
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen"> {/* Envolvendo o app com o novo componente */}
-      <div className="relative z-10 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full"> {/* Removido min-h-screen e bg-black, adicionado relative z-10 */}
+      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full"> {/* Removido min-h-screen e bg-black, adicionado relative z-10 */}
         <style>{`
           @keyframes fade-in {
             from { opacity: 0; transform: translateY(20px); }
