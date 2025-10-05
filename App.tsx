@@ -36,7 +36,8 @@ const MainAppContent: React.FC = () => {
     "Não feche esta página.",
     "Autenticação em andamento — validando tokens...",
     "Carregando perfil alvo.",
-    "Analisando atividades — compilando resumo temporal."
+    "Analisando atividades — compilando resumo temporal.",
+    "Gerando relatório — montagem dos painéis de exibição."
   ];
 
   // Efeito para exibir as mensagens frase por frase
