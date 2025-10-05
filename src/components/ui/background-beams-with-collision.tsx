@@ -47,7 +47,7 @@ export const BackgroundBeamsWithCollision = ({
     <div
       ref={parentRef}
       className={cn(
-        "min-h-screen bg-black relative flex items-center w-full justify-center overflow-hidden z-0", // Adicionado z-0 aqui
+        "min-h-screen bg-black relative flex items-center w-full justify-center overflow-hidden z-0",
         className
       )}
     >
@@ -166,7 +166,7 @@ const CollisionMechanism = React.forwardRef<
           repeatDelay: beamOptions.repeatDelay || 0,
         }}
         className={cn(
-          "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-yellow-400 via-pink-500 to-purple-600 z-[1] blur-[0.8px]",
+          "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-yellow-400 via-pink-500 to-purple-600 z-[-1] blur-[0.8px]", // Alterado para z-[-1]
           beamOptions.className
         )}
       />
@@ -174,7 +174,7 @@ const CollisionMechanism = React.forwardRef<
         {collision.detected && collision.coordinates && (
           <Explosion
             key={`${collision.coordinates.x}-${collision.coordinates.y}`}
-            className="z-[2]"
+            className="z-[-1]" // Alterado para z-[-1]
             style={{
               left: `${collision.coordinates.x}px`,
               top: `${collision.coordinates.y}px`,
