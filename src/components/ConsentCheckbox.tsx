@@ -14,7 +14,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           --primary: #E1306C; /* Instagram Pink */
           --primary-dark: #C13584; /* Instagram Dark Pink/Purple */
           --primary-light: #FCAF45; /* Instagram Yellow/Orange */
-          --size: 30px; /* Tamanho do checkbox */
+          --size: 18px; /* Tamanho reduzido em 40% */
           position: relative;
           width: var(--size);
           height: var(--size);
@@ -37,13 +37,13 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           inset: 0;
           background: rgba(0, 0, 0, 0.8);
           border-radius: 4px;
-          border: 2px solid var(--primary-dark);
+          border: 1.5px solid var(--primary-dark); /* Ajustado */
           transition: all 0.4s ease;
         }
 
         .neon-checkbox__check-container {
           position: absolute;
-          inset: 2px;
+          inset: 1px; /* Ajustado */
           display: flex;
           align-items: center;
           justify-content: center;
@@ -54,22 +54,22 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           height: 80%;
           fill: none;
           stroke: var(--primary);
-          stroke-width: 3;
+          stroke-width: 2; /* Ajustado */
           stroke-linecap: round;
           stroke-linejoin: round;
-          stroke-dasharray: 40;
-          stroke-dashoffset: 40;
+          stroke-dasharray: 13; /* Ajustado */
+          stroke-dashoffset: 13; /* Ajustado */
           transform-origin: center;
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .neon-checkbox__glow {
           position: absolute;
-          inset: -2px;
+          inset: -1px; /* Ajustado */
           border-radius: 6px;
           background: var(--primary);
           opacity: 0;
-          filter: blur(8px);
+          filter: blur(5px); /* Ajustado */
           transform: scale(1.2);
           transition: all 0.4s ease;
         }
@@ -83,7 +83,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
 
         .neon-checkbox__borders span {
           position: absolute;
-          width: 40px;
+          width: 24px; /* Ajustado */
           height: 1px;
           background: var(--primary);
           opacity: 0;
@@ -100,7 +100,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           top: -100%;
           right: 0;
           width: 1px;
-          height: 40px;
+          height: 24px; /* Ajustado */
           animation: borderFlow2 2s linear infinite;
         }
 
@@ -114,26 +114,26 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           bottom: -100%;
           left: 0;
           width: 1px;
-          height: 40px;
+          height: 24px; /* Ajustado */
           animation: borderFlow4 2s linear infinite;
         }
 
         .neon-checkbox__particles span {
           position: absolute;
-          width: 4px;
-          height: 4px;
+          width: 2px; /* Ajustado */
+          height: 2px; /* Ajustado */
           background: var(--primary);
           border-radius: 50%;
           opacity: 0;
           pointer-events: none;
           top: 50%;
           left: 50%;
-          box-shadow: 0 0 6px var(--primary);
+          box-shadow: 0 0 3px var(--primary); /* Ajustado */
         }
 
         .neon-checkbox__rings {
           position: absolute;
-          inset: -20px;
+          inset: -8px; /* Ajustado */
           pointer-events: none;
         }
 
@@ -141,14 +141,14 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           position: absolute;
           inset: 0;
           border-radius: 50%;
-          border: 1px solid var(--primary);
+          border: 0.5px solid var(--primary); /* Ajustado */
           opacity: 0;
           transform: scale(0);
         }
 
         .neon-checkbox__sparks span {
           position: absolute;
-          width: 20px;
+          width: 12px; /* Ajustado */
           height: 1px;
           background: linear-gradient(90deg, var(--primary), transparent);
           opacity: 0;
@@ -287,52 +287,52 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
 
         /* Particle Positions */
         .neon-checkbox__particles span:nth-child(1) {
-          --x: 25px;
-          --y: -25px;
+          --x: 15px; /* Ajustado */
+          --y: -15px; /* Ajustado */
         }
         .neon-checkbox__particles span:nth-child(2) {
-          --x: -25px;
-          --y: -25px;
+          --x: -15px; /* Ajustado */
+          --y: -15px; /* Ajustado */
         }
         .neon-checkbox__particles span:nth-child(3) {
-          --x: 25px;
-          --y: 25px;
+          --x: 15px; /* Ajustado */
+          --y: 15px; /* Ajustado */
         }
         .neon-checkbox__particles span:nth-child(4) {
-          --x: -25px;
-          --y: 25px;
+          --x: -15px; /* Ajustado */
+          --y: 15px; /* Ajustado */
         }
         .neon-checkbox__particles span:nth-child(5) {
-          --x: 35px;
+          --x: 20px; /* Ajustado */
           --y: 0px;
         }
         .neon-checkbox__particles span:nth-child(6) {
-          --x: -35px;
+          --x: -20px; /* Ajustado */
           --y: 0px;
         }
         .neon-checkbox__particles span:nth-child(7) {
           --x: 0px;
-          --y: 35px;
+          --y: 20px; /* Ajustado */
         }
         .neon-checkbox__particles span:nth-child(8) {
           --x: 0px;
-          --y: -35px;
+          --y: -20px; /* Ajustado */
         }
         .neon-checkbox__particles span:nth-child(9) {
-          --x: 20px;
-          --y: -30px;
+          --x: 12px; /* Ajustado */
+          --y: -18px; /* Ajustado */
         }
         .neon-checkbox__particles span:nth-child(10) {
-          --x: -20px;
-          --y: 30px;
+          --x: -12px; /* Ajustado */
+          --y: 18px; /* Ajustado */
         }
         .neon-checkbox__particles span:nth-child(11) {
-          --x: 30px;
-          --y: 20px;
+          --x: 18px; /* Ajustado */
+          --y: 12px; /* Ajustado */
         }
         .neon-checkbox__particles span:nth-child(12) {
-          --x: -30px;
-          --y: -20px;
+          --x: -18px; /* Ajustado */
+          --y: -12px; /* Ajustado */
         }
 
         /* Spark Rotations */
