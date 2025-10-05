@@ -78,6 +78,13 @@ const App: React.FC = () => {
         .animate-logo-background-pulse {
           animation: logo-background-pulse 3s infinite ease-in-out alternate;
         }
+        .logo-radial-background {
+          background-image: radial-gradient(circle at center,
+            rgba(236, 72, 153, 0.4) 0%, /* pink-600, 40% opacity */
+            rgba(147, 51, 234, 0.2) 50%, /* purple-600, 20% opacity */
+            rgba(251, 191, 36, 0) 100% /* yellow-500, 0% opacity */
+          );
+        }
       `}</style>
       <header className="text-center mb-10 relative w-full max-w-xl">
         {/* Existing general blob background */}
@@ -88,7 +95,7 @@ const App: React.FC = () => {
         {/* New wrapper for the logo and its specific background */}
         <div className="relative group mx-auto w-fit mb-2">
           {/* The new background for the logo */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 blur animate-tilt animate-blob animate-logo-background-pulse"></div>
+          <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
           
           {/* The logo image itself */}
           <img
