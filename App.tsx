@@ -30,7 +30,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center p-4 sm:p-8">
+    <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden">
       <style>{`
         @keyframes fade-in {
           from { opacity: 0; transform: translateY(20px); }
@@ -47,20 +47,32 @@ const App: React.FC = () => {
         .animate-tilt {
           animation: tilt 10s infinite linear;
         }
-        @keyframes logo-pulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.03); }
-          100% { transform: scale(1); }
+        @keyframes logo-float-pulse {
+          0% { transform: translateY(0) scale(1); }
+          25% { transform: translateY(-5px) scale(1.02); }
+          50% { transform: translateY(0) scale(1.04); }
+          75% { transform: translateY(5px) scale(1.02); }
+          100% { transform: translateY(0) scale(1); }
         }
-        .animate-logo-pulse {
-          animation: logo-pulse 2s infinite ease-in-out;
+        .animate-logo-float-pulse {
+          animation: logo-float-pulse 4s infinite ease-in-out;
+        }
+        @keyframes blob-animation {
+          0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+          50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+        .animate-blob {
+          animation: blob-animation 10s infinite alternate;
         }
       `}</style>
-      <header className="text-center mb-10">
+      <header className="text-center mb-10 relative w-full max-w-xl">
+        <div className="absolute inset-0 -z-10 flex items-center justify-center">
+          <div className="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-purple-600 via-pink-500 to-yellow-400 rounded-full blur-3xl opacity-40 animate-blob"></div>
+        </div>
         <img
           src="/spygram_transparentebranco.png"
           alt="SpyGram Logo"
-          className="h-32 md:h-48 mx-auto mb-2 animate-logo-pulse"
+          className="h-48 md:h-64 mx-auto mb-2 animate-logo-float-pulse relative z-10"
         />
         <p className="text-gray-400 mt-2">Get insights on any Instagram profile.</p>
       </header>
