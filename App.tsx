@@ -64,6 +64,13 @@ const App: React.FC = () => {
         .animate-blob {
           animation: blob-animation 10s infinite alternate;
         }
+        @keyframes logo-entrance {
+          from { opacity: 0; transform: translateY(50px) scale(0.8); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-logo-entrance {
+          animation: logo-entrance 1s ease-out forwards;
+        }
       `}</style>
       <header className="text-center mb-10 relative w-full max-w-xl">
         {/* Existing general blob background */}
@@ -80,7 +87,7 @@ const App: React.FC = () => {
           <img
             src="/spygram_transparentebranco.png"
             alt="SpyGram Logo"
-            className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full"
+            className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
           />
         </div>
         <p className="text-gray-400 mt-2">Get insights on any Instagram profile.</p>
