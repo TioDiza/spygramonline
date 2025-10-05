@@ -163,25 +163,28 @@ const MainAppContent: React.FC = () => {
             animation: pulse 1s infinite;
           }
         `}</style>
-        <header className="text-center mb-10 relative w-full max-w-xl">
-          <div className="relative group mx-auto w-fit mb-4">
-            <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
-            
-            <img
-              src="/spygram_transparentebranco.png"
-              alt="SpyGram Logo"
-              className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
-            />
-          </div>
+        
+        {!showLoadingSequence && ( // Renderiza o cabeçalho apenas se não estiver na sequência de carregamento
+          <header className="text-center mb-10 relative w-full max-w-xl">
+            <div className="relative group mx-auto w-fit mb-4">
+              <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
+              
+              <img
+                src="/spygram_transparentebranco.png"
+                alt="SpyGram Logo"
+                className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
+              />
+            </div>
 
-          <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
-            <span className="text-white">ACESSE O </span>
-            <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
-            <span className="text-white"> DE QUALQUER PESSOA, </span>
-            <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
-            <span className="text-white">, APENAS COM O @</span>
-          </p>
-        </header>
+            <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
+              <span className="text-white">ACESSE O </span>
+              <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
+              <span className="text-white"> DE QUALQUER PESSOA, </span>
+              <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
+              <span className="text-white">, APENAS COM O @</span>
+            </p>
+          </header>
+        )}
         
         <main className="w-full flex flex-col items-center">
           {showLoadingSequence ? (
