@@ -1,4 +1,3 @@
-
 import React from 'react';
 import type { ProfileData } from '../types';
 
@@ -8,7 +7,7 @@ interface ProfileCardProps {
 
 const StatItem: React.FC<{ value: number; label: string }> = ({ value, label }) => (
   <div className="text-center">
-    <p className="text-2xl font-bold text-white">{new Intl.NumberFormat().format(value)}</p>
+    <p className="text-xl sm:text-2xl font-bold text-white">{new Intl.NumberFormat().format(value)}</p>
     <p className="text-sm text-gray-400">{label}</p>
   </div>
 );
@@ -28,11 +27,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ data }) => {
         <img
           src={data.profilePicUrl}
           alt={`${data.username}'s profile picture`}
-          className="w-32 h-32 rounded-full border-4 border-gray-700 object-cover shadow-md"
+          className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-gray-700 object-cover shadow-md"
         />
         <div className="flex-1 text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
-            <h1 className="text-3xl font-bold text-white">{data.username}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">{data.username}</h1>
             {data.isVerified && <VerifiedIcon />}
           </div>
           <h2 className="text-lg text-gray-300">{data.fullName}</h2>
