@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import type { ProfileData } from './types';
 import { fetchProfileData } from './services/apiService';
-import CustomSearchBar from './components/ui/CustomSearchBar'; // Importação atualizada para o novo componente
+import CustomSearchBar from './components/ui/CustomSearchBar';
+import SparkleButton from './components/ui/SparkleButton'; // Novo import para o botão de brilho
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
@@ -10,8 +11,10 @@ const App: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>(''); // Estado da query levantado para App.tsx
 
   const handleSearch = useCallback(async (query: string) => {
+    if (!query.trim()) return; // Impede a busca se a query estiver vazia
     setIsLoading(true);
     setError(null);
     setProfile(null);
@@ -28,6 +31,10 @@ const App: React.FC = () => {
       setIsLoading(false);
     }
   }, []);
+
+  const handleSearchButtonClick = () => {
+    handleSearch(searchQuery);
+  };
 
   return (
     <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden">
@@ -92,6 +99,10 @@ const App: React.FC = () => {
         .animate-pulse {
           animation: pulse 1s infinite;
         }
+        @keyframes sparkle-bounce { /* Animação para o ícone de brilho */
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.2); }
+        }
       `}</style>
       <header className="text-center mb-10 relative w-full max-w-xl">
         {/* Existing general blob background */}
@@ -123,7 +134,17 @@ const App: React.FC = () => {
       </header>
       
       <main className="w-full flex flex-col items-center">
-        <CustomSearchBar onSearch={handleSearch} isLoading={isLoading} />
+        <CustomSearchBar
+          onSearch={handleSearch}
+          isLoading={isLoading}
+          query={searchQuery}
+          setQuery={setSearchQuery}
+        />
+        <div className="mt-4"> {/* Adicionado margem superior para espaçamento */}
+          <SparkleButton onClick={handleSearchButtonClick} isLoading={isLoading || !searchQuery.trim()}>
+            Buscar Perfil
+          </SparkleButton>
+        </div>
         <div className="w-full mt-4">
           {isLoading && <Loader />}
           {error && <ErrorMessage message={error} />}
