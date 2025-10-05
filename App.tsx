@@ -14,7 +14,7 @@ import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
 import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
-// import TypingText from './components/TypingText'; // Caminho de importação corrigido - REMOVIDO
+import TypingText from './components/TypingText'; // Caminho de importação corrigido
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -25,7 +25,6 @@ const MainAppContent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
   const [loadingStartTime, setLoadingStartTime] = useState<string | null>(null); // Novo estado para o horário de início
-  const [visibleMessages, setVisibleMessages] = useState<string[]>([]); // Novo estado para mensagens visíveis
   const navigate = useNavigate();
 
   // Mensagens para a sequência de carregamento
@@ -38,23 +37,21 @@ const MainAppContent: React.FC = () => {
     "Carregando perfil alvo.",
     "Analisando atividades — compilando resumo temporal."
   ];
+  const [currentTypingMessageIndex, setCurrentTypingMessageIndex] = useState(0);
 
-  // Efeito para exibir as mensagens frase por frase
+  // Efeito para reiniciar a sequência de mensagens quando o carregamento começa
   useEffect(() => {
     if (isLoading) {
-      setVisibleMessages([]); // Resetar mensagens visíveis ao iniciar o carregamento
-      let timers: NodeJS.Timeout[] = [];
-      loadingMessages.forEach((message, index) => {
-        const timer = setTimeout(() => {
-          setVisibleMessages((prev) => [...prev, message]);
-        }, index * 2000); // 2 segundos de atraso entre cada mensagem
-        timers.push(timer);
-      });
-      return () => timers.forEach(clearTimeout); // Limpar todos os timers ao desmontar ou recarregar
-    } else {
-      setVisibleMessages([]); // Limpar mensagens quando o carregamento termina
+      setCurrentTypingMessageIndex(0); // Reinicia o índice da mensagem quando o carregamento começa
     }
-  }, [isLoading, loadingMessages]);
+  }, [isLoading]);
+
+  // Callback para quando uma mensagem termina de digitar
+  const handleTypingComplete = useCallback(() => {
+    if (currentTypingMessageIndex < loadingMessages.length - 1) {
+      setCurrentTypingMessageIndex((prevIndex) => prevIndex + 1);
+    }
+  }, [currentTypingMessageIndex, loadingMessages.length]);
 
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
@@ -230,10 +227,20 @@ const MainAppContent: React.FC = () => {
               {loadingStartTime && (
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
               )}
-              {/* Renderiza as mensagens visíveis */}
-              {visibleMessages.map((msg, idx) => (
-                <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in">{msg}</p>
+              {/* Renderiza as mensagens já digitadas como texto estático */}
+              {loadingMessages.slice(0, currentTypingMessageIndex).map((msg, idx) => (
+                <p key={idx} className="text-base text-gray-400 mt-2">{msg}</p>
               ))}
+              {/* Renderiza a mensagem atual com animação de digitação */}
+              {currentTypingMessageIndex < loadingMessages.length && (
+                <TypingText 
+                  key={currentTypingMessageIndex} // Key para forçar o re-render e resetar a animação
+                  text={loadingMessages[currentTypingMessageIndex]} 
+                  className="text-base text-gray-400 mt-2" // Tamanho e cor consistentes
+                  speed={200} // Velocidade ajustada para 0.2 segundos por letra
+                  onComplete={handleTypingComplete}
+                />
+              )}
             </div>
           ) : (
             <>
