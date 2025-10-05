@@ -35,14 +35,11 @@ export const BackgroundBeamsWithCollision = ({
     { initialX: 1000, translateX: 1000, duration: 4, repeatDelay: 1, className: "h-12" },
     { initialX: 1200, translateX: 1200, duration: 6, repeatDelay: 2, delay: 2, className: "h-6" },
 
-    // Algumas das novas vigas para manter uma boa frequência, mas reduzida
-    { initialX: 50, translateX: 50, duration: 5, repeatDelay: 2, delay: 1, className: "h-8" },
+    // Vigas restantes após a redução de 20%
     { initialX: 200, translateX: 200, duration: 8, repeatDelay: 5, delay: 3, className: "h-10" },
-    { initialX: 350, translateX: 350, duration: 4, repeatDelay: 1, delay: 0, className: "h-16" },
     { initialX: 550, translateX: 550, duration: 9, repeatDelay: 6, delay: 5, className: "h-6" },
     { initialX: 700, translateX: 700, duration: 6, repeatDelay: 3, delay: 2, className: "h-14" },
     { initialX: 900, translateX: 900, duration: 10, repeatDelay: 8, delay: 6, className: "h-18" },
-    { initialX: 1150, translateX: 1150, duration: 3, repeatDelay: 1, delay: 0.5, className: "h-12" },
     { initialX: 150, translateX: 150, duration: 7, repeatDelay: 3, delay: 1.5, className: "h-9" },
   ];
 
@@ -177,7 +174,7 @@ const CollisionMechanism = React.forwardRef<
         {collision.detected && collision.coordinates && (
           <Explosion
             key={`${collision.coordinates.x}-${collision.coordinates.y}`}
-            className="z-[2]" // Ajustado o z-index para 2
+            className="z-[2]"
             style={{
               left: `${collision.coordinates.x}px`,
               top: `${collision.coordinates.y}px`,
@@ -202,7 +199,7 @@ const Explosion = ({ ...props }: React.HTMLProps<HTMLDivElement>) => {
   }));
 
   return (
-    <div {...props} className={cn("absolute h-2 w-2", props.className)}> {/* Removido z-50 daqui */}
+    <div {...props} className={cn("absolute h-2 w-2", props.className)}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
