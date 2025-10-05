@@ -104,7 +104,7 @@ const App: React.FC = () => {
             className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
           />
         </div>
-        <p className="text-gray-400 mt-2">Get insights on any Instagram profile.</p>
+        <p className="text-white font-bold text-lg mt-2">ACESSE O INSTAGRAM DE QUALQUER PESSOA, SEM SENHA, APENAS COM O @</p>
       </header>
       
       <main className="w-full flex flex-col items-center">
