@@ -6,7 +6,7 @@ import SparkleButton from './components/ui/SparkleButton';
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
-import ConsentCheckbox from './components/ConsentCheckbox'; // Importando o novo componente com o caminho corrigido
+import ConsentCheckbox from './src/components/ConsentCheckbox'; // Importando o novo componente
 
 const App: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
