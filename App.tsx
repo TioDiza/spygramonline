@@ -25,84 +25,6 @@ const MainAppContent: React.FC = () => {
   const [progressBarProgress, setProgressBarProgress] = useState(0);
   const navigate = useNavigate();
 
-  // --- Lógica para as mensagens de 'invasão' ---
-  const hackingMessages = [
-    "Inicializando protocolo de acesso não autorizado...",
-    "Estabelecendo conexão com a rede do alvo...",
-    "Bypass de segurança primário ativado...",
-    "Analisando vulnerabilidades do perfil...",
-    "Injetando script de extração de dados...",
-    "Quebrando criptografia de sessão (AES-256)...",
-    "Obtendo credenciais de acesso temporárias...",
-    "Extraindo informações detalhadas do perfil...",
-    "Compilando dados para visualização...",
-    "Acesso ao perfil concedido. Finalizando processo.",
-  ];
-  const typingSpeed = 50; // ms por caractere
-  const delayAfterMessage = 1000; // ms após a mensagem ser digitada
-  const [typedMessages, setTypedMessages] = useState<string[]>([]);
-  const [currentTypingText, setCurrentTypingText] = useState('');
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [isTypingMessage, setIsTypingMessage] = useState(false);
-  const [isHackingMessagesDone, setIsHackingMessagesDone] = useState<boolean>(false);
-
-  const getBrasiliaTime = useCallback(() => {
-    return new Date().toLocaleString('pt-BR', {
-      timeZone: 'America/Sao_Paulo',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    });
-  }, []);
-
-  useEffect(() => {
-    if (isLoading) {
-      // Resetar estados das mensagens ao iniciar um novo carregamento
-      setTypedMessages([]);
-      setCurrentTypingText('');
-      setCurrentMessageIndex(0);
-      setIsTypingMessage(false);
-      setIsHackingMessagesDone(false);
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    let typingInterval: NodeJS.Timeout | null = null;
-    let nextMessageTimeout: NodeJS.Timeout | null = null;
-
-    if (isLoading && currentMessageIndex < hackingMessages.length) {
-      let charIndex = 0;
-      setCurrentTypingText('');
-      setIsTypingMessage(true);
-      const timestamp = getBrasiliaTime();
-      const fullMessage = `[${timestamp}] ${hackingMessages[currentMessageIndex]}`;
-
-      typingInterval = setInterval(() => {
-        if (charIndex < fullMessage.length) {
-          setCurrentTypingText((prev) => prev + fullMessage[charIndex]);
-          charIndex++;
-        } else {
-          clearInterval(typingInterval!);
-          setIsTypingMessage(false);
-          setTypedMessages((prev) => [...prev, fullMessage]);
-          nextMessageTimeout = setTimeout(() => {
-            setCurrentMessageIndex((prev) => prev + 1);
-          }, delayAfterMessage);
-        }
-      }, typingSpeed);
-    } else if (isLoading && currentMessageIndex >= hackingMessages.length) {
-      setIsHackingMessagesDone(true);
-    }
-
-    return () => {
-      if (typingInterval) clearInterval(typingInterval);
-      if (nextMessageTimeout) clearTimeout(nextMessageTimeout);
-    };
-  }, [isLoading, currentMessageIndex, hackingMessages, typingSpeed, delayAfterMessage, getBrasiliaTime]);
-  // --- Fim da lógica para as mensagens de 'invasão' ---
-
-
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -140,7 +62,6 @@ const MainAppContent: React.FC = () => {
     setError(null);
     setProfile(null); // Limpa o perfil anterior antes de uma nova busca
     setProgressBarProgress(0); // Garante que a barra comece do zero
-    setIsHackingMessagesDone(false); // Resetar o estado das mensagens
 
     try {
       const dataPromise = fetchProfileData(searchQuery.trim());
@@ -149,6 +70,7 @@ const MainAppContent: React.FC = () => {
       const [data] = await Promise.all([dataPromise, minDurationPromise]);
       
       setProfile(data); // Armazena os dados do perfil
+      navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
     } catch (err) {
       // Se ocorrer um erro, ainda esperamos o tempo mínimo de carregamento
       await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
@@ -164,21 +86,9 @@ const MainAppContent: React.FC = () => {
         setError('Ocorreu um erro inesperado.');
       }
     } finally {
-      // A navegação agora depende de isLoading e isHackingMessagesDone
-      // Não desativamos isLoading aqui, pois ele é usado para controlar a exibição das mensagens
-      // e a barra de progresso. Ele será desativado quando a navegação ocorrer.
+      setIsLoading(false); // Desativa o estado geral de carregamento
     }
   }, [searchQuery, hasConsented, navigate]);
-
-  // Efeito para lidar com a navegação após o carregamento e as mensagens
-  useEffect(() => {
-    if (!isLoading && isHackingMessagesDone && profile) {
-      navigate('/results', { state: { profileData: profile } });
-    } else if (!isLoading && isHackingMessagesDone && error) {
-      // Se houver um erro e as mensagens terminaram, e não navegamos para overload, exibe o erro
-      // A navegação para /overload já é tratada no catch de handleSearch
-    }
-  }, [isLoading, isHackingMessagesDone, profile, error, navigate]);
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
@@ -271,20 +181,9 @@ const MainAppContent: React.FC = () => {
         
         <main className="w-full flex flex-col items-center">
           {isLoading ? (
-            <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col justify-start items-center min-h-[20rem]">
-              {typedMessages.map((msg, index) => (
-                <p key={index} className="text-lg text-green-400 font-mono animate-fade-in text-center">
-                  {msg}
-                </p>
-              ))}
-              {currentMessageIndex < hackingMessages.length && (
-                <p className="text-lg text-green-400 font-mono text-center">
-                  {currentTypingText}
-                  {isTypingMessage && <span className="animate-pulse ml-1">|</span>}
-                </p>
-              )}
-              {/* O Loader pode ser mantido ou removido dependendo da preferência, mas as mensagens já indicam progresso */}
-              {/* <Loader /> */} 
+            <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
+              <Loader /> {/* Reutiliza o Loader existente */}
+              <p className="text-xl font-semibold text-white mt-4">Procurando perfil pesquisado...</p>
             </div>
           ) : (
             <>
