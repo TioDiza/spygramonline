@@ -5,7 +5,6 @@ import SearchBar from './components/SearchBar';
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
-import TypingText from './components/TypingText'; // Importando o componente TypingText
 
 const App: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -101,7 +100,7 @@ const App: React.FC = () => {
         </div>
 
         {/* New wrapper for the logo and its specific background */}
-        <div className="relative group mx-auto w-fit mb-4">
+        <div className="relative group mx-auto w-fit mb-4"> {/* Adicionado mb-4 para espaçamento */}
           {/* The new background for the logo */}
           <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
           
@@ -113,12 +112,14 @@ const App: React.FC = () => {
           />
         </div>
 
-        {/* Usando o componente TypingText para a frase */}
-        <TypingText
-          text="ACESSE O INSTAGRAM DE QUALQUER PESSOA, SEM SENHA, APENAS COM O @"
-          className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in"
-          speed={70} // Velocidade de digitação em milissegundos por caractere
-        />
+        {/* Nova frase adicionada aqui */}
+        <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
+          <span className="text-white">ACESSE O </span>
+          <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
+          <span className="text-white"> DE QUALQUER PESSOA, </span>
+          <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
+          <span className="text-white">, APENAS COM O @</span>
+        </p>
       </header>
       
       <main className="w-full flex flex-col items-center">
