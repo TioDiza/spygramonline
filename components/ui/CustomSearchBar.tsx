@@ -1,14 +1,21 @@
-import React from 'react'; // Removido useState, pois o estado agora é gerenciado pelo pai
-import SearchIcon from '../icons/SearchIcon';
+import React, { useState } from 'react';
+import SearchIcon from '../icons/SearchIcon'; // Reutilizando o ícone de busca existente
 
 interface CustomSearchBarProps {
   onSearch: (query: string) => void;
   isLoading: boolean;
-  query: string; // Nova prop para a query
-  setQuery: (query: string) => void; // Nova prop para atualizar a query
 }
 
-const CustomSearchBar: React.FC<CustomSearchBarProps> = ({ onSearch, isLoading, query, setQuery }) => {
+const CustomSearchBar: React.FC<CustomSearchBarProps> = ({ onSearch, isLoading }) => {
+  const [query, setQuery] = useState('');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (query.trim()) {
+      onSearch(query.trim());
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && query.trim()) {
       e.preventDefault();
@@ -19,11 +26,11 @@ const CustomSearchBar: React.FC<CustomSearchBarProps> = ({ onSearch, isLoading, 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Remove o caractere '@' da entrada do usuário
     const sanitizedValue = e.target.value.replace(/@/g, '');
-    setQuery(sanitizedValue); // Usa o setter da prop para atualizar a query
+    setQuery(sanitizedValue);
   };
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSearch(query.trim()); }} className="w-full max-w-md mx-auto flex justify-center items-center">
+    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto flex justify-center items-center">
       <label className="relative block w-[250px] flex rounded-md border-2 border-[#373737] py-[15px] px-2 pl-[10px] text-left">
         <input
           type="text"
