@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import type { ProfileData } from './types';
 import { fetchProfileData } from './services/apiService';
-import CustomSearchBar from './components/ui/CustomSearchBar'; // Importação atualizada para o novo componente
+import CustomSearchBar from './components/ui/CustomSearchBar';
+import SparkleButton from './components/ui/SparkleButton'; // Importação do novo botão
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
@@ -124,6 +125,11 @@ const App: React.FC = () => {
       
       <main className="w-full flex flex-col items-center">
         <CustomSearchBar onSearch={handleSearch} isLoading={isLoading} />
+        <div className="mt-6"> {/* Adiciona um espaçamento entre a barra de busca e o botão */}
+          <SparkleButton onClick={() => console.log('Botão Invadir Conta clicado!')} disabled={isLoading}>
+            Invadir Conta
+          </SparkleButton>
+        </div>
         <div className="w-full mt-4">
           {isLoading && <Loader />}
           {error && <ErrorMessage message={error} />}
