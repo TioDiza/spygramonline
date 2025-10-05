@@ -11,12 +11,12 @@ const CircuitLoader: React.FC = () => {
           align-items: center;
           width: 100%;
           height: 100%;
-          min-height: 200px; /* Ajustado para garantir visibilidade */
+          min-height: 300px; /* Aumentado para garantir visibilidade e escala */
         }
 
         .loader {
           width: 100%;
-          max-width: 800px; /* Limita o tamanho máximo do SVG */
+          max-width: 1000px; /* Aumentado o tamanho máximo do SVG */
           height: auto;
         }
 
