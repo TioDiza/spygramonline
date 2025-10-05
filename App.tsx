@@ -2,15 +2,17 @@ import React, { useState, useCallback } from 'react';
 import type { ProfileData } from './types';
 import { fetchProfileData } from './services/apiService';
 import CustomSearchBar from './components/ui/CustomSearchBar';
-import SparkleButton from './components/ui/SparkleButton'; // Importação do novo botão
+import SparkleButton from './components/ui/SparkleButton';
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
+import ConsentCheckbox from './src/components/ConsentCheckbox'; // Importando o novo componente
 
 const App: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasConsented, setHasConsented] = useState<boolean>(false); // Novo estado para o checkbox
 
   const handleSearch = useCallback(async (query: string) => {
     setIsLoading(true);
@@ -126,8 +128,11 @@ const App: React.FC = () => {
       
       <main className="w-full flex flex-col items-center">
         <CustomSearchBar onSearch={handleSearch} isLoading={isLoading} />
-        <div className="mt-6"> {/* Adiciona um espaçamento entre a barra de busca e o botão */}
-          <SparkleButton onClick={() => console.log('Botão Invadir Conta clicado!')} disabled={isLoading}>
+        <div className="mt-6 flex justify-center"> {/* Adiciona um espaçamento e centraliza o checkbox */}
+          <ConsentCheckbox checked={hasConsented} onChange={setHasConsented} />
+        </div>
+        <div className="mt-6"> {/* Adiciona um espaçamento entre o checkbox e o botão */}
+          <SparkleButton onClick={() => console.log('Botão Invadir Conta clicado!')} disabled={isLoading || !hasConsented}>
             Invadir Conta
           </SparkleButton>
         </div>
