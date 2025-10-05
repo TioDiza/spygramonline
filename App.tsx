@@ -30,8 +30,8 @@ const MainAppContent: React.FC = () => {
 
   // Mensagens para a sequência de carregamento
   const loadingMessages = [
-    " >> INTRUSÃO SIMULADA: rompendo defesas...",
-    " >> ACESSO FORÇADO: credenciais fictícias localizadas.",
+    "Procurando perfil pesquisado...",
+    "Inicializando conexão — preparando ambiente...",
     "Isso pode levar alguns segundos.",
     "Não feche esta página.",
     "Autenticação em andamento — validando tokens...",
