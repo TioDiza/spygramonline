@@ -50,6 +50,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
         }
 
         .neon-checkbox__check {
+          /* Este estilo não terá efeito, pois o SVG do check foi removido */
           width: 80%;
           height: 80%;
           fill: none;
@@ -378,9 +379,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           <div className="neon-checkbox__frame">
             <div className="neon-checkbox__box"></div>
             <div className="neon-checkbox__check-container">
-              <svg className="neon-checkbox__check" viewBox="0 0 16 16">
-                <polyline points="4,8 7,12 12,4"></polyline>
-              </svg>
+              {/* O SVG do checkmark foi removido daqui */}
             </div>
             <div className="neon-checkbox__glow"></div>
             <div className="neon-checkbox__borders">
