@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import ChipLoader from './ChipLoader'; // Importa o novo ChipLoader
 
 interface LoadingSequenceProps {
   messages: string[];
@@ -51,7 +52,9 @@ const LoadingSequence: React.FC<LoadingSequenceProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center p-8 text-center min-h-[150px]">
-      <div className="w-16 h-16 border-4 border-t-transparent border-pink-500 rounded-full animate-spin mb-4"></div>
+      <div className="mb-4"> {/* Container para o ChipLoader */}
+        <ChipLoader />
+      </div>
       <p className="text-lg text-gray-300 font-medium min-h-[2rem]">
         {displayedText}
         {isTyping && <span className="animate-pulse ml-1">|</span>} {/* Cursor piscando */}
