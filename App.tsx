@@ -5,7 +5,7 @@ import SearchBar from './components/SearchBar';
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
-import TypingText from './components/TypingText'; // Caminho de importação corrigido para a pasta components/
+import TypingText from './components/TypingText'; // Caminho de importação correto
 
 const App: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
