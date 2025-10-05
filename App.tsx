@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import type { ProfileData } from './types';
 import { fetchProfileData } from './services/apiService';
-import SearchBar from './components/SearchBar';
+import AnimatedGlowingSearchBar from './components/ui/animated-glowing-search-bar'; // Caminho de importação corrigido
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
@@ -123,7 +123,7 @@ const App: React.FC = () => {
       </header>
       
       <main className="w-full flex flex-col items-center">
-        <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+        <AnimatedGlowingSearchBar onSearch={handleSearch} isLoading={isLoading} />
         <div className="w-full mt-4">
           {isLoading && <Loader />}
           {error && <ErrorMessage message={error} />}
