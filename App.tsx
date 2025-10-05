@@ -24,6 +24,7 @@ const MainAppContent: React.FC = () => {
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
+  const [loadingStartTime, setLoadingStartTime] = useState<string | null>(null); // Novo estado para o horário de início
   const navigate = useNavigate();
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
@@ -31,6 +32,17 @@ const MainAppContent: React.FC = () => {
     let interval: NodeJS.Timeout | null = null;
     if (isLoading) {
       setProgressBarProgress(0); // Resetar o progresso ao iniciar o carregamento
+      // Captura o horário de início do carregamento
+      const now = new Date();
+      setLoadingStartTime(
+        new Intl.DateTimeFormat('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          timeZone: 'America/Sao_Paulo',
+        }).format(now)
+      );
+
       interval = setInterval(() => {
         setProgressBarProgress((prev) => {
           // Incrementa lentamente até ~95% enquanto o carregamento está ativo
@@ -43,6 +55,7 @@ const MainAppContent: React.FC = () => {
     } else {
       setProgressBarProgress(100); // Garante que a barra chegue a 100% quando o carregamento termina
       if (interval) clearInterval(interval);
+      setLoadingStartTime(null); // Limpa o horário de início quando o carregamento termina
     }
     return () => {
       if (interval) clearInterval(interval);
@@ -184,12 +197,18 @@ const MainAppContent: React.FC = () => {
           {isLoading ? (
             <div className="mt-10 w-full max-w-2xl mx-auto bg-black backdrop-blur-sm border border-white rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
               <Loader /> {/* Reutiliza o Loader existente */}
+              {loadingStartTime && (
+                <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
+              )}
               <TypingText 
                 text="Procurando perfil pesquisado..." 
                 className="text-lg font-semibold text-white mt-4" 
                 speed={28} // 60% mais rápido
-                showTime={true} // Ativa a exibição do horário
-                timeZone="America/Sao_Paulo" // Define o fuso horário de Brasília
+              />
+              <TypingText 
+                text="Inicializando conexão — preparando ambiente..." 
+                className="text-base text-gray-400 mt-2" 
+                speed={40} // Velocidade ligeiramente diferente
               />
               <p className="text-base text-gray-400 mt-2">Isso pode levar alguns segundos.</p>
               <p className="text-base text-gray-400">Não feche esta página.</p>
