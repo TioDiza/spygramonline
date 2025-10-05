@@ -1,8 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import type { ProfileData } from './types';
 import { fetchProfileData } from './services/apiService';
-import CustomSearchBar from './components/ui/CustomSearchBar';
-import SparkleButton from './components/ui/SparkleButton'; // Importação do novo botão
+import CustomSearchBar from './components/ui/CustomSearchBar'; // Importação atualizada para o novo componente
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
@@ -29,14 +28,6 @@ const App: React.FC = () => {
       setIsLoading(false);
     }
   }, []);
-
-  const handleButtonClick = () => {
-    // Ação do botão, por exemplo, disparar a busca com um valor padrão ou o último valor pesquisado
-    // Por enquanto, apenas um console.log
-    console.log('Botão "Invadir Perfil" clicado!');
-    // Se você quiser que ele dispare a busca com o último query, precisaria passar o query para o App
-    // ou ter um estado para o query aqui. Por simplicidade, vou deixar apenas o log.
-  };
 
   return (
     <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden">
@@ -133,9 +124,6 @@ const App: React.FC = () => {
       
       <main className="w-full flex flex-col items-center">
         <CustomSearchBar onSearch={handleSearch} isLoading={isLoading} />
-        <SparkleButton onClick={handleButtonClick} disabled={isLoading}>
-          Invadir Perfil
-        </SparkleButton>
         <div className="w-full mt-4">
           {isLoading && <Loader />}
           {error && <ErrorMessage message={error} />}
