@@ -5,7 +5,6 @@ import SearchBar from './components/SearchBar';
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
-import TypingText from './components/TypingText'; // Caminho de importação correto
 
 const App: React.FC = () => {
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -112,11 +111,6 @@ const App: React.FC = () => {
             className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
           />
         </div>
-        <TypingText
-          text="ACESSE O INSTAGRAM DE QUALQUER PESSOA, SEM SENHA, APENAS COM O @"
-          speed={70} // Ajuste a velocidade conforme desejar (ms por caractere)
-          className="font-bold text-lg mt-2" // Removido 'text-white' daqui
-        />
       </header>
       
       <main className="w-full flex flex-col items-center">
