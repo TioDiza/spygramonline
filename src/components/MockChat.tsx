@@ -17,7 +17,7 @@ interface MockChatProps {
 
 const MockChat: React.FC<MockChatProps> = ({ otherProfilePic = 'https://picsum.photos/id/64/50/50', username = '@alguem_especial', messages }) => {
   return (
-    <div className="w-[320px] h-[400px] bg-gray-900 rounded-2xl p-0 flex flex-col overflow-hidden border border-gray-700 shadow-lg shadow-purple-500/10 flex-shrink-0">
+    <div className="w-[280px] h-[550px] bg-gray-900 rounded-2xl p-0 flex flex-col overflow-hidden border border-gray-700 shadow-lg shadow-purple-500/10 flex-shrink-0"> {/* Largura e altura ajustadas para proporção de celular */}
       {/* Cabeçalho do chat estilo Instagram */}
       <div className="flex items-center justify-between p-3 border-b border-gray-800 bg-gray-800">
         <div className="flex items-center">

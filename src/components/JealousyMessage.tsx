@@ -80,7 +80,7 @@ const JealousyMessage: React.FC = () => {
   ];
 
   // Calcula a quantidade de rolagem (largura do card + espaçamento)
-  const scrollAmount = 320 + 16; // Largura do MockChat (320px) + space-x-4 (16px)
+  const scrollAmount = 280 + 16; // Largura do MockChat (280px) + space-x-4 (16px)
 
   const handleScrollLeft = () => {
     if (scrollContainerRef.current) {
