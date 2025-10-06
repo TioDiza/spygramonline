@@ -4,11 +4,12 @@ import { cn } from '../lib/utils';
 interface ChatMessageProps {
   sender: 'self' | 'other';
   text: string;
-  timestamp: string; // Adicionado: timestamp da mensagem
-  profilePic?: string; // Opcional para o remetente 'other'
+  timestamp: string;
+  profilePic?: string;
+  isBlurred?: boolean; // Reintroduzindo a propriedade isBlurred
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, timestamp, profilePic }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, timestamp, profilePic, isBlurred = false }) => {
   const isSelf = sender === 'self';
 
   return (
@@ -24,16 +25,17 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, timestamp, prof
         className={cn(
           "max-w-[70%] p-3 relative flex flex-col",
           isSelf
-            ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-2xl rounded-br-none" // Estilo Instagram para 'self'
-            : "bg-gray-200 text-gray-900 rounded-2xl rounded-bl-none" // Estilo Instagram para 'other'
+            ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-2xl rounded-br-none"
+            : "bg-gray-700 text-gray-100 rounded-2xl rounded-bl-none", // Ajustado para um cinza mais escuro para o tema dark
+          isBlurred && "blur-sm select-none" // Aplicando blur-sm
         )}
       >
         <p className="text-sm break-words">{text}</p>
-        <span className={cn("text-[10px] mt-1", isSelf ? "text-blue-100 self-end" : "text-gray-500 self-start")}>
+        <span className={cn("text-[10px] mt-1", isSelf ? "text-blue-100 self-end" : "text-gray-400 self-start")}> {/* Ajustado cor do timestamp */}
           {timestamp}
         </span>
       </div>
-      {isSelf && profilePic && ( // Pode adicionar uma foto para o 'self' também, se desejar
+      {isSelf && profilePic && (
         <img
           src={profilePic}
           alt="Profile"
