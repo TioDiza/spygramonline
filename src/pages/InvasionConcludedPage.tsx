@@ -4,7 +4,8 @@ import type { ProfileData } from '../../types';
 import ProfileCard from '../../components/ProfileCard';
 import SparkleButton from '../../components/ui/SparkleButton';
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
-import InteractionProfilesSection from '../components/InteractionProfilesSection'; // Importa a nova seção
+import InteractionProfilesSection from '../components/InteractionProfilesSection';
+import ScrollHint from '../components/ScrollHint'; // Importa o novo componente
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -25,7 +26,6 @@ const InvasionConcludedPage: React.FC = () => {
         </h1>
         <ProfileCard data={profileData} />
         
-        {/* Nova seção de perfis de interação */}
         {profileData.topInteractions && profileData.topInteractions.length > 0 && (
           <InteractionProfilesSection profiles={profileData.topInteractions} />
         )}
@@ -35,6 +35,9 @@ const InvasionConcludedPage: React.FC = () => {
             Nova Invasão
           </SparkleButton>
         </div>
+
+        {/* Adiciona a dica de rolagem aqui */}
+        <ScrollHint />
       </div>
     </BackgroundBeamsWithCollision>
   );
