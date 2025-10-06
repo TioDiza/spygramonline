@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import type { ProfileData, InteractionProfile } from './types'; // Importa InteractionProfile
+import type { ProfileData, InteractionProfile } from './types';
 import { fetchProfileData } from './services/apiService';
 import CustomSearchBar from './components/ui/CustomSearchBar';
 import SparkleButton from './components/ui/SparkleButton';
@@ -15,7 +15,6 @@ import OverloadPage from './src/pages/OverloadPage';
 import InvasionConcludedPage from './src/pages/InvasionConcludedPage';
 import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
-// TypingText removido, pois as mensagens aparecerão por frase
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -27,7 +26,6 @@ const MainAppContent: React.FC = () => {
   const [progressBarProgress, setProgressBarProgress] = useState(0);
   const [loadingStartTime, setLoadingStartTime] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [areMessagesDone, setAreMessagesDone] = useState<boolean>(false);
 
   // Mensagens para a sequência de carregamento
   const loadingMessages = [
@@ -41,40 +39,7 @@ const MainAppContent: React.FC = () => {
     "Perfil Invadido com Sucesso"
   ];
   const [displayedMessages, setDisplayedMessages] = useState<{ text: string; timestamp: string }[]>([]);
-
-  // Efeito para controlar a exibição sequencial das mensagens
-  useEffect(() => {
-    let messageTimer: NodeJS.Timeout | null = null;
-    if (isLoading && displayedMessages.length < loadingMessages.length) {
-      const delayPerMessage = 1500; // 1.5 segundos entre cada mensagem
-      messageTimer = setTimeout(() => {
-        const nextMessageIndex = displayedMessages.length;
-        const messageText = loadingMessages[nextMessageIndex];
-        const now = new Date();
-        const timestamp = new Intl.DateTimeFormat('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          timeZone: 'America/Sao_Paulo',
-        }).format(now);
-        setDisplayedMessages((prev) => [...prev, { text: messageText, timestamp }]);
-      }, delayPerMessage);
-    } else if (isLoading && displayedMessages.length === loadingMessages.length && !areMessagesDone) {
-      // Todas as mensagens foram exibidas, atualiza o estado
-      setAreMessagesDone(true);
-    }
-    return () => {
-      if (messageTimer) clearTimeout(messageTimer);
-    };
-  }, [isLoading, displayedMessages.length, areMessagesDone, loadingMessages.length]);
-
-  // Efeito para reiniciar as mensagens quando o carregamento começa
-  useEffect(() => {
-    if (isLoading) {
-      setDisplayedMessages([]); // Reinicia as mensagens quando o carregamento começa
-      setAreMessagesDone(false); // Garante que o estado de conclusão seja resetado
-    }
-  }, [isLoading]);
+  const [areMessagesDone, setAreMessagesDone] = useState<boolean>(false);
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
   useEffect(() => {
@@ -125,50 +90,73 @@ const MainAppContent: React.FC = () => {
     setError(null);
     setProfile(null); // Limpa o perfil anterior antes de uma nova busca
     setProgressBarProgress(0); // Garante que a barra comece do zero
+    setDisplayedMessages([]); // Clear messages for new search
+    setAreMessagesDone(false); // Reset message completion state
+
+    const searchStartTime = Date.now();
 
     try {
-      // Dados mockados para os perfis de interação
-      const mockInteractionProfiles: InteractionProfile[] = Array.from({ length: 12 }).map((_, i) => ({
-        username: `user_interacao_${i + 1}`,
-        profilePicUrl: `https://picsum.photos/id/${100 + i}/150/150`, // Imagens aleatórias
-        interactionScore: Math.floor(Math.random() * 90) + 10, // Score de 10 a 99
-      }));
+      // Start fetching data
+      const profileDataPromise = fetchProfileData(searchQuery.trim());
 
-      // Simula a busca de dados com um objeto mockado
-      const mockProfileData: ProfileData = {
-        username: searchQuery.trim(),
-        fullName: 'Nome Completo Mockado',
-        profilePicUrl: 'https://via.placeholder.com/150/FF00FF/FFFFFF?text=Mock', // Imagem de placeholder
-        biography: 'Esta é uma biografia mockada para demonstração. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        followers: 123456,
-        following: 789,
-        postsCount: 123,
-        isVerified: true,
-        isPrivate: false,
-        topInteractions: mockInteractionProfiles, // Adiciona os perfis de interação mockados
+      // Function to display messages sequentially
+      const displayMessagesSequentially = async () => {
+        for (let i = 0; i < loadingMessages.length; i++) {
+          await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 seconds delay
+          const messageText = loadingMessages[i];
+          const now = new Date();
+          const timestamp = new Intl.DateTimeFormat('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'America/Sao_Paulo',
+          }).format(now);
+          setDisplayedMessages((prev) => [...prev, { text: messageText, timestamp }]);
+        }
+        setAreMessagesDone(true); // Mark messages as done
       };
 
-      // Calcula a duração total do loading
-      const delayPerMessage = 1500;
-      const totalMessagesDuration = loadingMessages.length * delayPerMessage;
-      const finalWaitDuration = 3000; // 3 segundos de "loading normal" após as mensagens
-      const totalLoadingDuration = totalMessagesDuration + finalWaitDuration;
+      // Run message display and data fetch concurrently
+      const [profileData] = await Promise.all([
+        profileDataPromise,
+        displayMessagesSequentially(),
+      ]);
 
-      // Espera o tempo total de carregamento antes de navegar
-      await new Promise(resolve => setTimeout(resolve, totalLoadingDuration));
+      // Ensure minimum loading duration has passed
+      const elapsedTime = Date.now() - searchStartTime;
+      const remainingTime = MIN_LOADING_DURATION - elapsedTime;
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
       
-      setProfile(mockProfileData); // Armazena os dados do perfil mockado
-      navigate('/invasion-concluded', { state: { profileData: mockProfileData } }); // Navega para a nova página com os dados mockados
+      setProfile(profileData);
+      navigate('/invasion-concluded', { state: { profileData: profileData } });
+
     } catch (err) {
+      // Ensure minimum loading duration has passed even on error
+      const elapsedTime = Date.now() - searchStartTime;
+      const remainingTime = MIN_LOADING_DURATION - elapsedTime;
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
+
       if (err instanceof Error) {
-          setError(err.message); // Exibe o erro na página principal
+        // Check for specific error messages to decide between OverloadPage and main page error
+        if (err.message.includes('Network response was not ok') || err.message.includes('An unknown error occurred')) {
+          navigate('/overload');
+        } else {
+          setError(err.message);
+        }
       } else {
         setError('Ocorreu um erro inesperado.');
       }
     } finally {
-      setIsLoading(false); // Desativa o estado geral de carregamento
+      setIsLoading(false);
+      setProgressBarProgress(100);
+      setLoadingStartTime(null);
+      setAreMessagesDone(true); // Ensure this is true even on error to stop any potential message display logic
     }
-  }, [searchQuery, hasConsented, navigate, loadingMessages.length]);
+  }, [searchQuery, hasConsented, navigate, loadingMessages]);
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
@@ -273,8 +261,8 @@ const MainAppContent: React.FC = () => {
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
               )}
               
-              {/* Renderiza as mensagens uma por uma, se ainda não terminaram */}
-              {!areMessagesDone && displayedMessages.map((msgObj, idx) => {
+              {/* Renderiza as mensagens uma por uma */}
+              {displayedMessages.map((msgObj, idx) => {
                 const { text, timestamp } = msgObj;
                 const isLastMessage = idx === loadingMessages.length - 1;
 
