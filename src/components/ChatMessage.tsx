@@ -26,7 +26,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, isBlurred = fal
           isSelf
             ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white rounded-br-none"
             : "bg-gray-700 text-gray-100 rounded-bl-none",
-          isBlurred && "blur-md select-none" // Aplica blur e impede seleção de texto
+          isBlurred && "blur-sm select-none" // Alterado de blur-md para blur-sm
         )}
       >
         <p className="text-sm">{text}</p>
