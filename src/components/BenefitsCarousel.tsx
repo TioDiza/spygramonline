@@ -34,7 +34,7 @@ const variants = {
 };
 
 const BenefitsCarousel: React.FC<BenefitsCarouselProps> = ({ benefits }) => {
-  const [[page, direction], setPage] = useState<[number, number]>([0, 0]);
+  const [[page, direction], setPage] = useState([0, 0]);
 
   // Garante que o índice sempre esteja dentro dos limites do array
   const benefitIndex = (page % benefits.length + benefits.length) % benefits.length;

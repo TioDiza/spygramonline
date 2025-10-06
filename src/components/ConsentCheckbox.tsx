@@ -375,7 +375,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           <input
             type="checkbox"
             checked={checked}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.checked)}
+            onChange={(e) => onChange(e.target.checked)}
           />
           <div className="neon-checkbox__frame">
             <div className="neon-checkbox__box"></div>

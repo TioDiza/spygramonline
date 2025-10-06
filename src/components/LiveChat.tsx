@@ -77,7 +77,7 @@ const LiveChat: React.FC = () => {
         username: newMessageData.username,
       };
 
-      setMessages((prev: ChatMessageData[]) => [...prev, newMessage]);
+      setMessages(prev => [...prev, newMessage]);
     }, 3500); // Intervalo mais rápido
 
     return () => clearInterval(interval);
@@ -94,7 +94,7 @@ const LiveChat: React.FC = () => {
       username: 'Você',
     };
 
-    setMessages((prev: ChatMessageData[]) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
     scrollToBottom();
@@ -109,7 +109,7 @@ const LiveChat: React.FC = () => {
         username: 'Admin SpyGram',
       };
       setIsTyping(false);
-      setMessages((prev: ChatMessageData[]) => [...prev, adminMessage]);
+      setMessages(prev => [...prev, adminMessage]);
       scrollToBottom();
     }, 1500);
   };
@@ -135,7 +135,7 @@ const LiveChat: React.FC = () => {
 
       {/* Messages */}
       <div className="flex-1 p-3 overflow-y-auto scrollbar-hide">
-        {messages.map((msg: ChatMessageData) => (
+        {messages.map(msg => (
           <ChatMessage
             key={msg.id}
             sender={msg.sender}

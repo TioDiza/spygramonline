@@ -24,7 +24,7 @@ const CustomSearchBar: React.FC<CustomSearchBarProps> = ({ query, setQuery, isLo
   };
 
   return (
-    <form onSubmit={(e: React.FormEvent) => e.preventDefault()} className="w-full max-w-md mx-auto flex justify-center items-center">
+    <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-md mx-auto flex justify-center items-center">
       <label className="relative block w-[350px] flex rounded-full border-2 border-[#373737] py-[15px] px-4"> {/* Ajustado padding para px-4 */}
         <input
           type="text"

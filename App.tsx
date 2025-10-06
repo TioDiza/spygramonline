@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'; // Removed useLocation
-import type { ProfileData } from './types'; // Removed InteractionProfile as it's not directly used here
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import type { ProfileData, InteractionProfile } from './types';
 import { fetchProfileData } from './services/apiService';
 import CustomSearchBar from './components/ui/CustomSearchBar';
 import SparkleButton from './components/ui/SparkleButton';
+import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
 import ConsentCheckbox from './src/components/ConsentCheckbox';
@@ -57,7 +58,7 @@ const MainAppContent: React.FC = () => {
       );
 
       interval = setInterval(() => {
-        setProgressBarProgress((prev: number) => {
+        setProgressBarProgress((prev) => {
           // Incrementa lentamente até ~95% enquanto o carregamento está ativo
           if (prev < 95) {
             return prev + 1;
@@ -110,7 +111,7 @@ const MainAppContent: React.FC = () => {
             second: '2-digit',
             timeZone: 'America/Sao_Paulo',
           }).format(now);
-          setDisplayedMessages((prev: { text: string; timestamp: string }[]) => [...prev, { text: messageText, timestamp }]);
+          setDisplayedMessages((prev) => [...prev, { text: messageText, timestamp }]);
         }
         setAreMessagesDone(true); // Mark messages as done
       };
@@ -261,7 +262,7 @@ const MainAppContent: React.FC = () => {
               )}
               
               {/* Renderiza as mensagens uma por uma */}
-              {displayedMessages.map((msgObj: { text: string; timestamp: string }, idx: number) => {
+              {displayedMessages.map((msgObj, idx) => {
                 const { text, timestamp } = msgObj;
                 const isLastMessage = idx === loadingMessages.length - 1;
 
