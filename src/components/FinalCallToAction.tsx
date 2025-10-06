@@ -44,7 +44,7 @@ const FinalCallToAction: React.FC = () => {
           "
         >
           <LockOpen className="w-7 h-7 transform transition-transform duration-300 group-hover:rotate-[-10deg]" />
-          <span>DESBLOQUEAR TUDO AGORA</span>
+          <span>Descobrir Tudo AGORA 🐂</span>
           <Zap className="w-7 h-7 transform transition-transform duration-300 group-hover:rotate-[10deg]" />
         </button>
       </motion.div>
