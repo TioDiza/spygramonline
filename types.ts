@@ -1,4 +1,3 @@
-
 export interface ProfileData {
   username: string;
   fullName: string;
@@ -9,6 +8,13 @@ export interface ProfileData {
   postsCount: number;
   isVerified: boolean;
   isPrivate: boolean;
+  topInteractions?: InteractionProfile[]; // Adicionado: lista de perfis com maior interação
+}
+
+export interface InteractionProfile {
+  username: string;
+  profilePicUrl: string;
+  interactionScore: number; // Um score mockado para simular a interação
 }
 
 export interface ApiSuccessResponse {

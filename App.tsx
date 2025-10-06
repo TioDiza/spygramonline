@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import type { ProfileData } from './types';
+import type { ProfileData, InteractionProfile } from './types'; // Importa InteractionProfile
 import { fetchProfileData } from './services/apiService';
 import CustomSearchBar from './components/ui/CustomSearchBar';
 import SparkleButton from './components/ui/SparkleButton';
@@ -122,17 +122,25 @@ const MainAppContent: React.FC = () => {
     setProgressBarProgress(0); // Garante que a barra comece do zero
 
     try {
+      // Dados mockados para os perfis de interação
+      const mockInteractionProfiles: InteractionProfile[] = Array.from({ length: 12 }).map((_, i) => ({
+        username: `user_interacao_${i + 1}`,
+        profilePicUrl: `https://picsum.photos/id/${100 + i}/150/150`, // Imagens aleatórias
+        interactionScore: Math.floor(Math.random() * 90) + 10, // Score de 10 a 99
+      }));
+
       // Simula a busca de dados com um objeto mockado
       const mockProfileData: ProfileData = {
         username: searchQuery.trim(),
         fullName: 'Nome Completo Mockado',
         profilePicUrl: 'https://via.placeholder.com/150/FF00FF/FFFFFF?text=Mock', // Imagem de placeholder
-        biography: 'Esta é uma biografia mockada para demonstração. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        biography: 'Esta é uma biografia mockada para demonstração. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         followers: 123456,
         following: 789,
         postsCount: 123,
         isVerified: true,
         isPrivate: false,
+        topInteractions: mockInteractionProfiles, // Adiciona os perfis de interação mockados
       };
 
       // Espera o tempo mínimo de carregamento antes de navegar
