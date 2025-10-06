@@ -65,7 +65,7 @@ const InvasionConcludedPage: React.FC = () => {
 
         <ScrollHint />
 
-        <div className="mt-24 w-full max-w-6xl mx-auto text-center">
+        <div className="mt-16 w-full max-w-6xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
             Como Funciona?
           </h2>
