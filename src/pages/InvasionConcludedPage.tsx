@@ -92,6 +92,15 @@ const InvasionConcludedPage: React.FC = () => {
           Invasão Concluída!
         </h1>
         <ProfileCard data={profileData} />
+
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
+            Ver Mensagens Apagadas
+          </SparkleButton>
+          <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
+            Acessar Mídias Ocultas
+          </SparkleButton>
+        </div>
         
         {profileData.topInteractions && profileData.topInteractions.length > 0 && (
           <InteractionProfilesSection profiles={profileData.topInteractions} />
