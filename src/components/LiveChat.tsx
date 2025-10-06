@@ -30,6 +30,17 @@ const initialMessages: ChatMessageData[] = [
     { id: 3, sender: 'other', text: 'Bem-vindos ao nosso suporte! Fiquem à vontade para tirar suas dúvidas.', profilePic: 'https://i.pravatar.cc/150?img=60', timestamp: '14:24' },
 ];
 
+const simulatedNewMessages = [
+  { text: 'Acabei de comprar, ansiosa pra testar!', profilePic: 'https://i.pravatar.cc/150?img=31' },
+  { text: 'É seguro mesmo? Tenho medo de descobrirem.', profilePic: 'https://i.pravatar.cc/150?img=45' },
+  { text: 'Admin, o pagamento por PIX cai na hora?', profilePic: 'https://i.pravatar.cc/150?img=52' },
+  { text: 'Gente, é surreal. Vi até a localização em tempo real.', profilePic: 'https://i.pravatar.cc/150?img=18' },
+  { text: 'Funciona pra conta privada?', profilePic: 'https://i.pravatar.cc/150?img=33' },
+  { text: 'Sim, o acesso é liberado imediatamente após o PIX!', profilePic: 'https://i.pravatar.cc/150?img=60' },
+  { text: 'Funciona perfeitamente para contas privadas também!', profilePic: 'https://i.pravatar.cc/150?img=60' },
+  { text: 'Vale cada centavo, sério.', profilePic: 'https://i.pravatar.cc/150?img=5' },
+];
+
 const LiveChat: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessageData[]>(initialMessages);
   const [inputValue, setInputValue] = useState('');
@@ -44,6 +55,26 @@ const LiveChat: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Efeito para simular novas mensagens chegando
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * simulatedNewMessages.length);
+      const newMessageData = simulatedNewMessages[randomIndex];
+
+      const newMessage: ChatMessageData = {
+        id: Date.now() + Math.random(),
+        sender: 'other',
+        text: newMessageData.text,
+        timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+        profilePic: newMessageData.profilePic,
+      };
+
+      setMessages(prev => [...prev, newMessage]);
+    }, 5000); // Adiciona uma nova mensagem a cada 5 segundos
+
+    return () => clearInterval(interval); // Limpa o intervalo ao desmontar o componente
+  }, []);
+
   const handleSendMessage = (text: string) => {
     if (!text.trim()) return;
 
@@ -52,7 +83,7 @@ const LiveChat: React.FC = () => {
       sender: 'self',
       text: text,
       timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-      profilePic: 'https://i.pravatar.cc/150?img=7',
+      profilePic: 'https://i.pravatar.cc/150?img=7', // Imagem para o "usuário-403"
     };
 
     setMessages(prev => [...prev, userMessage]);
