@@ -8,7 +8,6 @@ import InteractionProfilesSection from '../components/InteractionProfilesSection
 import ScrollHint from '../components/ScrollHint';
 import JealousyMessage from '../components/JealousyMessage';
 import IphoneMockup from '../components/IphoneMockup';
-import { Search, Loader2, UserCheck } from 'lucide-react';
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -50,25 +49,37 @@ const InvasionConcludedPage: React.FC = () => {
           <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
             Em apenas 3 passos simples você tem acesso total a qualquer conta do Instagram.
           </p>
-          <div className="flex flex-col lg:flex-row justify-center items-start gap-12">
-            <IphoneMockup stepNumber={1} title="Digite o Usuário">
-              <Search className="w-24 h-24 text-purple-400" />
-              <p className="text-lg font-medium">
+          <div className="flex flex-col lg:flex-row justify-center items-start gap-8 lg:gap-12">
+            <div className="flex flex-col items-center text-center">
+              <IphoneMockup 
+                stepNumber={1} 
+                title="Digite o Usuário"
+                imageUrl="/passo1.png"
+              />
+              <p className="text-lg font-medium mt-6 max-w-xs">
                 Comece inserindo o @ do perfil que você deseja invadir no nosso campo de busca.
               </p>
-            </IphoneMockup>
-            <IphoneMockup stepNumber={2} title="Aguarde a Invasão">
-              <Loader2 className="w-24 h-24 text-purple-400 animate-spin" />
-              <p className="text-lg font-medium">
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <IphoneMockup 
+                stepNumber={2} 
+                title="Aguarde a Invasão"
+                imageUrl="/passo2.png"
+              />
+              <p className="text-lg font-medium mt-6 max-w-xs">
                 Nossa ferramenta irá explorar vulnerabilidades para obter acesso total à conta.
               </p>
-            </IphoneMockup>
-            <IphoneMockup stepNumber={3} title="Acesse os Dados">
-              <UserCheck className="w-24 h-24 text-purple-400" />
-              <p className="text-lg font-medium">
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <IphoneMockup 
+                stepNumber={3} 
+                title="Acesse os Dados"
+                imageUrl="/passo3.png"
+              />
+              <p className="text-lg font-medium mt-6 max-w-xs">
                 Veja mensagens, mídias apagadas, localização e muito mais, tudo de forma anônima.
               </p>
-            </IphoneMockup>
+            </div>
           </div>
         </div>
       </div>
