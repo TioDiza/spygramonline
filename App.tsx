@@ -12,6 +12,7 @@ import { BackgroundBeamsWithCollision } from './src/components/ui/background-bea
 import { Lock } from 'lucide-react';
 import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
+import InvasionConcludedPage from './src/pages/InvasionConcludedPage'; // Importa a nova página
 import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
 // TypingText removido, pois as mensagens aparecerão por frase
@@ -127,18 +128,18 @@ const MainAppContent: React.FC = () => {
       const [data] = await Promise.all([dataPromise, minDurationPromise]);
       
       setProfile(data); // Armazena os dados do perfil
-      navigate('/results', { state: { profileData: data } }); // Navega para a página de resultados com os dados
+      navigate('/invasion-concluded', { state: { profileData: data } }); // Navega para a nova página
     } catch (err) {
       // Se ocorrer um erro, ainda esperamos o tempo mínimo de carregamento
       await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
 
       if (err instanceof Error) {
-        // Verifica se é um erro de sobrecarga ou erro de rede
-        if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
-          navigate('/overload'); // Navega para a página de sobrecarga
-        } else {
-          setError(err.message);
-        }
+        // Temporariamente desativado: navega para a página de sobrecarga
+        // if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
+        //   navigate('/overload'); 
+        // } else {
+          setError(err.message); // Exibe o erro na página principal
+        // }
       } else {
         setError('Ocorreu um erro inesperado.');
       }
@@ -251,7 +252,6 @@ const MainAppContent: React.FC = () => {
                 if (isLastMessage) {
                   return (
                     <p key={idx} className="text-xl font-bold mt-4 animate-fade-in flex items-start">
-                      {/* Removido o span do timestamp para a última mensagem */}
                       <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
                         {text}
                       </span>
@@ -322,8 +322,9 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<MainAppContent />} />
-        <Route path="/results" element={<ResultsPage />} />
-        <Route path="/overload" element={<OverloadPage />} />
+        <Route path="/results" element={<ResultsPage />} /> {/* Mantido, mas não mais usado diretamente */}
+        <Route path="/overload" element={<OverloadPage />} /> {/* Mantido, mas navegação desativada */}
+        <Route path="/invasion-concluded" element={<InvasionConcludedPage />} /> {/* Nova rota */}
       </Routes>
     </Router>
   );
