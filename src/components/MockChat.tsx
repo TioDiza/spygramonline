@@ -39,35 +39,18 @@ const MockChat: React.FC<MockChatProps> = ({
         </div>
       </div>
 
-      {/* Corpo (Perfil e Mensagens) */}
-      <div className="flex-1 flex flex-col pt-3 overflow-hidden">
-        {/* Seção de Perfil no Topo */}
-        <div className="flex flex-col items-center text-center px-3 mb-4 flex-shrink-0">
-          <img
-            src={otherProfilePic}
-            alt={username}
-            className="w-24 h-24 rounded-full mb-3 border-2 border-gray-700"
+      {/* Corpo (Apenas Mensagens) */}
+      <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col p-3">
+        {messages.map((msg) => (
+          <ChatMessage
+            key={msg.id}
+            sender={msg.sender}
+            text={msg.text}
+            timestamp={msg.timestamp}
+            profilePic={msg.sender === 'other' ? otherProfilePic : undefined}
+            isBlurred={msg.isBlurred}
           />
-          <p className="font-bold text-white text-lg">{username}</p>
-          <p className="text-sm text-gray-400">Instagram</p>
-          <p className="text-xs text-gray-500 mt-3 px-4">
-            As mensagens e chamadas são protegidas com a criptografia de ponta a ponta.
-          </p>
-        </div>
-
-        {/* Container das Mensagens (scrollable e alinhado ao fundo) */}
-        <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col justify-end px-3">
-          {messages.map((msg) => (
-            <ChatMessage
-              key={msg.id}
-              sender={msg.sender}
-              text={msg.text}
-              timestamp={msg.timestamp}
-              profilePic={msg.sender === 'other' ? otherProfilePic : undefined}
-              isBlurred={msg.isBlurred}
-            />
-          ))}
-        </div>
+        ))}
       </div>
 
       {/* Rodapé (Campo de Mensagem) */}
