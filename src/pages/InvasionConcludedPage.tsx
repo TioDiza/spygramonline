@@ -97,9 +97,6 @@ const InvasionConcludedPage: React.FC = () => {
           <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
             Ver Mensagens Apagadas
           </SparkleButton>
-          <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
-            Acessar Mídias Ocultas
-          </SparkleButton>
         </div>
         
         {profileData.topInteractions && profileData.topInteractions.length > 0 && (
@@ -107,6 +104,12 @@ const InvasionConcludedPage: React.FC = () => {
         )}
 
         <JealousyMessage />
+
+        <div className="mt-12 flex justify-center">
+            <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
+              Acessar Mídias Ocultas e Mais
+            </SparkleButton>
+        </div>
 
         <ScrollHint />
 

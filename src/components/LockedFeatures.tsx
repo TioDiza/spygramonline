@@ -62,9 +62,6 @@ const LockedFeatures: React.FC = () => {
           <span className="text-2xl text-gray-500 line-through">R$ 97,90</span>
           <span className="text-5xl font-bold bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text animate-pulse">R$ 27,90</span>
         </div>
-        <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
-          Desbloquear Acesso Total Agora
-        </SparkleButton>
         <p className="text-sm text-gray-500 mt-4">Acesso vitalício com pagamento único. Sem mensalidades.</p>
       </div>
     </div>
