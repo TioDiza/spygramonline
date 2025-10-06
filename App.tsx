@@ -15,6 +15,7 @@ import OverloadPage from './src/pages/OverloadPage';
 import InvasionConcludedPage from './src/pages/InvasionConcludedPage';
 import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
+import ScrollIndicatorButton from './src/components/ScrollIndicatorButton'; // Importa o novo botão
 // TypingText removido, pois as mensagens aparecerão por frase
 
 // Componente principal que contém a lógica de pesquisa e roteamento
@@ -322,6 +323,11 @@ const MainAppContent: React.FC = () => {
             </>
           )}
         </main>
+
+        {/* Botão "Continue Lendo" */}
+        {!isLoading && (
+          <ScrollIndicatorButton />
+        )}
 
         <footer className="mt-16 text-center text-gray-400 text-sm">
           <div className="flex items-center justify-center mb-2">
