@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send } from 'lucide-react';
+import { Send, MessageSquare } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 
 interface ChatMessageData {
@@ -7,7 +7,7 @@ interface ChatMessageData {
   sender: 'self' | 'other';
   text: string;
   timestamp: string;
-  profilePic?: string;
+  username?: string;
 }
 
 const faqs = [
@@ -25,20 +25,20 @@ const adminResponses: { [key: string]: string } = {
 };
 
 const initialMessages: ChatMessageData[] = [
-    { id: 1, sender: 'other', text: 'Gente, funciona mesmo? Alguém já comprou?', profilePic: 'https://i.pravatar.cc/150?img=12', timestamp: '14:22' },
-    { id: 2, sender: 'other', text: 'Comprei e funcionou na hora! Consegui ver umas conversas que tinham apagado, chocada.', profilePic: 'https://i.pravatar.cc/150?img=25', timestamp: '14:23' },
-    { id: 3, sender: 'other', text: 'Bem-vindos ao nosso suporte! Fiquem à vontade para tirar suas dúvidas.', profilePic: 'https://i.pravatar.cc/150?img=60', timestamp: '14:24' },
+    { id: 1, sender: 'other', text: 'Gente, funciona mesmo? Alguém já comprou?', username: 'usuario-322', timestamp: '14:22' },
+    { id: 2, sender: 'other', text: 'Comprei e funcionou na hora! Consegui ver umas conversas que tinham apagado, chocada.', username: 'usuario-44', timestamp: '14:23' },
+    { id: 3, sender: 'other', text: 'Bem-vindos ao nosso suporte! Fiquem à vontade para tirar suas dúvidas.', username: 'Admin SpyGram', timestamp: '14:24' },
 ];
 
 const simulatedNewMessages = [
-  { text: 'Acabei de comprar, ansiosa pra testar!', profilePic: 'https://i.pravatar.cc/150?img=31' },
-  { text: 'É seguro mesmo? Tenho medo de descobrirem.', profilePic: 'https://i.pravatar.cc/150?img=45' },
-  { text: 'Admin, o pagamento por PIX cai na hora?', profilePic: 'https://i.pravatar.cc/150?img=52' },
-  { text: 'Gente, é surreal. Vi até a localização em tempo real.', profilePic: 'https://i.pravatar.cc/150?img=18' },
-  { text: 'Funciona pra conta privada?', profilePic: 'https://i.pravatar.cc/150?img=33' },
-  { text: 'Sim, o acesso é liberado imediatamente após o PIX!', profilePic: 'https://i.pravatar.cc/150?img=60' },
-  { text: 'Funciona perfeitamente para contas privadas também!', profilePic: 'https://i.pravatar.cc/150?img=60' },
-  { text: 'Vale cada centavo, sério.', profilePic: 'https://i.pravatar.cc/150?img=5' },
+  { text: 'Acabei de comprar, ansiosa pra testar!', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
+  { text: 'É seguro mesmo? Tenho medo de descobrirem.', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
+  { text: 'Admin, o pagamento por PIX cai na hora?', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
+  { text: 'Gente, é surreal. Vi até a localização em tempo real.', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
+  { text: 'Funciona pra conta privada?', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
+  { text: 'Sim, o acesso é liberado imediatamente após o PIX!', username: 'Admin SpyGram' },
+  { text: 'Funciona perfeitamente para contas privadas também!', username: 'Admin SpyGram' },
+  { text: 'Vale cada centavo, sério.', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
 ];
 
 const LiveChat: React.FC = () => {
@@ -66,7 +66,7 @@ const LiveChat: React.FC = () => {
         sender: 'other',
         text: newMessageData.text,
         timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-        profilePic: newMessageData.profilePic,
+        username: newMessageData.username,
       };
 
       setMessages(prev => [...prev, newMessage]);
@@ -83,7 +83,7 @@ const LiveChat: React.FC = () => {
       sender: 'self',
       text: text,
       timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-      profilePic: 'https://i.pravatar.cc/150?img=7', // Imagem para o "usuário-403"
+      username: 'Você',
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -97,7 +97,7 @@ const LiveChat: React.FC = () => {
         sender: 'other',
         text: adminResponseText,
         timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-        profilePic: 'https://i.pravatar.cc/150?img=60',
+        username: 'Admin SpyGram',
       };
       setIsTyping(false);
       setMessages(prev => [...prev, adminMessage]);
@@ -114,7 +114,7 @@ const LiveChat: React.FC = () => {
       {/* Header */}
       <div className="p-4 border-b border-gray-700 flex items-center gap-3">
         <div className="relative">
-          <img src="https://i.pravatar.cc/150?img=60" alt="Admin" className="w-10 h-10 rounded-full" />
+          <MessageSquare className="w-10 h-10 text-purple-400" />
           <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-gray-900 rounded-full"></span>
         </div>
         <div>
@@ -131,13 +131,13 @@ const LiveChat: React.FC = () => {
             sender={msg.sender}
             text={msg.text}
             timestamp={msg.timestamp}
-            profilePic={msg.profilePic}
+            username={msg.username}
           />
         ))}
         {isTyping && (
           <div className="flex justify-start mb-2">
-            <img src="https://i.pravatar.cc/150?img=60" alt="Admin" className="w-7 h-7 rounded-full mr-2 self-end" />
             <div className="bg-gray-700 text-gray-100 rounded-2xl rounded-bl-none px-3 py-2">
+              <p className="text-xs font-bold mb-1 text-green-400">Admin SpyGram</p>
               <div className="flex items-center gap-1">
                 <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse delay-0"></span>
                 <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse delay-150"></span>
