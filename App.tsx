@@ -35,7 +35,8 @@ const MainAppContent: React.FC = () => {
     ">> QUEBRA DE CAMADAS: token mock capturado — elevando privilégios.",
     ">> MINERANDO HISTÓRICO: reconstruindo contatos e conversas.",
     ">> ENTRADA COMPROMETIDA: mantendo backdoor.",
-    ">> OPERAÇÃO CONCLUÍDA: implante fantasma adicionado — rastros limpos." // Frase alterada aqui
+    ">> OPERAÇÃO CONCLUÍDA: implante fantasma adicionado — rastros limpos.",
+    "Perfil Invadido com Sucesso" // Nova frase de conclusão adicionada aqui
   ];
   const [displayedMessages, setDisplayedMessages] = useState<{ text: string; timestamp: string }[]>([]);
 
