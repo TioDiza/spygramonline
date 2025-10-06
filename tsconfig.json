@@ -28,5 +28,5 @@
     }
   },
   "include": ["src", "types.ts", "components", "constants.ts", "services"]
-  // Removida a linha: "references": [{ "path": "./tsconfig.node.json" }]
+  // A linha "references": [{ "path": "./tsconfig.node.json" }] foi removida.
 }
