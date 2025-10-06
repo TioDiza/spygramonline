@@ -250,8 +250,8 @@ const MainAppContent: React.FC = () => {
                   const prefix = prefixMatch[1];
                   const suffix = text.substring(prefix.length);
                   return (
-                    <p key={idx} className="text-base mt-2 animate-fade-in">
-                      <span className="text-gray-500 mr-2 inline-block w-20 text-left">[{timestamp}]</span>
+                    <p key={idx} className="text-base mt-2 animate-fade-in flex items-start"> {/* Adicionado flex e items-start */}
+                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span> {/* Removido inline-block, adicionado flex-shrink-0 */}
                       <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
                         {prefix}
                       </span>
@@ -260,8 +260,8 @@ const MainAppContent: React.FC = () => {
                   );
                 } else {
                   return (
-                    <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in">
-                      <span className="text-gray-500 mr-2 inline-block w-20 text-left">[{timestamp}]</span>
+                    <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in flex items-start"> {/* Adicionado flex e items-start */}
+                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span> {/* Removido inline-block, adicionado flex-shrink-0 */}
                       {text}
                     </p>
                   );
