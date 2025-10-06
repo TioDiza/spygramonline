@@ -1,8 +1,8 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { ProfileData } from '../../types';
-import ProfileCard from '../../components/ProfileCard';
-import SparkleButton from '../../components/ui/SparkleButton';
+import type { ProfileData } from '../types'; // Corrected path
+import ProfileCard from '../components/ProfileCard'; // Corrected path
+import SparkleButton from '../components/ui/SparkleButton'; // Corrected path
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
 
 const ResultsPage: React.FC = () => {
