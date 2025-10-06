@@ -5,7 +5,8 @@ import ProfileCard from '../../components/ProfileCard';
 import SparkleButton from '../../components/ui/SparkleButton';
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
 import InteractionProfilesSection from '../components/InteractionProfilesSection';
-import ScrollHint from '../components/ScrollHint'; // Importa o novo componente
+import ScrollHint from '../components/ScrollHint';
+import JealousyMessage from '../components/JealousyMessage'; // Importa o novo componente
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -29,6 +30,9 @@ const InvasionConcludedPage: React.FC = () => {
         {profileData.topInteractions && profileData.topInteractions.length > 0 && (
           <InteractionProfilesSection profiles={profileData.topInteractions} />
         )}
+
+        {/* Adiciona a mensagem de ciúmes aqui */}
+        <JealousyMessage />
 
         <div className="mt-10">
           <SparkleButton onClick={() => navigate('/')}>
