@@ -32,3 +32,10 @@ body {
   -ms-user-select: none;     /* IE 10+ */
   user-select: none;         /* Standard */
 }
+
+/* Anti-clone: Esconde o conteúdo na impressão */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+}
