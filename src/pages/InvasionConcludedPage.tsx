@@ -10,6 +10,7 @@ import IphoneMockup from '../components/IphoneMockup';
 import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle } from 'lucide-react';
 import BenefitsCarousel from '../components/BenefitsCarousel';
 import LiveChat from '../components/LiveChat';
+import SparkleButton from '../../components/ui/SparkleButton';
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -134,6 +135,11 @@ const InvasionConcludedPage: React.FC = () => {
               isBlurred={currentStep.isBlurred}
             />
           </div>
+          <div className="mt-12 flex justify-center">
+            <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
+              Ver a Verdade em 3 Passos
+            </SparkleButton>
+          </div>
         </div>
 
         <div className="mt-20 w-full max-w-6xl mx-auto text-center">
@@ -157,6 +163,11 @@ const InvasionConcludedPage: React.FC = () => {
               </p>
             </div>
           </div>
+          <div className="mt-12 flex justify-center">
+            <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
+              Quero Acesso a Todos Benefícios
+            </SparkleButton>
+          </div>
         </div>
 
         <div className="mt-20 w-full max-w-6xl mx-auto text-center">
@@ -167,6 +178,11 @@ const InvasionConcludedPage: React.FC = () => {
             Fale com nosso suporte em tempo real e veja o que outros clientes estão dizendo.
           </p>
           <LiveChat />
+          <div className="mt-12 flex justify-center">
+            <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
+              Desbloquear Acesso Total Agora
+            </SparkleButton>
+          </div>
         </div>
       </div>
     </BackgroundBeamsWithCollision>
