@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import type { ProfileData, InteractionProfile } from './types';
-import { fetchProfileData } from './services/apiService';
+// import { fetchProfileData } from './services/apiService'; // Removido: Não usaremos a API real
 import CustomSearchBar from './components/ui/CustomSearchBar';
 import SparkleButton from './components/ui/SparkleButton';
 import ProfileCard from './components/ProfileCard';
@@ -96,13 +96,30 @@ const MainAppContent: React.FC = () => {
     const searchStartTime = Date.now();
 
     try {
-      // Start fetching data
-      const profileDataPromise = fetchProfileData(searchQuery.trim());
+      // Dados de perfil simulados
+      const mockProfileData: ProfileData = {
+        username: searchQuery.trim(), // Usa o nome de usuário digitado
+        fullName: "Usuário de Teste",
+        profilePicUrl: "https://picsum.photos/id/1005/200/200", // Imagem de placeholder
+        biography: "Esta é uma biografia de teste para demonstração. O SpyGram permite acesso total a perfis, mensagens e mídias ocultas.",
+        followers: 123456,
+        following: 789,
+        postsCount: 1234,
+        isVerified: true,
+        isPrivate: false,
+        topInteractions: [
+          { username: "amigo_secreto", profilePicUrl: "https://picsum.photos/id/1011/100/100", interactionScore: 95 },
+          { username: "contatinho_x", profilePicUrl: "https://picsum.photos/id/1012/100/100", interactionScore: 88 },
+          { username: "ex_namorado", profilePicUrl: "https://picsum.photos/id/1013/100/100", interactionScore: 76 },
+          { username: "rival_da_escola", profilePicUrl: "https://picsum.photos/id/1014/100/100", interactionScore: 65 },
+          { username: "colega_de_trabalho", profilePicUrl: "https://picsum.photos/id/1015/100/100", interactionScore: 50 },
+        ],
+      };
 
-      // Function to display messages sequentially
+      // Função para exibir mensagens sequencialmente
       const displayMessagesSequentially = async () => {
         for (let i = 0; i < loadingMessages.length; i++) {
-          await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 seconds delay
+          await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 segundos de atraso
           const messageText = loadingMessages[i];
           const now = new Date();
           const timestamp = new Intl.DateTimeFormat('pt-BR', {
@@ -113,48 +130,30 @@ const MainAppContent: React.FC = () => {
           }).format(now);
           setDisplayedMessages((prev) => [...prev, { text: messageText, timestamp }]);
         }
-        setAreMessagesDone(true); // Mark messages as done
+        setAreMessagesDone(true); // Marca as mensagens como concluídas
       };
 
-      // Run message display and data fetch concurrently
-      const [profileData] = await Promise.all([
-        profileDataPromise,
-        displayMessagesSequentially(),
-      ]);
+      // Executa a exibição das mensagens e simula o tempo de carregamento
+      await displayMessagesSequentially();
 
-      // Ensure minimum loading duration has passed
+      // Garante que a duração mínima de carregamento tenha passado
       const elapsedTime = Date.now() - searchStartTime;
       const remainingTime = MIN_LOADING_DURATION - elapsedTime;
       if (remainingTime > 0) {
         await new Promise(resolve => setTimeout(resolve, remainingTime));
       }
       
-      setProfile(profileData);
-      navigate('/invasion-concluded', { state: { profileData: profileData } });
+      setProfile(mockProfileData);
+      navigate('/invasion-concluded', { state: { profileData: mockProfileData } });
 
     } catch (err) {
-      // Ensure minimum loading duration has passed even on error
-      const elapsedTime = Date.now() - searchStartTime;
-      const remainingTime = MIN_LOADING_DURATION - elapsedTime;
-      if (remainingTime > 0) {
-        await new Promise(resolve => setTimeout(resolve, remainingTime));
-      }
-
-      if (err instanceof Error) {
-        // Check for specific error messages to decide between OverloadPage and main page error
-        if (err.message.includes('Network response was not ok') || err.message.includes('An unknown error occurred')) {
-          navigate('/overload');
-        } else {
-          setError(err.message);
-        }
-      } else {
-        setError('Ocorreu um erro inesperado.');
-      }
+      // Tratamento de erro simplificado, já que não há chamada de API real
+      setError('Ocorreu um erro inesperado na simulação.');
     } finally {
       setIsLoading(false);
       setProgressBarProgress(100);
       setLoadingStartTime(null);
-      setAreMessagesDone(true); // Ensure this is true even on error to stop any potential message display logic
+      setAreMessagesDone(true); // Garante que isso seja verdadeiro mesmo em caso de erro
     }
   }, [searchQuery, hasConsented, navigate, loadingMessages]);
 
