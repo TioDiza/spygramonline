@@ -27,6 +27,7 @@ const MainAppContent: React.FC = () => {
   const [progressBarProgress, setProgressBarProgress] = useState(0);
   const [loadingStartTime, setLoadingStartTime] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [areMessagesDone, setAreMessagesDone] = useState<boolean>(false);
 
   // Mensagens para a sequência de carregamento
   const loadingMessages = [
@@ -58,16 +59,20 @@ const MainAppContent: React.FC = () => {
         }).format(now);
         setDisplayedMessages((prev) => [...prev, { text: messageText, timestamp }]);
       }, delayPerMessage);
+    } else if (isLoading && displayedMessages.length === loadingMessages.length && !areMessagesDone) {
+      // Todas as mensagens foram exibidas, atualiza o estado
+      setAreMessagesDone(true);
     }
     return () => {
       if (messageTimer) clearTimeout(messageTimer);
     };
-  }, [isLoading, displayedMessages.length, loadingMessages.length]);
+  }, [isLoading, displayedMessages.length, areMessagesDone, loadingMessages.length]);
 
   // Efeito para reiniciar as mensagens quando o carregamento começa
   useEffect(() => {
     if (isLoading) {
       setDisplayedMessages([]); // Reinicia as mensagens quando o carregamento começa
+      setAreMessagesDone(false); // Garante que o estado de conclusão seja resetado
     }
   }, [isLoading]);
 
@@ -143,29 +148,27 @@ const MainAppContent: React.FC = () => {
         topInteractions: mockInteractionProfiles, // Adiciona os perfis de interação mockados
       };
 
-      // Espera o tempo mínimo de carregamento antes de navegar
-      await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
+      // Calcula a duração total do loading
+      const delayPerMessage = 1500;
+      const totalMessagesDuration = loadingMessages.length * delayPerMessage;
+      const finalWaitDuration = 3000; // 3 segundos de "loading normal" após as mensagens
+      const totalLoadingDuration = totalMessagesDuration + finalWaitDuration;
+
+      // Espera o tempo total de carregamento antes de navegar
+      await new Promise(resolve => setTimeout(resolve, totalLoadingDuration));
       
       setProfile(mockProfileData); // Armazena os dados do perfil mockado
       navigate('/invasion-concluded', { state: { profileData: mockProfileData } }); // Navega para a nova página com os dados mockados
     } catch (err) {
-      // Este bloco de erro não será acionado com dados mockados, mas é mantido para quando a API for reativada.
-      await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
-
       if (err instanceof Error) {
-        // Temporariamente desativado: navega para a página de sobrecarga
-        // if (err.message.includes('Network response was not ok') || err.message.includes('Failed to fetch')) {
-        //   navigate('/overload'); 
-        // } else {
           setError(err.message); // Exibe o erro na página principal
-        // }
       } else {
         setError('Ocorreu um erro inesperado.');
       }
     } finally {
       setIsLoading(false); // Desativa o estado geral de carregamento
     }
-  }, [searchQuery, hasConsented, navigate]);
+  }, [searchQuery, hasConsented, navigate, loadingMessages.length]);
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
@@ -263,8 +266,9 @@ const MainAppContent: React.FC = () => {
               {loadingStartTime && (
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
               )}
-              {/* Renderiza as mensagens uma por uma, aplicando o estilo de gradiente */}
-              {displayedMessages.map((msgObj, idx) => {
+              
+              {/* Renderiza as mensagens uma por uma, se ainda não terminaram */}
+              {!areMessagesDone && displayedMessages.map((msgObj, idx) => {
                 const { text, timestamp } = msgObj;
                 const isLastMessage = idx === loadingMessages.length - 1;
 
@@ -300,6 +304,13 @@ const MainAppContent: React.FC = () => {
                   );
                 }
               })}
+
+              {/* Mostra uma mensagem final após a sequência de mensagens */}
+              {areMessagesDone && (
+                <p className="text-base text-gray-400 mt-4 animate-fade-in">
+                  Finalizando invasão e limpando rastros...
+                </p>
+              )}
             </div>
           ) : (
             <>
