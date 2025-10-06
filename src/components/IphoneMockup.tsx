@@ -3,12 +3,13 @@ import React from 'react';
 interface IphoneMockupProps {
   stepNumber: number;
   title: string;
+  description: string;
   imageUrl: string;
   imageFit?: 'cover' | 'contain';
   isBlurred?: boolean;
 }
 
-const IphoneMockup: React.FC<IphoneMockupProps> = ({ stepNumber, title, imageUrl, imageFit = 'cover', isBlurred = false }) => {
+const IphoneMockup: React.FC<IphoneMockupProps> = ({ stepNumber, title, description, imageUrl, imageFit = 'cover', isBlurred = false }) => {
   return (
     <>
       <style>{`
@@ -30,6 +31,7 @@ const IphoneMockup: React.FC<IphoneMockupProps> = ({ stepNumber, title, imageUrl
 
         .step-info {
           text-align: center;
+          min-height: 120px; /* Adiciona altura mínima para evitar deslocamento */
         }
 
         .step-number {
@@ -178,6 +180,7 @@ const IphoneMockup: React.FC<IphoneMockupProps> = ({ stepNumber, title, imageUrl
         <div className="step-info">
           <span className="step-number">{stepNumber}</span>
           <h3 className="step-title">{title}</h3>
+          <p className="text-sm text-gray-400 mt-2 max-w-xs">{description}</p>
         </div>
         <section>
           <div className="outside-border">

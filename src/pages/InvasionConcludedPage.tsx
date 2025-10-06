@@ -99,13 +99,11 @@ const InvasionConcludedPage: React.FC = () => {
             <IphoneMockup 
               stepNumber={currentStep.stepNumber} 
               title={currentStep.title}
+              description={currentStep.description}
               imageUrl={currentStep.imageUrl}
               imageFit={currentStep.imageFit}
               isBlurred={currentStep.isBlurred}
             />
-            <p className="text-lg font-medium mt-6 max-w-xs">
-              {currentStep.description}
-            </p>
           </div>
         </div>
       </div>
