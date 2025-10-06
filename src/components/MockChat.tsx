@@ -2,7 +2,7 @@ import React from 'react';
 import { Phone, Video, Info, Smile, Camera, Mic, Image, ChevronLeft } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 
-export interface Message { // Adicionado 'export' aqui
+interface Message {
   id: string;
   sender: 'self' | 'other';
   text: string;

@@ -8,10 +8,9 @@ interface ChatMessageProps {
   timestamp: string;
   username?: string;
   isBlurred?: boolean;
-  profilePic?: string; // Adicionado: A prop profilePic
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, timestamp, username, isBlurred = false, profilePic }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, timestamp, username, isBlurred = false }) => {
   const isSelf = sender === 'self';
 
   // Gera uma cor consistente para cada nome de usuário
@@ -29,10 +28,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, timestamp, user
       className={cn("flex flex-col mb-1.5", isSelf ? "items-end" : "items-start")}
     >
       <div className={cn("flex items-end gap-1.5", isSelf ? "flex-row-reverse" : "flex-row")}>
-        {/* Renderiza a foto de perfil se for uma mensagem de 'other' e profilePic estiver disponível */}
-        {!isSelf && profilePic && (
-          <img src={profilePic} alt="Profile" className="w-6 h-6 rounded-full object-cover" />
-        )}
         <div
           className={cn(
             "max-w-[75%] px-2.5 py-1.5 relative flex flex-col",
