@@ -15,7 +15,6 @@ import OverloadPage from './src/pages/OverloadPage';
 import InvasionConcludedPage from './src/pages/InvasionConcludedPage';
 import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
-import FloatingWhatsAppButton from './src/components/FloatingWhatsAppButton';
 // TypingText removido, pois as mensagens aparecerão por frase
 
 // Componente principal que contém a lógica de pesquisa e roteamento
@@ -349,7 +348,6 @@ const MainAppContent: React.FC = () => {
           <p>Todos os direitos reservados a SpyGram</p>
         </footer>
       </div>
-      <FloatingWhatsAppButton />
     </BackgroundBeamsWithCollision>
   );
 };
