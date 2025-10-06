@@ -92,12 +92,6 @@ const InvasionConcludedPage: React.FC = () => {
           Invasão Concluída!
         </h1>
         <ProfileCard data={profileData} />
-
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
-            Ver Mensagens Apagadas
-          </SparkleButton>
-        </div>
         
         {profileData.topInteractions && profileData.topInteractions.length > 0 && (
           <InteractionProfilesSection profiles={profileData.topInteractions} />
@@ -146,11 +140,6 @@ const InvasionConcludedPage: React.FC = () => {
               imageFit={currentStep.imageFit}
               isBlurred={currentStep.isBlurred}
             />
-          </div>
-          <div className="mt-12 flex justify-center">
-            <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
-              Ver a Verdade em 3 Passos
-            </SparkleButton>
           </div>
         </div>
 
