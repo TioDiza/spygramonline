@@ -10,6 +10,7 @@ import IphoneMockup from '../components/IphoneMockup';
 import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle } from 'lucide-react';
 import BenefitsCarousel from '../components/BenefitsCarousel';
 import LiveChat from '../components/LiveChat';
+import CtaSection from '../components/CtaSection'; // Importando o novo componente
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -96,6 +97,8 @@ const InvasionConcludedPage: React.FC = () => {
           <InteractionProfilesSection profiles={profileData.topInteractions} />
         )}
 
+        <CtaSection />
+
         <JealousyMessage />
 
         <ScrollHint />
@@ -147,6 +150,8 @@ const InvasionConcludedPage: React.FC = () => {
           <div className="flex justify-center">
             <BenefitsCarousel benefits={benefits} />
           </div>
+
+          <CtaSection />
 
           <div className="mt-16 p-6 bg-gray-900/50 border border-yellow-500/50 rounded-xl max-w-3xl mx-auto flex items-start gap-4 text-left">
             <AlertTriangle className="w-12 h-12 text-yellow-400 flex-shrink-0" />
