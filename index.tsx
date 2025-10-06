@@ -12,6 +12,13 @@ document.addEventListener('contextmenu', (e) => {
   e.preventDefault();
 });
 
+// Anti-clone: Desabilita a tecla F12
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'J')) {
+    e.preventDefault();
+  }
+});
+
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
