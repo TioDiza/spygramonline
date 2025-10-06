@@ -34,7 +34,7 @@ const MainAppContent: React.FC = () => {
     ">> VARREDURA INTENSA: exfiltrando artefatos — stream ativo.",
     ">> QUEBRA DE CAMADAS: token mock capturado — elevando privilégios.",
     ">> MINERANDO HISTÓRICO: reconstruindo contatos e conversas.",
-    "Carregando dados do perfil...",
+    ">> ENTRADA COMPROMETIDA: mantendo backdoor.", // Frase alterada aqui
     "Compilando informações para exibição."
   ];
   const [displayedMessages, setDisplayedMessages] = useState<{ text: string; timestamp: string }[]>([]);
