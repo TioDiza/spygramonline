@@ -9,6 +9,7 @@ import JealousyMessage from '../components/JealousyMessage';
 import IphoneMockup from '../components/IphoneMockup';
 import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle } from 'lucide-react';
 import BenefitsCarousel from '../components/BenefitsCarousel';
+import LiveChat from '../components/LiveChat';
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -156,6 +157,16 @@ const InvasionConcludedPage: React.FC = () => {
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="mt-20 w-full max-w-6xl mx-auto text-center">
+          <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
+            Ainda com Dúvidas?
+          </h2>
+          <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
+            Fale com nosso suporte em tempo real e veja o que outros clientes estão dizendo.
+          </p>
+          <LiveChat />
         </div>
       </div>
     </BackgroundBeamsWithCollision>
