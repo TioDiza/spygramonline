@@ -237,7 +237,7 @@ const MainAppContent: React.FC = () => {
           }
         `}</style>
         
-        <header className="text-center mb-10 relative w-full max-w-xl">
+        <header className="text-center mb-4 relative w-full max-w-xl">
           <div className="relative group mx-auto w-fit mb-4">
             <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
             
@@ -261,7 +261,7 @@ const MainAppContent: React.FC = () => {
         
         <main className="w-full flex flex-col items-center">
           {isLoading ? (
-            <div className="mt-10 w-full max-w-2xl mx-auto bg-black backdrop-blur-sm border border-white rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
+            <div className="mt-4 w-full max-w-2xl mx-auto bg-black backdrop-blur-sm border border-white rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
               <Loader /> {/* Reutiliza o Loader existente */}
               {loadingStartTime && (
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
