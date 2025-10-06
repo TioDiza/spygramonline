@@ -114,7 +114,7 @@ const JealousyMessage: React.FC = () => {
         A VERDADE DÓI.
       </h2>
       <p className="text-2xl text-gray-300 font-medium mb-8">
-        MENSAGENS RECUPERADAS PELO SPYGRAM
+        MENSAGENS SUSPEITAS RECUPERADAS DA LIXEIRA PELO SPYGRAM
       </p>
 
       <div className="relative flex items-center justify-center w-full max-w-5xl mx-auto">
