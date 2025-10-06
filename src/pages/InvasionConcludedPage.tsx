@@ -11,6 +11,8 @@ import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle 
 import BenefitsCarousel from '../components/BenefitsCarousel';
 import LiveChat from '../components/LiveChat';
 import SparkleButton from '../../components/ui/SparkleButton';
+import FaqSection from '../components/FaqSection';
+import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -199,7 +201,10 @@ const InvasionConcludedPage: React.FC = () => {
             </SparkleButton>
           </div>
         </div>
+
+        <FaqSection />
       </div>
+      <FloatingWhatsAppButton />
     </BackgroundBeamsWithCollision>
   );
 };

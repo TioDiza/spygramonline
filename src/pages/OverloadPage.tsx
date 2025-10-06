@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import SparkleButton from '../../components/ui/SparkleButton';
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
 import { AlertTriangle } from 'lucide-react';
+import FloatingWhatsAppButton from '../../src/components/FloatingWhatsAppButton';
 
 const OverloadPage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const OverloadPage: React.FC = () => {
           Tentar Novamente
         </SparkleButton>
       </div>
+      <FloatingWhatsAppButton />
     </BackgroundBeamsWithCollision>
   );
 };

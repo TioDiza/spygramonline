@@ -4,6 +4,7 @@ import type { ProfileData } from '../../types';
 import ProfileCard from '../../components/ProfileCard';
 import SparkleButton from '../../components/ui/SparkleButton';
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
+import FloatingWhatsAppButton from '../../src/components/FloatingWhatsAppButton';
 
 const ResultsPage: React.FC = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ const ResultsPage: React.FC = () => {
           </SparkleButton>
         </div>
       </div>
+      <FloatingWhatsAppButton />
     </BackgroundBeamsWithCollision>
   );
 };
