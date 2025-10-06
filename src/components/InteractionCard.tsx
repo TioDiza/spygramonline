@@ -7,7 +7,7 @@ interface InteractionCardProps {
 
 const InteractionCard: React.FC<InteractionCardProps> = ({ profile }) => {
   return (
-    <div className="flex flex-col items-center p-4 bg-black rounded-xl border border-gray-700 shadow-md hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300">
+    <div className="flex flex-col items-center p-4 bg-gray-800/50 rounded-xl border border-gray-700 shadow-md hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300">
       <img
         src={profile.profilePicUrl}
         alt={`${profile.username}'s profile picture`}
