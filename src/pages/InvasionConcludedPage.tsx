@@ -35,8 +35,8 @@ const InvasionConcludedPage: React.FC = () => {
       stepNumber: 3,
       title: "Acesse os Dados",
       imageUrl: "/passo3.png",
-      imageFit: "cover" as const,
-      isBlurred: true,
+      imageFit: "contain" as const,
+      isBlurred: false,
       description: "Veja mensagens, mídias apagadas, localização e muito mais, tudo de forma anônima."
     }
   ];
@@ -62,12 +62,6 @@ const InvasionConcludedPage: React.FC = () => {
         )}
 
         <JealousyMessage />
-
-        <div className="mt-10">
-          <SparkleButton onClick={() => navigate('/')}>
-            Nova Invasão
-          </SparkleButton>
-        </div>
 
         <ScrollHint />
 
