@@ -4,9 +4,11 @@ interface IphoneMockupProps {
   stepNumber: number;
   title: string;
   imageUrl: string;
+  imageFit?: 'cover' | 'contain';
+  isBlurred?: boolean;
 }
 
-const IphoneMockup: React.FC<IphoneMockupProps> = ({ stepNumber, title, imageUrl }) => {
+const IphoneMockup: React.FC<IphoneMockupProps> = ({ stepNumber, title, imageUrl, imageFit = 'cover', isBlurred = false }) => {
   return (
     <>
       <style>{`
@@ -166,10 +168,10 @@ const IphoneMockup: React.FC<IphoneMockupProps> = ({ stepNumber, title, imageUrl
         .screen-image {
           width: 100%;
           height: 100%;
-          object-fit: cover;
           position: absolute;
           top: 0;
           left: 0;
+          transition: filter 0.3s ease-in-out;
         }
       `}</style>
       <div className="iphone-container">
@@ -184,7 +186,12 @@ const IphoneMockup: React.FC<IphoneMockupProps> = ({ stepNumber, title, imageUrl
             <div className="volume-down"></div>
             <div className="button-on"></div>
             <div className="inside-border">
-              <img src={imageUrl} alt={title} className="screen-image" />
+              <img
+                src={imageUrl}
+                alt={title}
+                className={`screen-image ${isBlurred ? 'blur-sm' : ''}`}
+                style={{ objectFit: imageFit }}
+              />
               <div className="camera">
                 <div className="camera-dot">
                   <div className="camera-dot-2"></div>

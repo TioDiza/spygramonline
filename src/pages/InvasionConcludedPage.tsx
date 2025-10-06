@@ -55,6 +55,7 @@ const InvasionConcludedPage: React.FC = () => {
                 stepNumber={1} 
                 title="Digite o Usuário"
                 imageUrl="/passo1.png"
+                imageFit="contain"
               />
               <p className="text-lg font-medium mt-6 max-w-xs">
                 Comece inserindo o @ do perfil que você deseja invadir no nosso campo de busca.
@@ -65,6 +66,7 @@ const InvasionConcludedPage: React.FC = () => {
                 stepNumber={2} 
                 title="Aguarde a Invasão"
                 imageUrl="/passo2.png"
+                imageFit="contain"
               />
               <p className="text-lg font-medium mt-6 max-w-xs">
                 Nossa ferramenta irá explorar vulnerabilidades para obter acesso total à conta.
@@ -75,6 +77,7 @@ const InvasionConcludedPage: React.FC = () => {
                 stepNumber={3} 
                 title="Acesse os Dados"
                 imageUrl="/passo3.png"
+                isBlurred={true}
               />
               <p className="text-lg font-medium mt-6 max-w-xs">
                 Veja mensagens, mídias apagadas, localização e muito mais, tudo de forma anônima.
