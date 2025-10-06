@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
+import { Phone } from 'lucide-react';
 
 const FloatingWhatsAppButton: React.FC = () => {
   const whatsappNumber = "5511999999999"; // Número de placeholder
@@ -31,10 +31,10 @@ const FloatingWhatsAppButton: React.FC = () => {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg hover:bg-[#128C7E] transition-colors duration-300 animate-pulse-whatsapp"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg hover:bg-[#128C7E] transition-colors duration-300 animate-pulse-whatsapp"
         aria-label="Fale conosco no WhatsApp"
       >
-        <MessageCircle size={32} />
+        <Phone size={28} />
       </a>
     </>
   );
