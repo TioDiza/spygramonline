@@ -96,26 +96,6 @@ const MainAppContent: React.FC = () => {
     const searchStartTime = Date.now();
 
     try {
-      // Dados de perfil simulados
-      const mockProfileData: ProfileData = {
-        username: searchQuery.trim(), // Usa o nome de usuário digitado
-        fullName: "Usuário de Teste",
-        profilePicUrl: "https://picsum.photos/id/1005/200/200", // Imagem de placeholder
-        biography: "Esta é uma biografia de teste para demonstração. O SpyGram permite acesso total a perfis, mensagens e mídias ocultas.",
-        followers: 123456,
-        following: 789,
-        postsCount: 1234,
-        isVerified: true,
-        isPrivate: false,
-        topInteractions: [
-          { username: "amigo_secreto", profilePicUrl: "https://picsum.photos/id/1011/100/100", interactionScore: 95 },
-          { username: "contatinho_x", profilePicUrl: "https://picsum.photos/id/1012/100/100", interactionScore: 88 },
-          { username: "ex_namorado", profilePicUrl: "https://picsum.photos/id/1013/100/100", interactionScore: 76 },
-          { username: "rival_da_escola", profilePicUrl: "https://picsum.photos/id/1014/100/100", interactionScore: 65 },
-          { username: "colega_de_trabalho", profilePicUrl: "https://picsum.photos/id/1015/100/100", interactionScore: 50 },
-        ],
-      };
-
       // Função para exibir mensagens sequencialmente
       const displayMessagesSequentially = async () => {
         for (let i = 0; i < loadingMessages.length; i++) {
@@ -142,6 +122,32 @@ const MainAppContent: React.FC = () => {
       if (remainingTime > 0) {
         await new Promise(resolve => setTimeout(resolve, remainingTime));
       }
+      
+      // Simula uma chance de sobrecarga (por exemplo, 30% de chance)
+      if (Math.random() < 0.3) {
+        navigate('/overload');
+        return; // Sai da função para não continuar para a página de sucesso
+      }
+
+      // Dados de perfil simulados
+      const mockProfileData: ProfileData = {
+        username: searchQuery.trim(), // Usa o nome de usuário digitado
+        fullName: "Usuário de Teste",
+        profilePicUrl: "https://picsum.photos/id/1005/200/200", // Imagem de placeholder
+        biography: "Esta é uma biografia de teste para demonstração. O SpyGram permite acesso total a perfis, mensagens e mídias ocultas.",
+        followers: 123456,
+        following: 789,
+        postsCount: 1234,
+        isVerified: true,
+        isPrivate: false,
+        topInteractions: [
+          { username: "amigo_secreto", profilePicUrl: "https://picsum.photos/id/1011/100/100", interactionScore: 95 },
+          { username: "contatinho_x", profilePicUrl: "https://picsum.photos/id/1012/100/100", interactionScore: 88 },
+          { username: "ex_namorado", profilePicUrl: "https://picsum.photos/id/1013/100/100", interactionScore: 76 },
+          { username: "rival_da_escola", profilePicUrl: "https://picsum.photos/id/1014/100/100", interactionScore: 65 },
+          { username: "colega_de_trabalho", profilePicUrl: "https://picsum.photos/id/1015/100/100", interactionScore: 50 },
+        ],
+      };
       
       setProfile(mockProfileData);
       navigate('/invasion-concluded', { state: { profileData: mockProfileData } });
