@@ -15,7 +15,7 @@ import OverloadPage from './src/pages/OverloadPage';
 import InvasionConcludedPage from './src/pages/InvasionConcludedPage';
 import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
-// TypingText removido, pois as mensagens aparecerão por frase
+import HowToSection from './src/components/HowToSection'; // Importando o novo componente
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -339,6 +339,8 @@ const MainAppContent: React.FC = () => {
             </>
           )}
         </main>
+
+        {!isLoading && <HowToSection />}
 
         <footer className="mt-16 text-center text-gray-400 text-sm">
           <div className="flex items-center justify-center mb-2">
