@@ -10,7 +10,7 @@ interface SparkleButtonProps {
 
 const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabled = false }) => {
   const baseButtonClasses = `
-    relative z-10 flex items-center justify-center gap-1 whitespace-nowrap rounded-full border-none
+    relative z-10 flex items-center justify-center gap-1 rounded-full border-none
     w-full px-6 py-3 text-lg font-medium text-white
     bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400
     transition-all duration-300 ease-in-out
@@ -38,7 +38,7 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
         )}
       >
         <Sparkles className="w-5 h-5 text-white" /> {/* Usando o ícone Sparkles */}
-        <span>{children}</span>
+        <span className="text-center">{children}</span>
       </button>
     </div>
   );
