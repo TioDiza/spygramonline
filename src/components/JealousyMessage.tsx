@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { HeartCrack, ChevronLeft, ChevronRight, FileSearch } from 'lucide-react';
 import MockChat from './MockChat';
+import LockedFeatures from './LockedFeatures';
 
 const JealousyMessage: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -161,6 +162,9 @@ const JealousyMessage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* Locked Features Section */}
+      <LockedFeatures />
     </div>
   );
 };
