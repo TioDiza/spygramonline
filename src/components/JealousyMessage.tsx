@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { HeartCrack, ChevronLeft, ChevronRight } from 'lucide-react';
+import { HeartCrack, ChevronLeft, ChevronRight, FileSearch } from 'lucide-react';
 import MockChat from './MockChat';
 
 const JealousyMessage: React.FC = () => {
@@ -17,9 +17,9 @@ const JealousyMessage: React.FC = () => {
         { id: '4', sender: 'self', text: 'com certeza! tô livre amanhã a noite toda...', timestamp: '23:19', isBlurred: true },
         { id: '5', sender: 'other', text: 'mal posso esperar pra te sentir de novo.', timestamp: '23:19', isBlurred: true },
         { id: '6', sender: 'self', text: 'você sabe como me deixar sem fôlego.', timestamp: '23:20', isBlurred: true },
-        { id: '7', sender: 'other', text: 'e você sabe como me fazer querer mais.', timestamp: '23:20', isBlurred: true },
+        { id: '7', sender: 'other', text: 'e você sabe como me fazer querer mais. que delicia.', timestamp: '23:20', isBlurred: true },
         { id: '8', sender: 'self', text: 'é um perigo a gente se encontrar.', timestamp: '23:21', isBlurred: true },
-        { id: '9', sender: 'other', text: 'um perigo que eu quero correr sempre.', timestamp: '23:22', isBlurred: true },
+        { id: '9', sender: 'other', text: 'um perigo que eu quero correr sempre, meu amor.', timestamp: '23:22', isBlurred: true },
         { id: '10', sender: 'other', text: 'me manda aquela foto que vc tirou depois? só pra eu lembrar do seu sorriso.', timestamp: '23:25', isBlurred: false },
       ],
     },
@@ -30,7 +30,7 @@ const JealousyMessage: React.FC = () => {
       messages: [
         { id: '1', sender: 'other', text: 'acha que alguém desconfia?', timestamp: '18:05', isBlurred: false },
         { id: '2', sender: 'self', text: 'impossível. a gente disfarça bem demais.', timestamp: '18:07', isBlurred: true },
-        { id: '3', sender: 'other', text: 'mas é isso que deixa tudo mais gostoso, né? o perigo.', timestamp: '18:08', isBlurred: true },
+        { id: '3', sender: 'other', text: 'mas é isso que deixa tudo mais gostoso, né? o perigo do nosso segredo.', timestamp: '18:08', isBlurred: true },
         { id: '4', sender: 'self', text: 'tô com saudade já. mesmo lugar amanhã?', timestamp: '18:10', isBlurred: true },
         { id: '5', sender: 'other', text: 'o jeito que você me olha... ninguém pode saber.', timestamp: '18:10', isBlurred: true },
         { id: '6', sender: 'self', text: 'é o nosso segredo. e eu amo cada parte dele.', timestamp: '18:11', isBlurred: true },
@@ -54,7 +54,7 @@ const JealousyMessage: React.FC = () => {
         { id: '7', sender: 'other', text: 'melhor eu te mostrar pessoalmente.', timestamp: '09:16', isBlurred: true },
         { id: '8', sender: 'self', text: 'não me provoca assim.', timestamp: '09:17', isBlurred: true },
         { id: '9', sender: 'other', text: 'é exatamente o que eu quero fazer.', timestamp: '09:18', isBlurred: true },
-        { id: '10', sender: 'other', text: 'só vem. e se prepara.', timestamp: '09:20', isBlurred: false },
+        { id: '10', sender: 'other', text: 'só vem. e se prepara. foi uma delicia da ultima vez', timestamp: '09:20', isBlurred: false },
       ],
     },
     {
@@ -70,7 +70,7 @@ const JealousyMessage: React.FC = () => {
         { id: '6', sender: 'self', text: 'e o meu tá esperando por você.', timestamp: '08:35', isBlurred: true },
         { id: '7', sender: 'other', text: 'chego em 15 minutos.', timestamp: '08:35', isBlurred: true },
         { id: '8', sender: 'self', text: 'a porta vai estar destrancada.', timestamp: '08:36', isBlurred: true },
-        { id: '9', sender: 'other', text: 'não vejo a hora.', timestamp: '08:37', isBlurred: true },
+        { id: '9', sender: 'other', text: 'não vejo a hora de te ter de novo, amor.', timestamp: '08:37', isBlurred: true },
         { id: '10', sender: 'other', text: 'entendeu o recado, né? te espero.', timestamp: '08:40', isBlurred: false },
       ],
     },
@@ -82,11 +82,11 @@ const JealousyMessage: React.FC = () => {
         { id: '1', sender: 'other', text: 'gostou do presente que eu deixei pra vc?', timestamp: '20:00', isBlurred: false },
         { id: '2', sender: 'self', text: 'eu AMEI. ficou perfeito em mim.', timestamp: '20:02', isBlurred: true },
         { id: '3', sender: 'other', text: 'imagino... pena que não tô aí pra ver pessoalmente.', timestamp: '20:03', isBlurred: true },
-        { id: '4', sender: 'self', text: 'mas logo vc vai ver. e vai poder tirar com a boca.', timestamp: '20:04', isBlurred: true },
+        { id: '4', sender: 'self', text: 'mas logo vc vai ver. e vai poder tirar com a boca. que delicia.', timestamp: '20:04', isBlurred: true },
         { id: '5', sender: 'other', text: 'essa imagem não vai sair da minha cabeça.', timestamp: '20:04', isBlurred: true },
         { id: '6', sender: 'self', text: 'é pra não sair mesmo.', timestamp: '20:05', isBlurred: true },
         { id: '7', sender: 'other', text: 'você me enlouquece.', timestamp: '20:05', isBlurred: true },
-        { id: '8', sender: 'self', text: 'esse é o plano.', timestamp: '20:06', isBlurred: true },
+        { id: '8', sender: 'self', text: 'esse é o plano, meu amor.', timestamp: '20:06', isBlurred: true },
         { id: '9', sender: 'other', text: 'está funcionando.', timestamp: '20:07', isBlurred: true },
         { id: '10', sender: 'other', text: 'não demora. tô te esperando do jeito que vc gosta.', timestamp: '20:10', isBlurred: false },
       ],
@@ -145,6 +145,21 @@ const JealousyMessage: React.FC = () => {
         >
           <ChevronRight size={32} />
         </button>
+      </div>
+
+      {/* Keyword Analysis Section */}
+      <div className="mt-12 p-6 bg-gray-900/50 border border-red-500/50 rounded-xl max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-4 text-left">
+        <FileSearch className="w-16 h-16 text-red-400 flex-shrink-0" />
+        <div>
+          <h3 className="text-xl font-bold text-white mb-1">Análise de Palavras-Chave</h3>
+          <p className="text-gray-300">
+            Nossa IA identificou palavras com teor suspeito. Termos como{' '}
+            <span className="font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
+              amor, delicia, saudade, segredo, perigo, beijo e corpo
+            </span>
+            {' '}foram mencionados <span className="font-bold text-white text-lg">12 vezes</span> nas conversas recuperadas.
+          </p>
+        </div>
       </div>
     </div>
   );
