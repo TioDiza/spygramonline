@@ -19,7 +19,7 @@ const MockChat: React.FC<MockChatProps> = ({ otherProfilePic = 'https://picsum.p
   ];
 
   return (
-    <div className="w-full max-w-md h-[400px] bg-gray-800/70 backdrop-blur-sm rounded-2xl p-4 flex flex-col overflow-y-auto scrollbar-hide border border-gray-700 shadow-lg shadow-purple-500/10 flex-shrink-0"> {/* Adicionado flex-shrink-0 */}
+    <div className="w-[320px] h-[400px] bg-gray-800/70 backdrop-blur-sm rounded-2xl p-4 flex flex-col overflow-y-auto scrollbar-hide border border-gray-700 shadow-lg shadow-purple-500/10 flex-shrink-0"> {/* Largura ajustada para 320px */}
       {/* Simula o cabeçalho do chat */}
       <div className="flex items-center justify-between pb-3 mb-4 border-b border-gray-700">
         <div className="flex items-center">
