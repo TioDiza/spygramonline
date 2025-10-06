@@ -230,10 +230,10 @@ const MainAppContent: React.FC = () => {
           }
           @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+            50% { opacity: 0.7; }
           }
           .animate-pulse {
-            animation: pulse 1s infinite;
+            animation: pulse 1.5s infinite ease-in-out;
           }
         `}</style>
         
@@ -259,6 +259,12 @@ const MainAppContent: React.FC = () => {
           )}
         </header>
         
+        {isLoading && (
+          <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-pulse">
+            Invadindo perfil...
+          </h2>
+        )}
+
         <main className="w-full flex flex-col items-center">
           {isLoading ? (
             <div className="mt-4 w-full max-w-2xl mx-auto bg-black backdrop-blur-sm border border-white rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
