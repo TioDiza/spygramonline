@@ -4,8 +4,7 @@ import type { ProfileData } from '../../types';
 import ProfileCard from '../../components/ProfileCard';
 import SparkleButton from '../../components/ui/SparkleButton';
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
-import InteractionProfilesSection from '../components/InteractionProfilesSection';
-import ScrollDownButton from '../components/ScrollDownButton'; // Importa o novo botão
+import InteractionProfilesSection from '../components/InteractionProfilesSection'; // Importa a nova seção
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -17,14 +16,6 @@ const InvasionConcludedPage: React.FC = () => {
     navigate('/');
     return null;
   }
-
-  // Função para rolar a página para baixo
-  const handleScrollDown = () => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
-    });
-  };
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
@@ -44,9 +35,6 @@ const InvasionConcludedPage: React.FC = () => {
             Nova Invasão
           </SparkleButton>
         </div>
-
-        {/* Botão "Continue Lendo" */}
-        <ScrollDownButton onClick={handleScrollDown} />
       </div>
     </BackgroundBeamsWithCollision>
   );
