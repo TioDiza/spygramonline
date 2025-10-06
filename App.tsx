@@ -12,7 +12,7 @@ import { BackgroundBeamsWithCollision } from './src/components/ui/background-bea
 import { Lock } from 'lucide-react';
 import ResultsPage from './src/pages/ResultsPage';
 import OverloadPage from './src/pages/OverloadPage';
-import InvasionConcludedPage from './src/pages/InvasionConcludedPage'; // Importa a nova página
+import InvasionConcludedPage from './src/pages/InvasionConcludedPage';
 import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
 // TypingText removido, pois as mensagens aparecerão por frase
@@ -122,15 +122,26 @@ const MainAppContent: React.FC = () => {
     setProgressBarProgress(0); // Garante que a barra comece do zero
 
     try {
-      const dataPromise = fetchProfileData(searchQuery.trim());
-      const minDurationPromise = new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
+      // Simula a busca de dados com um objeto mockado
+      const mockProfileData: ProfileData = {
+        username: searchQuery.trim(),
+        fullName: 'Nome Completo Mockado',
+        profilePicUrl: 'https://via.placeholder.com/150/FF00FF/FFFFFF?text=Mock', // Imagem de placeholder
+        biography: 'Esta é uma biografia mockada para demonstração. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        followers: 123456,
+        following: 789,
+        postsCount: 123,
+        isVerified: true,
+        isPrivate: false,
+      };
 
-      const [data] = await Promise.all([dataPromise, minDurationPromise]);
+      // Espera o tempo mínimo de carregamento antes de navegar
+      await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
       
-      setProfile(data); // Armazena os dados do perfil
-      navigate('/invasion-concluded', { state: { profileData: data } }); // Navega para a nova página
+      setProfile(mockProfileData); // Armazena os dados do perfil mockado
+      navigate('/invasion-concluded', { state: { profileData: mockProfileData } }); // Navega para a nova página com os dados mockados
     } catch (err) {
-      // Se ocorrer um erro, ainda esperamos o tempo mínimo de carregamento
+      // Este bloco de erro não será acionado com dados mockados, mas é mantido para quando a API for reativada.
       await new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
 
       if (err instanceof Error) {
@@ -322,9 +333,9 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<MainAppContent />} />
-        <Route path="/results" element={<ResultsPage />} /> {/* Mantido, mas não mais usado diretamente */}
-        <Route path="/overload" element={<OverloadPage />} /> {/* Mantido, mas navegação desativada */}
-        <Route path="/invasion-concluded" element={<InvasionConcludedPage />} /> {/* Nova rota */}
+        <Route path="/results" element={<ResultsPage />} />
+        <Route path="/overload" element={<OverloadPage />} />
+        <Route path="/invasion-concluded" element={<InvasionConcludedPage />} />
       </Routes>
     </Router>
   );
