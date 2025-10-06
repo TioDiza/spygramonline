@@ -6,7 +6,7 @@ interface ChatMessageProps {
   text: string;
   timestamp: string;
   profilePic?: string;
-  isBlurred?: boolean; // Reintroduzindo a propriedade isBlurred
+  isBlurred?: boolean;
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, timestamp, profilePic, isBlurred = false }) => {
@@ -23,15 +23,15 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, timestamp, prof
       )}
       <div
         className={cn(
-          "max-w-[70%] p-3 relative flex flex-col",
+          "max-w-[70%] px-3 py-2 relative flex flex-col", // Padding ajustado de p-3 para px-3 py-2
           isSelf
             ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-2xl rounded-br-none"
-            : "bg-gray-700 text-gray-100 rounded-2xl rounded-bl-none", // Ajustado para um cinza mais escuro para o tema dark
-          isBlurred && "blur-sm select-none" // Aplicando blur-sm
+            : "bg-gray-700 text-gray-100 rounded-2xl rounded-bl-none",
+          isBlurred && "blur-sm select-none"
         )}
       >
         <p className="text-sm break-words">{text}</p>
-        <span className={cn("text-[10px] mt-1", isSelf ? "text-blue-100 self-end" : "text-gray-400 self-start")}> {/* Ajustado cor do timestamp */}
+        <span className={cn("text-[10px] mt-1", isSelf ? "text-blue-100 self-end" : "text-gray-400 self-start")}>
           {timestamp}
         </span>
       </div>

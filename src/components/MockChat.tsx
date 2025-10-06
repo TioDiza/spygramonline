@@ -92,10 +92,10 @@ const MockChat: React.FC<MockChatProps> = ({
             className="bg-transparent outline-none border-none text-white text-sm flex-1 mx-2"
             disabled
           />
-          <div className="flex items-center space-x-2 pr-1">
-            <Mic className="w-6 h-6 text-white cursor-pointer" />
-            <Image className="w-6 h-6 text-white cursor-pointer" />
-            <Smile className="w-6 h-6 text-white cursor-pointer" />
+          <div className="flex items-center space-x-3 pr-1"> {/* Espaçamento ajustado */}
+            <Mic className="w-5 h-5 text-white cursor-pointer" /> {/* Dimensão corrigida */}
+            <Image className="w-5 h-5 text-white cursor-pointer" /> {/* Dimensão corrigida */}
+            <Smile className="w-5 h-5 text-white cursor-pointer" /> {/* Dimensão corrigida */}
           </div>
         </div>
       </div>
