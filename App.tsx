@@ -36,7 +36,7 @@ const MainAppContent: React.FC = () => {
     ">> MINERANDO HISTÓRICO: reconstruindo contatos e conversas.",
     ">> ENTRADA COMPROMETIDA: mantendo backdoor.",
     ">> OPERAÇÃO CONCLUÍDA: implante fantasma adicionado — rastros limpos.",
-    "Perfil Invadido com Sucesso" // Nova frase de conclusão adicionada aqui
+    "Perfil Invadido com Sucesso"
   ];
   const [displayedMessages, setDisplayedMessages] = useState<{ text: string; timestamp: string }[]>([]);
 
