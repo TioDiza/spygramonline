@@ -51,6 +51,29 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
+      <style>{`
+        .benefit-card {
+          width: 320px;
+          height: 220px;
+          background: rgba(30, 30, 30, 0.7);
+          border: 1px solid #444;
+          border-radius: 1rem;
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+          transition: all 0.3s ease-out;
+          backdrop-filter: blur(5px);
+          text-align: left;
+        }
+
+        .benefit-card:hover {
+          transform: translateY(-10px) rotateY(3deg) scale(1.03);
+          border-color: #C13584;
+          box-shadow: 0 10px 30px rgba(193, 53, 132, 0.2);
+        }
+      `}</style>
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
           Invasão Concluída!
@@ -101,7 +124,7 @@ const InvasionConcludedPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-20 w-full max-w-5xl mx-auto text-center">
+        <div className="mt-20 w-full max-w-6xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
             Benefícios Exclusivos do SpyGram
           </h2>
@@ -109,44 +132,44 @@ const InvasionConcludedPage: React.FC = () => {
             Tenha acesso a um arsenal de ferramentas para descobrir a verdade e proteger o que é seu.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
-            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
-              <ShieldCheck className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+          <div className="flex flex-wrap justify-center items-center gap-8">
+            <div className="benefit-card">
+              <ShieldCheck className="w-10 h-10 text-purple-400 flex-shrink-0" />
               <div>
                 <h3 className="text-lg font-bold text-white">Acesso Total</h3>
                 <p className="text-gray-400 text-sm">Acesse todas as funções do Instagram como se fosse o dono da conta, de forma 100% anônima.</p>
               </div>
             </div>
-            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
-              <History className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+            <div className="benefit-card">
+              <History className="w-10 h-10 text-purple-400 flex-shrink-0" />
               <div>
                 <h3 className="text-lg font-bold text-white">Mensagens Apagadas</h3>
                 <p className="text-gray-400 text-sm">Veja todas as mensagens, fotos e vídeos apagados de até um ano atrás.</p>
               </div>
             </div>
-            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
-              <KeyRound className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+            <div className="benefit-card">
+              <KeyRound className="w-10 h-10 text-purple-400 flex-shrink-0" />
               <div>
                 <h3 className="text-lg font-bold text-white">Recuperação de Conta</h3>
                 <p className="text-gray-400 text-sm">Recupere perfis hackeados, perdidos ou com senha inválida em minutos.</p>
               </div>
             </div>
-            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
-              <MapPin className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+            <div className="benefit-card">
+              <MapPin className="w-10 h-10 text-purple-400 flex-shrink-0" />
               <div>
                 <h3 className="text-lg font-bold text-white">Localização em Tempo Real</h3>
                 <p className="text-gray-400 text-sm">Saiba exatamente onde a pessoa está através do GPS do celular.</p>
               </div>
             </div>
-            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
-              <Eye className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+            <div className="benefit-card">
+              <Eye className="w-10 h-10 text-purple-400 flex-shrink-0" />
               <div>
                 <h3 className="text-lg font-bold text-white">Mídias Ocultas</h3>
                 <p className="text-gray-400 text-sm">Acesse fotos e vídeos privados, mesmo que o perfil seja trancado.</p>
               </div>
             </div>
-            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
-              <Smartphone className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+            <div className="benefit-card">
+              <Smartphone className="w-10 h-10 text-purple-400 flex-shrink-0" />
               <div>
                 <h3 className="text-lg font-bold text-white">Atividade Externa</h3>
                 <p className="text-gray-400 text-sm">Monitore interações suspeitas em outros apps como WhatsApp e Tinder.</p>
