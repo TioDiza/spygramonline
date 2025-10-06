@@ -62,7 +62,18 @@ const LockedFeatures: React.FC = () => {
           <span className="text-2xl text-gray-500 line-through">R$ 97,90</span>
           <span className="text-5xl font-bold bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text animate-pulse">R$ 27,90</span>
         </div>
-        <p className="text-sm text-gray-500 mt-4">Acesso vitalício com pagamento único. Sem mensalidades.</p>
+        
+        <div className="my-6 bg-yellow-900/30 border-2 border-dashed border-yellow-500 rounded-lg p-4 max-w-md mx-auto flex items-center justify-center gap-3">
+          <MapPin className="w-8 h-8 text-yellow-400 flex-shrink-0" />
+          <div>
+            <p className="text-yellow-500 font-semibold text-sm text-left">BÔNUS EXCLUSIVO DE HOJE:</p>
+            <p className="text-yellow-300 font-bold text-lg text-left">
+              Localização em Tempo Real 24h
+            </p>
+          </div>
+        </div>
+        
+        <p className="text-sm text-gray-500">Acesso vitalício com pagamento único. Sem mensalidades.</p>
       </div>
     </div>
   );
