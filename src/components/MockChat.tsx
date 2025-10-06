@@ -3,9 +3,10 @@ import ChatMessage from './ChatMessage';
 
 interface MockChatProps {
   otherProfilePic?: string; // Foto de perfil para o "outro" participante
+  username?: string; // Novo: nome de usuário para o chat
 }
 
-const MockChat: React.FC<MockChatProps> = ({ otherProfilePic = 'https://picsum.photos/id/64/50/50' }) => {
+const MockChat: React.FC<MockChatProps> = ({ otherProfilePic = 'https://picsum.photos/id/64/50/50', username = '@alguem_especial' }) => {
   const mockMessages = [
     { id: '1', sender: 'other', text: 'Oi, saudade de você!', isBlurred: false, profilePic: otherProfilePic },
     { id: '2', sender: 'self', text: 'Também! Aquela noite foi...', isBlurred: true },
@@ -18,12 +19,12 @@ const MockChat: React.FC<MockChatProps> = ({ otherProfilePic = 'https://picsum.p
   ];
 
   return (
-    <div className="w-full max-w-md h-[400px] bg-gray-800/70 backdrop-blur-sm rounded-2xl p-4 flex flex-col overflow-y-auto scrollbar-hide border border-gray-700 shadow-lg shadow-purple-500/10">
+    <div className="w-full max-w-md h-[400px] bg-gray-800/70 backdrop-blur-sm rounded-2xl p-4 flex flex-col overflow-y-auto scrollbar-hide border border-gray-700 shadow-lg shadow-purple-500/10 flex-shrink-0"> {/* Adicionado flex-shrink-0 */}
       {/* Simula o cabeçalho do chat */}
       <div className="flex items-center justify-between pb-3 mb-4 border-b border-gray-700">
         <div className="flex items-center">
           <img src={otherProfilePic} alt="Chat Partner" className="w-10 h-10 rounded-full mr-3" />
-          <span className="font-semibold text-white">@alguem_especial</span>
+          <span className="font-semibold text-white">{username}</span>
         </div>
         <span className="text-xs text-gray-400">Online</span>
       </div>
