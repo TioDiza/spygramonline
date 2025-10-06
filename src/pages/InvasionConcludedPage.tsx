@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { ProfileData } from '../../types';
 import ProfileCard from '../../components/ProfileCard';
-import SparkleButton from '../../components/ui/SparkleButton';
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
 import InteractionProfilesSection from '../components/InteractionProfilesSection';
 import ScrollHint from '../components/ScrollHint';
 import JealousyMessage from '../components/JealousyMessage';
 import IphoneMockup from '../components/IphoneMockup';
+import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle } from 'lucide-react';
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -98,6 +98,70 @@ const InvasionConcludedPage: React.FC = () => {
               imageFit={currentStep.imageFit}
               isBlurred={currentStep.isBlurred}
             />
+          </div>
+        </div>
+
+        <div className="mt-20 w-full max-w-5xl mx-auto text-center">
+          <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
+            Benefícios Exclusivos do SpyGram
+          </h2>
+          <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
+            Tenha acesso a um arsenal de ferramentas para descobrir a verdade e proteger o que é seu.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
+              <ShieldCheck className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white">Acesso Total</h3>
+                <p className="text-gray-400 text-sm">Acesse todas as funções do Instagram como se fosse o dono da conta, de forma 100% anônima.</p>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
+              <History className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white">Mensagens Apagadas</h3>
+                <p className="text-gray-400 text-sm">Veja todas as mensagens, fotos e vídeos apagados de até um ano atrás.</p>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
+              <KeyRound className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white">Recuperação de Conta</h3>
+                <p className="text-gray-400 text-sm">Recupere perfis hackeados, perdidos ou com senha inválida em minutos.</p>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
+              <MapPin className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white">Localização em Tempo Real</h3>
+                <p className="text-gray-400 text-sm">Saiba exatamente onde a pessoa está através do GPS do celular.</p>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
+              <Eye className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white">Mídias Ocultas</h3>
+                <p className="text-gray-400 text-sm">Acesse fotos e vídeos privados, mesmo que o perfil seja trancado.</p>
+              </div>
+            </div>
+            <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 flex items-start gap-4 hover:border-purple-500 transition-colors duration-300">
+              <Smartphone className="w-10 h-10 text-purple-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white">Atividade Externa</h3>
+                <p className="text-gray-400 text-sm">Monitore interações suspeitas em outros apps como WhatsApp e Tinder.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-16 p-6 bg-gray-900/50 border border-yellow-500/50 rounded-xl max-w-3xl mx-auto flex items-start gap-4 text-left">
+            <AlertTriangle className="w-12 h-12 text-yellow-400 flex-shrink-0" />
+            <div>
+              <h3 className="text-xl font-bold text-white mb-1">Aviso Importante</h3>
+              <p className="text-gray-300">
+                Garantimos o completo anonimato de todos os nossos clientes. Contudo, o SpyGram é uma ferramenta de monitoramento e não nos responsabilizamos por nenhuma ação realizada dentro da conta acessada. Use com responsabilidade.
+              </p>
+            </div>
           </div>
         </div>
       </div>
