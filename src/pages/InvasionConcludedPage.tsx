@@ -179,9 +179,23 @@ const InvasionConcludedPage: React.FC = () => {
             Fale com nosso suporte em tempo real e veja o que outros clientes estão dizendo.
           </p>
           <LiveChat />
-          <div className="mt-12 flex justify-center">
+        </div>
+
+        <div className="mt-20 w-full max-w-4xl mx-auto text-center p-8 bg-gray-900/50 border border-green-500/30 rounded-2xl">
+          <div className="mx-auto mb-6 w-32 h-32 rounded-full border-4 border-green-500 bg-gray-800/50 flex flex-col items-center justify-center text-white">
+            <ShieldCheck className="w-10 h-10 text-green-400 mb-1" />
+            <span className="text-2xl font-bold">7 Dias</span>
+            <span className="text-xs font-semibold">de Garantia</span>
+          </div>
+          <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
+            Sua Satisfação ou Seu Dinheiro de Volta
+          </h2>
+          <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+            Você tem 7 dias para testar o SpyGram sem riscos. Se por qualquer motivo você não estiver satisfeito, basta nos enviar um e-mail e devolveremos 100% do seu investimento, sem perguntas.
+          </p>
+          <div className="mt-8 flex justify-center">
             <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
-              Desbloquear Acesso Total Agora
+              Desbloquear Acesso Total Agora (Sem Risco)
             </SparkleButton>
           </div>
         </div>
