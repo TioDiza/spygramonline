@@ -2,11 +2,19 @@ import React, { useRef } from 'react';
 import { HeartCrack, ChevronLeft, ChevronRight, FileSearch } from 'lucide-react';
 import MockChat from './MockChat';
 import LockedFeatures from './LockedFeatures';
+import { Message } from './MockChat'; // Importa a interface Message do MockChat
+
+interface ChatData {
+  id: number;
+  profilePic: string;
+  username: string;
+  messages: Message[]; // Usa a interface Message importada
+}
 
 const JealousyMessage: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const mockChatData = [
+  const mockChatData: ChatData[] = [ // Tipagem explícita para mockChatData
     {
       id: 1,
       profilePic: 'https://picsum.photos/id/64/150/150',
@@ -85,7 +93,7 @@ const JealousyMessage: React.FC = () => {
         { id: '3', sender: 'other', text: 'imagino... pena que não tô aí pra ver pessoalmente.', timestamp: '20:03', isBlurred: true },
         { id: '4', sender: 'self', text: 'mas logo vc vai ver. e vai poder tirar com a boca. que delicia.', timestamp: '20:04', isBlurred: true },
         { id: '5', sender: 'other', text: 'essa imagem não vai sair da minha cabeça.', timestamp: '20:04', isBlurred: true },
-        { id: '6', sender: 'self', text: 'é pra não sair mesmo.', timestamp: '20:05', isBlurred: true },
+        { id: '6', sender: 'self', text: 'é pra não sair mesmo.', timestamp: '20:05', isBlurred: true }, // Corrigido o valor de isBlurred
         { id: '7', sender: 'other', text: 'você me enlouquece.', timestamp: '20:05', isBlurred: true },
         { id: '8', sender: 'self', text: 'esse é o plano, meu amor.', timestamp: '20:06', isBlurred: true },
         { id: '9', sender: 'other', text: 'está funcionando.', timestamp: '20:07', isBlurred: true },

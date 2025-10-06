@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, MapPin, PhoneCall, AppWindow, Lock } from 'lucide-react';
-import SparkleButton from '../../components/ui/SparkleButton';
+// import SparkleButton from '../../components/ui/SparkleButton'; // Removido: não é usado neste componente
 
 interface FeatureCardProps {
   icon: React.ElementType;
