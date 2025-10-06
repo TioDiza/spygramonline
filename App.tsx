@@ -251,7 +251,7 @@ const MainAppContent: React.FC = () => {
                 if (isLastMessage) {
                   return (
                     <p key={idx} className="text-xl font-bold mt-4 animate-fade-in flex items-start">
-                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span>
+                      {/* Removido o span do timestamp para a última mensagem */}
                       <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
                         {text}
                       </span>
