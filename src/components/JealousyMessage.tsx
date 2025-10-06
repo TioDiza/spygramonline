@@ -13,8 +13,9 @@ const JealousyMessage: React.FC = () => {
       messages: [
         { id: '1', sender: 'other', text: 'Não consigo parar de pensar em ontem...', timestamp: '23:15', isBlurred: false },
         { id: '2', sender: 'self', text: 'Nem eu. Ninguém pode sonhar com o que a gente fez.', timestamp: '23:17', isBlurred: true },
-        { id: '3', sender: 'other', text: 'Nosso segredo 😉 Quando repetimos a dose?', timestamp: '23:18', isBlurred: true },
-        { id: '4', sender: 'self', text: 'O mais rápido possível. Me manda aquela foto de novo?', timestamp: '23:20', isBlurred: true },
+        { id: '3', sender: 'other', text: 'Foi intenso demais. Quero de novo, logo.', timestamp: '23:18', isBlurred: true },
+        { id: '4', sender: 'self', text: 'Quando a gente se vê? Não aguento esperar.', timestamp: '23:19', isBlurred: true },
+        { id: '5', sender: 'other', text: 'Me manda aquela foto de novo? Pra eu ter um gostinho...', timestamp: '23:20', isBlurred: false },
       ],
     },
     {
@@ -22,10 +23,11 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/65/150/150',
       username: 'contatinho_secreto',
       messages: [
-        { id: '1', sender: 'other', text: 'Ele(a) desconfia de alguma coisa?', timestamp: '18:05', isBlurred: false },
+        { id: '1', sender: 'other', text: 'Alguém desconfia de alguma coisa?', timestamp: '18:05', isBlurred: false },
         { id: '2', sender: 'self', text: 'Acho que não. Mas o risco deixa tudo mais gostoso.', timestamp: '18:07', isBlurred: true },
         { id: '3', sender: 'other', text: 'Com certeza. Cada segundo com você vale a pena.', timestamp: '18:08', isBlurred: true },
         { id: '4', sender: 'self', text: 'Preciso te ver. Mesmo que seja escondido.', timestamp: '18:10', isBlurred: true },
+        { id: '5', sender: 'other', text: 'Mesmo lugar, mesma hora amanhã?', timestamp: '18:12', isBlurred: false },
       ],
     },
     {
@@ -36,7 +38,8 @@ const JealousyMessage: React.FC = () => {
         { id: '1', sender: 'other', text: 'Ainda tô com o seu cheiro em mim.', timestamp: '09:10', isBlurred: false },
         { id: '2', sender: 'self', text: 'E eu ainda sinto o gosto do seu beijo.', timestamp: '09:12', isBlurred: true },
         { id: '3', sender: 'other', text: 'Não provoca... senão eu apareço aí agora.', timestamp: '09:13', isBlurred: true },
-        { id: '4', sender: 'self', text: 'Será que eu quero que você venha? 😏', timestamp: '09:15', isBlurred: true },
+        { id: '4', sender: 'self', text: 'A porta vai estar aberta...', timestamp: '09:15', isBlurred: true },
+        { id: '5', sender: 'other', text: 'Só vem. E traz aquilo que eu gosto.', timestamp: '09:16', isBlurred: false },
       ],
     },
     {
@@ -47,7 +50,8 @@ const JealousyMessage: React.FC = () => {
         { id: '1', sender: 'other', text: 'Sonhei com você essa noite...', timestamp: '08:30', isBlurred: false },
         { id: '2', sender: 'self', text: 'Espero que tenha sido um sonho bom... e quente.', timestamp: '08:32', isBlurred: true },
         { id: '3', sender: 'other', text: 'Foi mais que bom. Pena que não era de verdade.', timestamp: '08:33', isBlurred: true },
-        { id: '4', sender: 'self', text: 'A gente pode resolver isso. Sozinho(a) em casa hoje?', timestamp: '08:35', isBlurred: true },
+        { id: '4', sender: 'self', text: 'A gente pode resolver isso.', timestamp: '08:34', isBlurred: true },
+        { id: '5', sender: 'other', text: 'Casa livre hoje. Entendeu o recado?', timestamp: '08:35', isBlurred: false },
       ],
     },
     {
@@ -56,9 +60,10 @@ const JealousyMessage: React.FC = () => {
       username: 'paixao_oculta',
       messages: [
         { id: '1', sender: 'other', text: 'Recebeu meu presente?', timestamp: '20:00', isBlurred: false },
-        { id: '2', sender: 'self', text: 'Recebi. Adorei a lingerie. Pena que não tenho pra quem usar...', timestamp: '20:02', isBlurred: true },
-        { id: '3', sender: 'other', text: 'Ainda não... mas logo você vai ter. E eu quero ver.', timestamp: '20:03', isBlurred: true },
-        { id: '4', sender: 'self', text: 'Estou esperando. Não demora.', timestamp: '20:05', isBlurred: true },
+        { id: '2', sender: 'self', text: 'Recebi. Adorei a lingerie.', timestamp: '20:02', isBlurred: true },
+        { id: '3', sender: 'other', text: 'Pena que não tenho pra quem usar...', timestamp: '20:03', isBlurred: true },
+        { id: '4', sender: 'self', text: 'Ainda não... mas logo você vai ter. E eu quero ver.', timestamp: '20:04', isBlurred: true },
+        { id: '5', sender: 'other', text: 'Estou esperando. Não demora.', timestamp: '20:05', isBlurred: false },
       ],
     },
   ];
