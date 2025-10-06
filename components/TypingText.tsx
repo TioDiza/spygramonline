@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { cn } from '../lib/utils'; // Corrected path
+import { cn } from '../src/lib/utils';
 
 interface TypingTextProps {
   text: string;

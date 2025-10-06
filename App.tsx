@@ -1,19 +1,19 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import type { ProfileData, InteractionProfile } from './types';
-import { fetchProfileData } from './services/apiService'; // Caminho verificado e correto
+import { fetchProfileData } from './services/apiService';
 import CustomSearchBar from './components/ui/CustomSearchBar';
 import SparkleButton from './components/ui/SparkleButton';
 import ProfileCard from './components/ProfileCard';
 import Loader from './components/Loader';
 import ErrorMessage from './components/ErrorMessage';
-import ConsentCheckbox from './components/ConsentCheckbox';
-import { BackgroundBeamsWithCollision } from './components/ui/background-beams-with-collision';
+import ConsentCheckbox from './src/components/ConsentCheckbox';
+import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision';
 import { Lock } from 'lucide-react';
-import ResultsPage from './pages/ResultsPage';
-import OverloadPage from './pages/OverloadPage';
-import InvasionConcludedPage from './pages/InvasionConcludedPage';
-import ProgressBar from './components/ProgressBar';
+import ResultsPage from './src/pages/ResultsPage';
+import OverloadPage from './src/pages/OverloadPage';
+import InvasionConcludedPage from './src/pages/InvasionConcludedPage';
+import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
 
 // Componente principal que contém a lógica de pesquisa e roteamento

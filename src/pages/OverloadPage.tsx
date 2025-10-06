@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import SparkleButton from '../components/ui/SparkleButton'; // Corrected path
+import SparkleButton from '../../components/ui/SparkleButton';
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
 import { AlertTriangle } from 'lucide-react';
 

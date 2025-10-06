@@ -1,5 +1,5 @@
 import React from 'react';
-import type { InteractionProfile } from '../types'; // Corrected path
+import type { InteractionProfile } from '../../types';
 
 interface InteractionCardProps {
   profile: InteractionProfile;

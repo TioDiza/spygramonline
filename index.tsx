@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App'; // App is now in src/App.tsx
-import './index.css'; // index.css is now in src/index.css
+import App from './App';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
