@@ -3,7 +3,7 @@ import { ArrowDown } from 'lucide-react';
 
 const ScrollHint: React.FC = () => {
   return (
-    <div className="fixed bottom-8 left-[40%] -translate-x-1/2 flex flex-col items-center 
+    <div className="fixed bottom-8 left-[45%] -translate-x-1/2 flex flex-col items-center 
                     animate-bounce-slow z-50 cursor-pointer">
       {/* Define o gradiente SVG oculto para ser usado na seta */}
       <svg width="0" height="0" className="absolute">
