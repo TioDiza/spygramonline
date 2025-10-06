@@ -8,6 +8,7 @@ import ScrollHint from '../components/ScrollHint';
 import JealousyMessage from '../components/JealousyMessage';
 import IphoneMockup from '../components/IphoneMockup';
 import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle } from 'lucide-react';
+import BenefitsCarousel from '../components/BenefitsCarousel';
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -41,6 +42,39 @@ const InvasionConcludedPage: React.FC = () => {
     }
   ];
 
+  const benefits = [
+    {
+      icon: ShieldCheck,
+      title: "Acesso Total",
+      description: "Acesse todas as funções do Instagram como se fosse o dono da conta, de forma 100% anônima."
+    },
+    {
+      icon: History,
+      title: "Mensagens Apagadas",
+      description: "Veja todas as mensagens, fotos e vídeos apagados de até um ano atrás."
+    },
+    {
+      icon: KeyRound,
+      title: "Recuperação de Conta",
+      description: "Recupere perfis hackeados, perdidos ou com senha inválida em minutos."
+    },
+    {
+      icon: MapPin,
+      title: "Localização em Tempo Real",
+      description: "Saiba exatamente onde a pessoa está através do GPS do celular."
+    },
+    {
+      icon: Eye,
+      title: "Mídias Ocultas",
+      description: "Acesse fotos e vídeos privados, mesmo que o perfil seja trancado."
+    },
+    {
+      icon: Smartphone,
+      title: "Atividade Externa",
+      description: "Monitore interações suspeitas em outros apps como WhatsApp e Tinder."
+    }
+  ];
+
   const [activeStep, setActiveStep] = useState(0);
   const currentStep = steps[activeStep];
 
@@ -51,29 +85,6 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
-      <style>{`
-        .benefit-card {
-          width: 320px;
-          height: 220px;
-          background: rgba(30, 30, 30, 0.7);
-          border: 1px solid #444;
-          border-radius: 1rem;
-          padding: 1.5rem;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 1rem;
-          transition: all 0.3s ease-out;
-          backdrop-filter: blur(5px);
-          text-align: left;
-        }
-
-        .benefit-card:hover {
-          transform: translateY(-10px) rotateY(3deg) scale(1.03);
-          border-color: #C13584;
-          box-shadow: 0 10px 30px rgba(193, 53, 132, 0.2);
-        }
-      `}</style>
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
           Invasão Concluída!
@@ -132,49 +143,8 @@ const InvasionConcludedPage: React.FC = () => {
             Tenha acesso a um arsenal de ferramentas para descobrir a verdade e proteger o que é seu.
           </p>
 
-          <div className="flex flex-wrap justify-center items-center gap-8">
-            <div className="benefit-card">
-              <ShieldCheck className="w-10 h-10 text-purple-400 flex-shrink-0" />
-              <div>
-                <h3 className="text-lg font-bold text-white">Acesso Total</h3>
-                <p className="text-gray-400 text-sm">Acesse todas as funções do Instagram como se fosse o dono da conta, de forma 100% anônima.</p>
-              </div>
-            </div>
-            <div className="benefit-card">
-              <History className="w-10 h-10 text-purple-400 flex-shrink-0" />
-              <div>
-                <h3 className="text-lg font-bold text-white">Mensagens Apagadas</h3>
-                <p className="text-gray-400 text-sm">Veja todas as mensagens, fotos e vídeos apagados de até um ano atrás.</p>
-              </div>
-            </div>
-            <div className="benefit-card">
-              <KeyRound className="w-10 h-10 text-purple-400 flex-shrink-0" />
-              <div>
-                <h3 className="text-lg font-bold text-white">Recuperação de Conta</h3>
-                <p className="text-gray-400 text-sm">Recupere perfis hackeados, perdidos ou com senha inválida em minutos.</p>
-              </div>
-            </div>
-            <div className="benefit-card">
-              <MapPin className="w-10 h-10 text-purple-400 flex-shrink-0" />
-              <div>
-                <h3 className="text-lg font-bold text-white">Localização em Tempo Real</h3>
-                <p className="text-gray-400 text-sm">Saiba exatamente onde a pessoa está através do GPS do celular.</p>
-              </div>
-            </div>
-            <div className="benefit-card">
-              <Eye className="w-10 h-10 text-purple-400 flex-shrink-0" />
-              <div>
-                <h3 className="text-lg font-bold text-white">Mídias Ocultas</h3>
-                <p className="text-gray-400 text-sm">Acesse fotos e vídeos privados, mesmo que o perfil seja trancado.</p>
-              </div>
-            </div>
-            <div className="benefit-card">
-              <Smartphone className="w-10 h-10 text-purple-400 flex-shrink-0" />
-              <div>
-                <h3 className="text-lg font-bold text-white">Atividade Externa</h3>
-                <p className="text-gray-400 text-sm">Monitore interações suspeitas em outros apps como WhatsApp e Tinder.</p>
-              </div>
-            </div>
+          <div className="flex justify-center">
+            <BenefitsCarousel benefits={benefits} />
           </div>
 
           <div className="mt-16 p-6 bg-gray-900/50 border border-yellow-500/50 rounded-xl max-w-3xl mx-auto flex items-start gap-4 text-left">
