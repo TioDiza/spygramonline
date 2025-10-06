@@ -25,20 +25,22 @@ const adminResponses: { [key: string]: string } = {
 };
 
 const initialMessages: ChatMessageData[] = [
-    { id: 1, sender: 'other', text: 'Gente, funciona mesmo? Alguém já comprou?', username: 'usuario-322', timestamp: '14:22' },
+    { id: 1, sender: 'other', text: 'Gente, funciona mesmo? Alguém já comprou?', username: 'usuario-157', timestamp: '14:22' },
     { id: 2, sender: 'other', text: 'Comprei e funcionou na hora! Consegui ver umas conversas que tinham apagado, chocada.', username: 'usuario-44', timestamp: '14:23' },
     { id: 3, sender: 'other', text: 'Bem-vindos ao nosso suporte! Fiquem à vontade para tirar suas dúvidas.', username: 'Admin SpyGram', timestamp: '14:24' },
 ];
 
+const generateRandomUsername = () => `usuario-${Math.floor(Math.random() * (602 - 44 + 1)) + 44}`;
+
 const simulatedNewMessages = [
-  { text: 'Acabei de comprar, ansiosa pra testar!', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
-  { text: 'É seguro mesmo? Tenho medo de descobrirem.', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
-  { text: 'Admin, o pagamento por PIX cai na hora?', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
-  { text: 'Gente, é surreal. Vi até a localização em tempo real.', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
-  { text: 'Funciona pra conta privada?', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
+  { text: 'Acabei de comprar, ansiosa pra testar!', username: generateRandomUsername() },
+  { text: 'É seguro mesmo? Tenho medo de descobrirem.', username: generateRandomUsername() },
+  { text: 'Admin, o pagamento por PIX cai na hora?', username: generateRandomUsername() },
+  { text: 'Gente, é surreal. Vi até a localização em tempo real.', username: generateRandomUsername() },
+  { text: 'Funciona pra conta privada?', username: generateRandomUsername() },
   { text: 'Sim, o acesso é liberado imediatamente após o PIX!', username: 'Admin SpyGram' },
   { text: 'Funciona perfeitamente para contas privadas também!', username: 'Admin SpyGram' },
-  { text: 'Vale cada centavo, sério.', username: `usuario-${Math.floor(Math.random() * 900) + 100}` },
+  { text: 'Vale cada centavo, sério.', username: generateRandomUsername() },
 ];
 
 const LiveChat: React.FC = () => {
@@ -48,18 +50,21 @@ const LiveChat: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 0);
   };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   // Efeito para simular novas mensagens chegando
   useEffect(() => {
     const interval = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * simulatedNewMessages.length);
-      const newMessageData = simulatedNewMessages[randomIndex];
+      const newMessageData = {
+        ...simulatedNewMessages[randomIndex],
+        username: simulatedNewMessages[randomIndex].username === 'Admin SpyGram' 
+          ? 'Admin SpyGram' 
+          : generateRandomUsername(),
+      };
 
       const newMessage: ChatMessageData = {
         id: Date.now() + Math.random(),
@@ -89,6 +94,7 @@ const LiveChat: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
+    scrollToBottom();
 
     setTimeout(() => {
       const adminResponseText = adminResponses[text] || "Não entendi sua pergunta. Poderia tentar uma das opções abaixo ou reformular?";
@@ -101,6 +107,7 @@ const LiveChat: React.FC = () => {
       };
       setIsTyping(false);
       setMessages(prev => [...prev, adminMessage]);
+      scrollToBottom();
     }, 1500);
   };
 
