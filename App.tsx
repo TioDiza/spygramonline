@@ -246,6 +246,19 @@ const MainAppContent: React.FC = () => {
               {/* Renderiza as mensagens uma por uma, aplicando o estilo de gradiente */}
               {displayedMessages.map((msgObj, idx) => {
                 const { text, timestamp } = msgObj;
+                const isLastMessage = idx === loadingMessages.length - 1;
+
+                if (isLastMessage) {
+                  return (
+                    <p key={idx} className="text-xl font-bold mt-4 animate-fade-in flex items-start">
+                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span>
+                      <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
+                        {text}
+                      </span>
+                    </p>
+                  );
+                }
+
                 const prefixMatch = text.match(/^(>>[^:]+?:)/); // Captura ">> ... :"
                 if (prefixMatch) {
                   const prefix = prefixMatch[1];
