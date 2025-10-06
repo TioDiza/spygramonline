@@ -9,11 +9,7 @@ const JealousyMessage: React.FC = () => {
     {
       id: 1,
       profilePic: 'https://picsum.photos/id/64/150/150',
-      name: 'Alguém Especial',
-      username: '@alguem_especial',
-      followers: '1,2 mil',
-      posts: 15,
-      isFollowing: false,
+      username: 'alguem_especial',
       messages: [
         { id: '1', sender: 'other', text: 'Oi, saudade de você!', timestamp: '14:30', isBlurred: false },
         { id: '2', sender: 'self', text: 'Também! Aquela noite foi...', timestamp: '14:31', isBlurred: true },
@@ -24,11 +20,7 @@ const JealousyMessage: React.FC = () => {
     {
       id: 2,
       profilePic: 'https://picsum.photos/id/65/150/150',
-      name: 'Contatinho Secreto',
-      username: '@contatinho_secreto',
-      followers: '987',
-      posts: 5,
-      isFollowing: false,
+      username: 'contatinho_secreto',
       messages: [
         { id: '1', sender: 'other', text: 'Chegou bem? Me avisa!', timestamp: '18:05', isBlurred: false },
         { id: '2', sender: 'self', text: 'Cheguei sim, mas já quero voltar pra você...', timestamp: '18:07', isBlurred: true },
@@ -38,11 +30,7 @@ const JealousyMessage: React.FC = () => {
     {
       id: 3,
       profilePic: 'https://picsum.photos/id/66/150/150',
-      name: 'Amor Proibido',
-      username: '@amor_proibido',
-      followers: '2,5 mil',
-      posts: 32,
-      isFollowing: false,
+      username: 'amor_proibido',
       messages: [
         { id: '1', sender: 'other', text: 'Não consigo parar de pensar em você.', timestamp: '21:10', isBlurred: false },
         { id: '2', sender: 'self', text: 'Nem eu... Isso é loucura.', timestamp: '21:12', isBlurred: true },
@@ -52,11 +40,7 @@ const JealousyMessage: React.FC = () => {
     {
       id: 4,
       profilePic: 'https://picsum.photos/id/67/150/150',
-      name: 'Meu Xodó',
-      username: '@meu_xodo',
-      followers: '5,1 mil',
-      posts: 120,
-      isFollowing: false,
+      username: 'meu_xodo',
       messages: [
         { id: '1', sender: 'other', text: 'Você me deixou sem palavras ontem.', timestamp: '09:00', isBlurred: false },
         { id: '2', sender: 'self', text: 'Ah é? Fico feliz em saber 😉', timestamp: '09:02', isBlurred: true },
@@ -66,11 +50,7 @@ const JealousyMessage: React.FC = () => {
     {
       id: 5,
       profilePic: 'https://picsum.photos/id/68/150/150',
-      name: 'Paixão Oculta',
-      username: '@paixao_oculta',
-      followers: '834',
-      posts: 22,
-      isFollowing: false,
+      username: 'paixao_oculta',
       messages: [
         { id: '1', sender: 'other', text: 'Ainda pensando no nosso último encontro...', timestamp: '00:15', isBlurred: false },
         { id: '2', sender: 'self', text: 'Eu também. Foi inesquecível.', timestamp: '00:17', isBlurred: true },
@@ -79,7 +59,7 @@ const JealousyMessage: React.FC = () => {
     },
   ];
 
-  const scrollAmount = 280 + 16; // Largura do MockChat (280px) + space-x-4 (16px)
+  const scrollAmount = 320 + 16; // Largura do MockChat (320px) + space-x-4 (16px)
 
   const handleScrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -119,11 +99,7 @@ const JealousyMessage: React.FC = () => {
             <MockChat
               key={chat.id}
               otherProfilePic={chat.profilePic}
-              name={chat.name}
               username={chat.username}
-              followers={chat.followers}
-              posts={chat.posts}
-              isFollowing={chat.isFollowing}
               messages={chat.messages}
             />
           ))}
