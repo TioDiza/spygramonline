@@ -11,10 +11,10 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/64/150/150',
       username: 'alguem_especial',
       messages: [
-        { id: '1', sender: 'other', text: 'Oi, saudade de você!', timestamp: '14:30', isBlurred: false },
-        { id: '2', sender: 'self', text: 'Também! Aquela noite foi...', timestamp: '14:31', isBlurred: true },
-        { id: '3', sender: 'other', text: 'Sim! Mal posso esperar pra te ver de novo 😉', timestamp: '14:32', isBlurred: true },
-        { id: '4', sender: 'self', text: 'O que você está vestindo agora? 😏', timestamp: '14:33', isBlurred: true },
+        { id: '1', sender: 'other', text: 'Não consigo parar de pensar em ontem...', timestamp: '23:15', isBlurred: false },
+        { id: '2', sender: 'self', text: 'Nem eu. Ninguém pode sonhar com o que a gente fez.', timestamp: '23:17', isBlurred: true },
+        { id: '3', sender: 'other', text: 'Nosso segredo 😉 Quando repetimos a dose?', timestamp: '23:18', isBlurred: true },
+        { id: '4', sender: 'self', text: 'O mais rápido possível. Me manda aquela foto de novo?', timestamp: '23:20', isBlurred: true },
       ],
     },
     {
@@ -22,9 +22,10 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/65/150/150',
       username: 'contatinho_secreto',
       messages: [
-        { id: '1', sender: 'other', text: 'Chegou bem? Me avisa!', timestamp: '18:05', isBlurred: false },
-        { id: '2', sender: 'self', text: 'Cheguei sim, mas já quero voltar pra você...', timestamp: '18:07', isBlurred: true },
-        { id: '3', sender: 'other', text: 'Ah, é? O que você faria se eu estivesse aí agora?', timestamp: '18:08', isBlurred: true },
+        { id: '1', sender: 'other', text: 'Ele(a) desconfia de alguma coisa?', timestamp: '18:05', isBlurred: false },
+        { id: '2', sender: 'self', text: 'Acho que não. Mas o risco deixa tudo mais gostoso.', timestamp: '18:07', isBlurred: true },
+        { id: '3', sender: 'other', text: 'Com certeza. Cada segundo com você vale a pena.', timestamp: '18:08', isBlurred: true },
+        { id: '4', sender: 'self', text: 'Preciso te ver. Mesmo que seja escondido.', timestamp: '18:10', isBlurred: true },
       ],
     },
     {
@@ -32,9 +33,10 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/66/150/150',
       username: 'amor_proibido',
       messages: [
-        { id: '1', sender: 'other', text: 'Não consigo parar de pensar em você.', timestamp: '21:10', isBlurred: false },
-        { id: '2', sender: 'self', text: 'Nem eu... Isso é loucura.', timestamp: '21:12', isBlurred: true },
-        { id: '3', sender: 'other', text: 'Uma loucura boa, não acha?', timestamp: '21:13', isBlurred: true },
+        { id: '1', sender: 'other', text: 'Ainda tô com o seu cheiro em mim.', timestamp: '09:10', isBlurred: false },
+        { id: '2', sender: 'self', text: 'E eu ainda sinto o gosto do seu beijo.', timestamp: '09:12', isBlurred: true },
+        { id: '3', sender: 'other', text: 'Não provoca... senão eu apareço aí agora.', timestamp: '09:13', isBlurred: true },
+        { id: '4', sender: 'self', text: 'Será que eu quero que você venha? 😏', timestamp: '09:15', isBlurred: true },
       ],
     },
     {
@@ -42,9 +44,10 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/67/150/150',
       username: 'meu_xodo',
       messages: [
-        { id: '1', sender: 'other', text: 'Você me deixou sem palavras ontem.', timestamp: '09:00', isBlurred: false },
-        { id: '2', sender: 'self', text: 'Ah é? Fico feliz em saber 😉', timestamp: '09:02', isBlurred: true },
-        { id: '3', sender: 'other', text: 'Quero mais. Quando repetimos?', timestamp: '09:03', isBlurred: true },
+        { id: '1', sender: 'other', text: 'Sonhei com você essa noite...', timestamp: '08:30', isBlurred: false },
+        { id: '2', sender: 'self', text: 'Espero que tenha sido um sonho bom... e quente.', timestamp: '08:32', isBlurred: true },
+        { id: '3', sender: 'other', text: 'Foi mais que bom. Pena que não era de verdade.', timestamp: '08:33', isBlurred: true },
+        { id: '4', sender: 'self', text: 'A gente pode resolver isso. Sozinho(a) em casa hoje?', timestamp: '08:35', isBlurred: true },
       ],
     },
     {
@@ -52,9 +55,10 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/68/150/150',
       username: 'paixao_oculta',
       messages: [
-        { id: '1', sender: 'other', text: 'Ainda pensando no nosso último encontro...', timestamp: '00:15', isBlurred: false },
-        { id: '2', sender: 'self', text: 'Eu também. Foi inesquecível.', timestamp: '00:17', isBlurred: true },
-        { id: '3', sender: 'other', text: 'O que você mais gostou?', timestamp: '00:18', isBlurred: true },
+        { id: '1', sender: 'other', text: 'Recebeu meu presente?', timestamp: '20:00', isBlurred: false },
+        { id: '2', sender: 'self', text: 'Recebi. Adorei a lingerie. Pena que não tenho pra quem usar...', timestamp: '20:02', isBlurred: true },
+        { id: '3', sender: 'other', text: 'Ainda não... mas logo você vai ter. E eu quero ver.', timestamp: '20:03', isBlurred: true },
+        { id: '4', sender: 'self', text: 'Estou esperando. Não demora.', timestamp: '20:05', isBlurred: true },
       ],
     },
   ];
