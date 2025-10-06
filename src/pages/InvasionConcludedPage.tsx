@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { ProfileData } from '../../types';
 import ProfileCard from '../../components/ProfileCard';
@@ -13,11 +13,28 @@ import LiveChat from '../components/LiveChat';
 import SparkleButton from '../../components/ui/SparkleButton';
 import FaqSection from '../components/FaqSection';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
+import { motion, AnimatePresence } from 'framer-motion';
+import FinalCallToAction from '../components/FinalCallToAction';
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const profileData = location.state?.profileData as ProfileData | undefined;
+  const [showScrollHint, setShowScrollHint] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50; // 50px buffer
+      setShowScrollHint(!isAtBottom);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const steps = [
     {
@@ -89,7 +106,7 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen">
-      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full">
+      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full pb-24"> {/* Added padding-bottom */}
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
           Invasão Concluída!
         </h1>
@@ -107,7 +124,18 @@ const InvasionConcludedPage: React.FC = () => {
             </SparkleButton>
         </div>
 
-        <ScrollHint />
+        <AnimatePresence>
+          {showScrollHint && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ScrollHint />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="mt-16 w-full max-w-6xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
@@ -203,6 +231,10 @@ const InvasionConcludedPage: React.FC = () => {
         </div>
 
         <FaqSection />
+
+        <AnimatePresence>
+          {!showScrollHint && <FinalCallToAction />}
+        </AnimatePresence>
       </div>
       <FloatingWhatsAppButton />
     </BackgroundBeamsWithCollision>
