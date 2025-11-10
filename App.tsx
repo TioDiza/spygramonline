@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'; // Removido useLocation
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import type { ProfileData } from './types'; // Removido InteractionProfile não utilizado
 // import { fetchProfileData } from './services/apiService'; // Removido: Não usaremos a API real
 import CustomSearchBar from '@/src/components/ui/CustomSearchBar'; // Usando alias @
@@ -87,7 +87,6 @@ const MainAppContent: React.FC = () => {
 
     setIsLoading(true);
     setError(null);
-    // setProfile(null); // Removido: 'profile' não é mais um estado
     setProgressBarProgress(0); // Garante que a barra comece do zero
     setDisplayedMessages([]); // Clear messages for new search
     setAreMessagesDone(false); // Reset message completion state
@@ -148,7 +147,6 @@ const MainAppContent: React.FC = () => {
         ],
       };
       
-      // setProfile(mockProfileData); // Removido: 'profile' não é mais um estado
       navigate('/invasion-concluded', { state: { profileData: mockProfileData } });
 
     } catch (err) {
