@@ -41,13 +41,13 @@ const MockChat: React.FC<MockChatProps> = ({
 
       {/* Corpo (Apenas Mensagens) */}
       <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col p-3">
-        {messages.map((msg) => (
+        {messages.map((msg: Message) => (
           <ChatMessage
             key={msg.id}
             sender={msg.sender}
             text={msg.text}
             timestamp={msg.timestamp}
-            profilePic={msg.sender === 'other' ? otherProfilePic : undefined}
+            // profilePic={msg.sender === 'other' ? otherProfilePic : undefined} // Removido: profilePic não é uma prop de ChatMessage
             isBlurred={msg.isBlurred}
           />
         ))}

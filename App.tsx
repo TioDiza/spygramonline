@@ -1,20 +1,20 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import type { ProfileData, InteractionProfile } from './types';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'; // Removido useLocation
+import type { ProfileData, InteractionProfile } from './types'; // types.ts está na raiz
 // import { fetchProfileData } from './services/apiService'; // Removido: Não usaremos a API real
-import CustomSearchBar from './src/components/ui/CustomSearchBar'; // Caminho corrigido para relativo
-import SparkleButton from './src/components/ui/SparkleButton';
-import ProfileCard from './src/components/ProfileCard';
-import Loader from './src/components/Loader';
-import ErrorMessage from './src/components/ErrorMessage';
-import ConsentCheckbox from './src/components/ConsentCheckbox';
-import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision';
+import CustomSearchBar from '@/src/components/ui/CustomSearchBar'; // Usando alias @
+import SparkleButton from '@/src/components/ui/SparkleButton'; // Usando alias @
+import ProfileCard from '@/src/components/ProfileCard'; // Usando alias @
+import Loader from '@/src/components/Loader'; // Usando alias @
+import ErrorMessage from '@/src/components/ErrorMessage'; // Usando alias @
+import ConsentCheckbox from '@/src/components/ConsentCheckbox'; // Usando alias @
+import { BackgroundBeamsWithCollision } from '@/src/components/ui/background-beams-with-collision'; // Usando alias @
 import { Lock } from 'lucide-react';
-import ResultsPage from './src/pages/ResultsPage';
-import OverloadPage from './src/pages/OverloadPage';
-import InvasionConcludedPage from './src/pages/InvasionConcludedPage';
-import ProgressBar from './src/components/ProgressBar';
-import { MIN_LOADING_DURATION } from './constants';
+import ResultsPage from '@/src/pages/ResultsPage'; // Usando alias @
+import OverloadPage from '@/src/pages/OverloadPage'; // Usando alias @
+import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage'; // Usando alias @
+import ProgressBar from '@/src/components/ProgressBar'; // Usando alias @
+import { MIN_LOADING_DURATION } from './constants'; // constants.ts está na raiz
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -58,7 +58,7 @@ const MainAppContent: React.FC = () => {
       );
 
       interval = setInterval(() => {
-        setProgressBarProgress((prev) => {
+        setProgressBarProgress((prev: number) => {
           // Incrementa lentamente até ~95% enquanto o carregamento está ativo
           if (prev < 95) {
             return prev + 1;
@@ -108,7 +108,7 @@ const MainAppContent: React.FC = () => {
             second: '2-digit',
             timeZone: 'America/Sao_Paulo',
           }).format(now);
-          setDisplayedMessages((prev) => [...prev, { text: messageText, timestamp }]);
+          setDisplayedMessages((prev: { text: string; timestamp: string }[]) => [...prev, { text: messageText, timestamp }]);
         }
         setAreMessagesDone(true); // Marca as mensagens como concluídas
       };

@@ -17,7 +17,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ sender, text, timestamp, user
   const userColors = [
     'text-pink-400', 'text-purple-400', 'text-yellow-400', 'text-green-400', 'text-blue-400', 'text-red-400'
   ];
-  const colorIndex = username ? username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % userColors.length : 0;
+  const colorIndex = username ? username.split('').reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0) % userColors.length : 0;
   const usernameColor = userColors[colorIndex];
 
   return (

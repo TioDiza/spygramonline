@@ -77,7 +77,7 @@ const LiveChat: React.FC = () => {
         username: newMessageData.username,
       };
 
-      setMessages(prev => [...prev, newMessage]);
+      setMessages((prev: ChatMessageData[]) => [...prev, newMessage]);
     }, 3500); // Intervalo mais rápido
 
     return () => clearInterval(interval);
@@ -94,7 +94,7 @@ const LiveChat: React.FC = () => {
       username: 'Você',
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev: ChatMessageData[]) => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
     scrollToBottom();
@@ -109,7 +109,7 @@ const LiveChat: React.FC = () => {
         username: 'Admin SpyGram',
       };
       setIsTyping(false);
-      setMessages(prev => [...prev, adminMessage]);
+      setMessages((prev: ChatMessageData[]) => [...prev, adminMessage]);
       scrollToBottom();
     }, 1500);
   };
@@ -135,7 +135,7 @@ const LiveChat: React.FC = () => {
 
       {/* Messages */}
       <div className="flex-1 p-3 overflow-y-auto scrollbar-hide">
-        {messages.map(msg => (
+        {messages.map((msg: ChatMessageData) => (
           <ChatMessage
             key={msg.id}
             sender={msg.sender}
@@ -178,7 +178,7 @@ const LiveChat: React.FC = () => {
           <input
             type="text"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
             placeholder="Digite sua mensagem..."
             className="w-full bg-gray-800 text-white text-sm rounded-full py-1.5 pl-3 pr-10 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
           />

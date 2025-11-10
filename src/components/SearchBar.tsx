@@ -27,7 +27,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading }) => {
           <input
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
             placeholder="Enter Instagram username..."
             className="w-full py-4 pl-2 pr-6 text-lg text-white bg-transparent border-none appearance-none focus:outline-none focus:ring-0"
             disabled={isLoading}

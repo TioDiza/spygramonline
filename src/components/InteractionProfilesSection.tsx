@@ -1,6 +1,6 @@
 import React from 'react';
-import type { InteractionProfile } from '../../types'; // Caminho corrigido
-import InteractionCard from './InteractionCard';
+import type { InteractionProfile } from '../../types';
+// import InteractionCard from './InteractionCard'; // Removido: não utilizado diretamente aqui
 import InteractionCarousel from './InteractionCarousel'; // Importa o novo componente de carrossel
 
 interface InteractionProfilesSectionProps {

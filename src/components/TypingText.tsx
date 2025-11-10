@@ -22,8 +22,8 @@ const TypingText: React.FC<TypingTextProps> = ({ text, speed = 70, className, on
   useEffect(() => {
     if (index < text.length) {
       const timeoutId = setTimeout(() => {
-        setDisplayedText((prev) => prev + text[index]);
-        setIndex((prev) => prev + 1);
+        setDisplayedText((prev: string) => prev + text[index]);
+        setIndex((prev: number) => prev + 1);
       }, speed);
       return () => clearTimeout(timeoutId);
     } else {
