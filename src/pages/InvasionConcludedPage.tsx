@@ -105,21 +105,21 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <>
-      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24 pt-16 min-h-screen"> {/* Alterado pt-32 para pt-16 */}
+      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24 pt-16 min-h-screen">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
-          Invasão Concluída!
+          Invasão Concluída! <span className="text-gray-500 text-xl">(Acesso Parcial)</span>
         </h1>
-        <ProfileCard data={profileData} />
+        <ProfileCard data={profileData} isPremiumLocked={true} />
         
         {profileData.topInteractions && profileData.topInteractions.length > 0 && (
-          <InteractionProfilesSection profiles={profileData.topInteractions} />
+          <InteractionProfilesSection profiles={profileData.topInteractions} isPremiumLocked={true} />
         )}
 
         <JealousyMessage />
 
         <div className="mt-12 flex justify-center">
             <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
-              Acessar Mídias Ocultas e Mais
+              Desbloquear Acesso Total AGORA!
             </SparkleButton>
         </div>
 
@@ -138,10 +138,10 @@ const InvasionConcludedPage: React.FC = () => {
 
         <div className="mt-16 w-full max-w-6xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
-            Como Funciona?
+            Como Funciona o SpyGram?
           </h2>
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Em apenas 3 passos simples você tem acesso total a qualquer conta do Instagram.
+            Em apenas 3 passos simples você tem acesso total a <span className="font-bold text-white">QUALQUER</span> conta do Instagram.
           </p>
           
           <div className="flex justify-center items-center gap-4 mb-8">

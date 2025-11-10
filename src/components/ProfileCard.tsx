@@ -3,11 +3,14 @@ import type { ProfileData } from '../../types'; // Caminho corrigido
 
 interface ProfileCardProps {
   data: ProfileData;
+  isPremiumLocked?: boolean; // Nova prop
 }
 
-const StatItem: React.FC<{ value: number; label: string }> = ({ value, label }) => (
+const StatItem: React.FC<{ value: number | string; label: string; isBlurred?: boolean }> = ({ value, label, isBlurred }) => (
   <div className="text-center">
-    <p className="text-2xl font-bold text-white">{new Intl.NumberFormat().format(value)}</p>
+    <p className={`text-2xl font-bold text-white ${isBlurred ? 'blur-sm select-none' : ''}`}>
+      {isBlurred ? '???' : new Intl.NumberFormat().format(Number(value))}
+    </p>
     <p className="text-sm text-gray-400">{label}</p>
   </div>
 );
@@ -20,37 +23,55 @@ const VerifiedIcon: React.FC = () => (
 );
 
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ data }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ data, isPremiumLocked = false }) => {
   return (
     <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in">
       <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-6 sm:space-y-0 sm:space-x-8">
-        <img
-          src={data.profilePicUrl}
-          alt={`${data.username}'s profile picture`}
-          className="w-32 h-32 rounded-full border-4 border-gray-700 object-cover shadow-md"
-        />
+        <div className="relative w-32 h-32 rounded-full border-4 border-gray-700 object-cover shadow-md overflow-hidden">
+          <img
+            src={data.profilePicUrl}
+            alt={`${data.username}'s profile picture`}
+            className={`w-full h-full object-cover ${isPremiumLocked ? 'blur-sm' : ''}`}
+          />
+          {isPremiumLocked && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-xs font-bold">
+              PREMIUM
+            </div>
+          )}
+        </div>
         <div className="flex-1 text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
             <h1 className="text-3xl font-bold text-white">{data.username}</h1>
             {data.isVerified && <VerifiedIcon />}
           </div>
-          <h2 className="text-lg text-gray-300">{data.fullName}</h2>
+          <h2 className={`text-lg text-gray-300 ${isPremiumLocked ? 'blur-sm select-none' : ''}`}>
+            {isPremiumLocked ? 'Nome Completo Oculto' : data.fullName}
+          </h2>
         </div>
       </div>
 
       <div className="mt-8 grid grid-cols-3 gap-4 border-t border-b border-gray-700 py-4">
-        <StatItem value={data.postsCount} label="Posts" />
-        <StatItem value={data.followers} label="Followers" />
-        <StatItem value={data.following} label="Following" />
+        <StatItem value={data.postsCount} label="Posts" isBlurred={isPremiumLocked} />
+        <StatItem value={data.followers} label="Followers" isBlurred={isPremiumLocked} />
+        <StatItem value={data.following} label="Following" isBlurred={isPremiumLocked} />
       </div>
 
-      <div className="mt-6">
-        <p className="text-gray-300 whitespace-pre-wrap">{data.biography}</p>
+      <div className="mt-6 relative">
+        <p className={`text-gray-300 whitespace-pre-wrap ${isPremiumLocked ? 'blur-sm select-none' : ''}`}>
+          {isPremiumLocked 
+            ? 'Esta biografia contém informações sensíveis. Desbloqueie o acesso premium para visualizar o conteúdo completo e descobrir todos os detalhes.' 
+            : data.biography}
+        </p>
+        {isPremiumLocked && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white text-center font-bold text-lg">
+            CONTEÚDO EXCLUSIVO
+          </div>
+        )}
       </div>
 
       {data.isPrivate && (
         <div className="mt-6 text-center text-yellow-400 bg-yellow-900/50 border border-yellow-700 rounded-lg p-3">
-          This account is private.
+          Este perfil é privado. <span className="font-bold">O SpyGram conseguiu invadir mesmo assim!</span>
         </div>
       )}
     </div>

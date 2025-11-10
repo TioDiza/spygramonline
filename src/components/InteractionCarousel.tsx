@@ -4,9 +4,10 @@ import InteractionCard from './InteractionCard';
 
 interface InteractionCarouselProps {
   profiles: InteractionProfile[];
+  isPremiumLocked?: boolean; // Nova prop
 }
 
-const InteractionCarousel: React.FC<InteractionCarouselProps> = ({ profiles }) => {
+const InteractionCarousel: React.FC<InteractionCarouselProps> = ({ profiles, isPremiumLocked = false }) => {
   const quantity = profiles.length;
   const cardWidth = 160; // Largura aproximada de um card + espaçamento
   const scrollDuration = quantity * 2; // Duração da animação baseada na quantidade de cards
@@ -54,7 +55,7 @@ const InteractionCarousel: React.FC<InteractionCarouselProps> = ({ profiles }) =
           {/* Duplica os perfis para criar um efeito de loop contínuo */}
           {[...profiles, ...profiles].map((profile, index) => (
             <div key={index} className="carousel-item">
-              <InteractionCard profile={profile} />
+              <InteractionCard profile={profile} isPremiumLocked={isPremiumLocked} />
             </div>
           ))}
         </div>

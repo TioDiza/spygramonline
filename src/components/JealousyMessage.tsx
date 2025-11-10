@@ -21,7 +21,7 @@ const JealousyMessage: React.FC = () => {
         { id: '7', sender: 'other' as const, text: 'e você sabe como me fazer querer mais. que delicia.', timestamp: '23:20', isBlurred: true },
         { id: '8', sender: 'self' as const, text: 'é um perigo a gente se encontrar.', timestamp: '23:21', isBlurred: true },
         { id: '9', sender: 'other' as const, text: 'um perigo que eu quero correr sempre, meu amor.', timestamp: '23:22', isBlurred: true },
-        { id: '10', sender: 'other' as const, text: 'me manda aquela foto que vc tirou depois? só pra eu lembrar do seu sorriso.', timestamp: '23:25', isBlurred: false },
+        { id: '10', sender: 'other' as const, text: 'me manda aquela foto que vc tirou depois? só pra eu lembrar do seu sorriso.', timestamp: '23:25', isBlurred: true }, // Alterado para true
       ],
     },
     {
@@ -38,7 +38,7 @@ const JealousyMessage: React.FC = () => {
         { id: '7', sender: 'other' as const, text: 'você é meu vício.', timestamp: '18:11', isBlurred: true },
         { id: '8', sender: 'self' as const, text: 'e você é o meu ponto fraco.', timestamp: '18:12', isBlurred: true },
         { id: '9', sender: 'other' as const, text: 'então se prepara pra amanhã.', timestamp: '18:12', isBlurred: true },
-        { id: '10', sender: 'other' as const, text: 'leva aquele "brinquedinho" que vc usou da última vez.', timestamp: '18:15', isBlurred: false },
+        { id: '10', sender: 'other' as const, text: 'leva aquele "brinquedinho" que vc usou da última vez.', timestamp: '18:15', isBlurred: true }, // Alterado para true
       ],
     },
     {
@@ -55,7 +55,7 @@ const JealousyMessage: React.FC = () => {
         { id: '7', sender: 'other' as const, text: 'melhor eu te mostrar pessoalmente.', timestamp: '09:16', isBlurred: true },
         { id: '8', sender: 'self' as const, text: 'não me provoca assim.', timestamp: '09:17', isBlurred: true },
         { id: '9', sender: 'other' as const, text: 'é exatamente o que eu quero fazer.', timestamp: '09:18', isBlurred: true },
-        { id: '10', sender: 'other' as const, text: 'só vem. e se prepara. foi uma delicia da ultima vez', timestamp: '09:20', isBlurred: false },
+        { id: '10', sender: 'other' as const, text: 'só vem. e se prepara. foi uma delicia da ultima vez', timestamp: '09:20', isBlurred: true }, // Alterado para true
       ],
     },
     {
@@ -72,7 +72,7 @@ const JealousyMessage: React.FC = () => {
         { id: '7', sender: 'other' as const, text: 'chego em 15 minutos.', timestamp: '08:35', isBlurred: true },
         { id: '8', sender: 'self' as const, text: 'a porta vai estar destrancada.', timestamp: '08:36', isBlurred: true },
         { id: '9', sender: 'other' as const, text: 'não vejo a hora de te ter de novo, amor.', timestamp: '08:37', isBlurred: true },
-        { id: '10', sender: 'other' as const, text: 'entendeu o recado, né? te espero.', timestamp: '08:40', isBlurred: false },
+        { id: '10', sender: 'other' as const, text: 'entendeu o recado, né? te espero.', timestamp: '08:40', isBlurred: true }, // Alterado para true
       ],
     },
     {
@@ -89,7 +89,7 @@ const JealousyMessage: React.FC = () => {
         { id: '7', sender: 'other' as const, text: 'você me enlouquece.', timestamp: '20:05', isBlurred: true },
         { id: '8', sender: 'self' as const, text: 'esse é o plano, meu amor.', timestamp: '20:06', isBlurred: true },
         { id: '9', sender: 'other' as const, text: 'está funcionando.', timestamp: '20:07', isBlurred: true },
-        { id: '10', sender: 'other' as const, text: 'não demora. tô te esperando do jeito que vc gosta.', timestamp: '20:10', isBlurred: false },
+        { id: '10', sender: 'other' as const, text: 'não demora. tô te esperando do jeito que vc gosta.', timestamp: '20:10', isBlurred: true }, // Alterado para true
       ],
     },
   ];
