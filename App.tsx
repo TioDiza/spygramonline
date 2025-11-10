@@ -8,11 +8,10 @@ import ErrorMessage from '@/src/components/ErrorMessage';
 import ConsentCheckbox from '@/src/components/ConsentCheckbox';
 import { BackgroundBeamsWithCollision } from '@/src/components/ui/background-beams-with-collision';
 import { Lock } from 'lucide-react';
-// import ResultsPage from '@/src/pages/ResultsPage'; // Removido: Não usaremos mais a página de resultados simples
-// import OverloadPage from '@/src/pages/OverloadPage'; // Removido: Não usaremos a página de sobrecarga
 import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
 import ProgressBar from '@/src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
+import { fetchProfileData } from './services/apiService'; // Importando a função da API
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -90,6 +89,7 @@ const MainAppContent: React.FC = () => {
     setAreMessagesDone(false); // Reset message completion state
 
     const searchStartTime = Date.now();
+    let profileData: ProfileData | undefined;
 
     try {
       // Função para exibir mensagens sequencialmente
@@ -110,7 +110,11 @@ const MainAppContent: React.FC = () => {
       };
 
       // Executa a exibição das mensagens e simula o tempo de carregamento
-      await displayMessagesSequentially();
+      const [apiResult] = await Promise.all([
+        fetchProfileData(searchQuery.trim()), // Chama a API real
+        displayMessagesSequentially(),
+      ]);
+      profileData = apiResult;
 
       // Garante que a duração mínima de carregamento tenha passado
       const elapsedTime = Date.now() - searchStartTime;
@@ -119,33 +123,14 @@ const MainAppContent: React.FC = () => {
         await new Promise(resolve => setTimeout(resolve, remainingTime));
       }
       
-      // Removida a simulação de sobrecarga. Agora sempre irá para a página de sucesso.
-      
-      // Dados de perfil simulados
-      const mockProfileData: ProfileData = {
-        username: searchQuery.trim(), // Usa o nome de usuário digitado
-        fullName: "Usuário de Teste",
-        profilePicUrl: "https://picsum.photos/id/1005/200/200", // Imagem de placeholder
-        biography: "Esta é uma biografia de teste para demonstração. O SpyGram permite acesso total a perfis, mensagens e mídias ocultas.",
-        followers: 123456,
-        following: 789,
-        postsCount: 1234,
-        isVerified: true,
-        isPrivate: false,
-        topInteractions: [
-          { username: "amigo_secreto", profilePicUrl: "https://picsum.photos/id/1011/100/100", interactionScore: 95 },
-          { username: "contatinho_x", profilePicUrl: "https://picsum.photos/id/1012/100/100", interactionScore: 88 },
-          { username: "ex_namorado", profilePicUrl: "https://picsum.photos/id/1013/100/100", interactionScore: 76 },
-          { username: "rival_da_escola", profilePicUrl: "https://picsum.photos/id/1014/100/100", interactionScore: 65 },
-          { username: "colega_de_trabalho", profilePicUrl: "https://picsum.photos/id/1015/100/100", interactionScore: 50 },
-        ],
-      };
-      
-      navigate('/invasion-concluded', { state: { profileData: mockProfileData } });
+      navigate('/invasion-concluded', { state: { profileData: profileData } });
 
     } catch (err) {
-      // Tratamento de erro simplificado, já que não há chamada de API real
-      setError('Ocorreu um erro inesperado na simulação.');
+      if (err instanceof Error) {
+        setError(`Erro ao buscar perfil: ${err.message}`);
+      } else {
+        setError('Ocorreu um erro desconhecido ao buscar o perfil.');
+      }
     } finally {
       setIsLoading(false);
       setProgressBarProgress(100);
@@ -342,8 +327,6 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<MainAppContent />} />
-        {/* Removida a rota para ResultsPage */}
-        {/* Removida a rota para OverloadPage */}
         <Route path="/invasion-concluded" element={<InvasionConcludedPage />} />
       </Routes>
     </Router>
