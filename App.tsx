@@ -1,20 +1,18 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import type { ProfileData } from './types'; // Removido InteractionProfile não utilizado
-// import { fetchProfileData } from './services/apiService'; // Removido: Não usaremos a API real
-import CustomSearchBar from '@/src/components/ui/CustomSearchBar'; // Usando alias @
-import SparkleButton from '@/src/components/ui/SparkleButton'; // Usando alias @
-// import ProfileCard from '@/src/components/ProfileCard'; // Removido: ProfileCard não é usado diretamente aqui
-import Loader from '@/src/components/Loader'; // Usando alias @
-import ErrorMessage from '@/src/components/ErrorMessage'; // Usando alias @
-import ConsentCheckbox from '@/src/components/ConsentCheckbox'; // Usando alias @
-import { BackgroundBeamsWithCollision } from '@/src/components/ui/background-beams-with-collision'; // Usando alias @
+import type { ProfileData } from './types';
+import CustomSearchBar from '@/src/components/ui/CustomSearchBar';
+import SparkleButton from '@/src/components/ui/SparkleButton';
+import Loader from '@/src/components/Loader';
+import ErrorMessage from '@/src/components/ErrorMessage';
+import ConsentCheckbox from '@/src/components/ConsentCheckbox';
+import { BackgroundBeamsWithCollision } from '@/src/components/ui/background-beams-with-collision';
 import { Lock } from 'lucide-react';
-import ResultsPage from '@/src/pages/ResultsPage'; // Usando alias @
-import OverloadPage from '@/src/pages/OverloadPage'; // Usando alias @
-import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage'; // Usando alias @
-import ProgressBar from '@/src/components/ProgressBar'; // Usando alias @
-import { MIN_LOADING_DURATION } from './constants'; // constants.ts está na raiz
+import ResultsPage from '@/src/pages/ResultsPage';
+// import OverloadPage from '@/src/pages/OverloadPage'; // Removido: Não usaremos a página de sobrecarga
+import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
+import ProgressBar from '@/src/components/ProgressBar';
+import { MIN_LOADING_DURATION } from './constants';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -121,12 +119,8 @@ const MainAppContent: React.FC = () => {
         await new Promise(resolve => setTimeout(resolve, remainingTime));
       }
       
-      // Simula uma chance de sobrecarga (por exemplo, 30% de chance)
-      if (Math.random() < 0.3) {
-        navigate('/overload');
-        return; // Sai da função para não continuar para a página de sucesso
-      }
-
+      // Removida a simulação de sobrecarga. Agora sempre irá para a página de sucesso.
+      
       // Dados de perfil simulados
       const mockProfileData: ProfileData = {
         username: searchQuery.trim(), // Usa o nome de usuário digitado
@@ -349,7 +343,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<MainAppContent />} />
         <Route path="/results" element={<ResultsPage />} />
-        <Route path="/overload" element={<OverloadPage />} />
+        {/* Removida a rota para OverloadPage */}
         <Route path="/invasion-concluded" element={<InvasionConcludedPage />} />
       </Routes>
     </Router>
