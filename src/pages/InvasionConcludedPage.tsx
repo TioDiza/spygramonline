@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { ProfileData } from '../../types';
-import ProfileCard from '../components/ProfileCard'; // Caminho corrigido
+import ProfileCard from '../components/ProfileCard';
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
 import InteractionProfilesSection from '../components/InteractionProfilesSection';
 import ScrollHint from '../components/ScrollHint';
@@ -10,7 +10,7 @@ import IphoneMockup from '../components/IphoneMockup';
 import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle } from 'lucide-react';
 import BenefitsCarousel from '../components/BenefitsCarousel';
 import LiveChat from '../components/LiveChat';
-import SparkleButton from '../components/ui/SparkleButton'; // Caminho corrigido
+import SparkleButton from '../components/ui/SparkleButton';
 import FaqSection from '../components/FaqSection';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -106,7 +106,7 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <BackgroundBeamsWithCollision className="min-h-screen"> {/* Fundo absoluto cobrindo 100% do pai */}
-      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 overflow-hidden w-full pb-24"> {/* Conteúdo da página */}
+      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24"> {/* Conteúdo da página */}
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
           Invasão Concluída!
         </h1>
