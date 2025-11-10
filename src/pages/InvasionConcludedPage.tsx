@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { ProfileData } from '../../types';
 import ProfileCard from '../components/ProfileCard';
-import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
+// import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision'; // Removido
 import InteractionProfilesSection from '../components/InteractionProfilesSection';
 import ScrollHint from '../components/ScrollHint';
 import JealousyMessage from '../components/JealousyMessage';
@@ -105,8 +105,8 @@ const InvasionConcludedPage: React.FC = () => {
   }
 
   return (
-    <BackgroundBeamsWithCollision> {/* Removido className="min-h-screen" daqui */}
-      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24 pt-32 min-h-screen"> {/* Adicionado min-h-screen aqui */}
+    <> {/* Removido BackgroundBeamsWithCollision daqui */}
+      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24 pt-32 min-h-screen">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
           Invasão Concluída!
         </h1>
@@ -237,7 +237,7 @@ const InvasionConcludedPage: React.FC = () => {
         </AnimatePresence>
       </div>
       <FloatingWhatsAppButton />
-    </BackgroundBeamsWithCollision>
+    </>
   );
 };
 
