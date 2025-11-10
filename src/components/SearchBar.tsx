@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SearchIcon from './icons/SearchIcon';
+import SearchIcon from './icons/SearchIcon'; // Caminho permanece correto
 
 interface SearchBarProps {
   onSearch: (query: string) => void;

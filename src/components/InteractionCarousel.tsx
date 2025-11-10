@@ -1,5 +1,5 @@
 import React from 'react';
-import type { InteractionProfile } from '../../types';
+import type { InteractionProfile } from '../../types'; // Caminho corrigido
 import InteractionCard from './InteractionCard';
 
 interface InteractionCarouselProps {

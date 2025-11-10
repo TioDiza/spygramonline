@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
-import { cn } from '../../lib/utils'; // Importando a função cn
+import { cn } from '../../lib/utils'; // Caminho corrigido
 
 interface SparkleButtonProps {
   children: React.ReactNode;

@@ -1,6 +1,5 @@
-
 import React from 'react';
-import type { ProfileData } from '../types';
+import type { ProfileData } from '../../types'; // Caminho corrigido
 
 interface ProfileCardProps {
   data: ProfileData;

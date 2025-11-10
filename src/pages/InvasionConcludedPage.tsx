@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { ProfileData } from '../../types';
-import ProfileCard from '../../components/ProfileCard';
+import ProfileCard from '../components/ProfileCard'; // Caminho corrigido
 import { BackgroundBeamsWithCollision } from '../components/ui/background-beams-with-collision';
 import InteractionProfilesSection from '../components/InteractionProfilesSection';
 import ScrollHint from '../components/ScrollHint';
@@ -10,7 +10,7 @@ import IphoneMockup from '../components/IphoneMockup';
 import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle } from 'lucide-react';
 import BenefitsCarousel from '../components/BenefitsCarousel';
 import LiveChat from '../components/LiveChat';
-import SparkleButton from '../../components/ui/SparkleButton';
+import SparkleButton from '../components/ui/SparkleButton'; // Caminho corrigido
 import FaqSection from '../components/FaqSection';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, AnimatePresence } from 'framer-motion';
