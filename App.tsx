@@ -8,7 +8,7 @@ import ErrorMessage from '@/src/components/ErrorMessage';
 import ConsentCheckbox from '@/src/components/ConsentCheckbox';
 import { BackgroundBeamsWithCollision } from '@/src/components/ui/background-beams-with-collision';
 import { Lock } from 'lucide-react';
-import ResultsPage from '@/src/pages/ResultsPage';
+// import ResultsPage from '@/src/pages/ResultsPage'; // Removido: Não usaremos mais a página de resultados simples
 // import OverloadPage from '@/src/pages/OverloadPage'; // Removido: Não usaremos a página de sobrecarga
 import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
 import ProgressBar from '@/src/components/ProgressBar';
@@ -342,7 +342,7 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<MainAppContent />} />
-        <Route path="/results" element={<ResultsPage />} />
+        {/* Removida a rota para ResultsPage */}
         {/* Removida a rota para OverloadPage */}
         <Route path="/invasion-concluded" element={<InvasionConcludedPage />} />
       </Routes>
