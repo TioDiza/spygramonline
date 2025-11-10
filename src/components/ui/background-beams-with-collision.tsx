@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion"; // Removido AnimatePresence não utilizado
 import React, { useRef, useState, useEffect, forwardRef } from "react";
 import { cn } from "../../lib/utils";
 
@@ -9,13 +9,13 @@ interface BeamOptions {
 interface BackgroundBeamsProps {
   className?: string;
   children?: React.ReactNode;
-  parentRef?: React.RefObject<HTMLDivElement>;
-  containerRef?: React.RefObject<HTMLDivElement>;
+  parentRef?: React.RefObject<HTMLDivElement | null>; // Permitir null
+  containerRef?: React.RefObject<HTMLDivElement | null>; // Permitir null
   beamOptions?: BeamOptions;
 }
 
 const Beam = forwardRef<HTMLDivElement, BackgroundBeamsProps>(
-  ({ parentRef, containerRef, beamOptions = {} as BeamOptions }, ref) => {
+  ({ className, ...props }, ref) => { // Desestruturando className e o resto das props, removendo parâmetros não utilizados e 'ref' não utilizado
     const beamRef = useRef<HTMLDivElement>(null);
     const [beamKey, setBeamKey] = useState(0); // Key to force re-render of beams
 
@@ -68,7 +68,7 @@ const Beam = forwardRef<HTMLDivElement, BackgroundBeamsProps>(
     });
 
     return (
-      <div {...props} className={cn("absolute h-2 w-2", props.className)}>
+      <div {...props} className={cn("absolute h-2 w-2", className)} ref={ref}> {/* Usando 'className' e 'ref' corretamente */}
         <motion.div
           ref={beamRef}
           className="absolute inset-0 overflow-hidden"

@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'; // Removido useLocation
-import type { ProfileData, InteractionProfile } from './types'; // types.ts está na raiz
+import type { ProfileData } from './types'; // Removido InteractionProfile não utilizado
 // import { fetchProfileData } from './services/apiService'; // Removido: Não usaremos a API real
 import CustomSearchBar from '@/src/components/ui/CustomSearchBar'; // Usando alias @
 import SparkleButton from '@/src/components/ui/SparkleButton'; // Usando alias @
-import ProfileCard from '@/src/components/ProfileCard'; // Usando alias @
+// import ProfileCard from '@/src/components/ProfileCard'; // Removido: ProfileCard não é usado diretamente aqui
 import Loader from '@/src/components/Loader'; // Usando alias @
 import ErrorMessage from '@/src/components/ErrorMessage'; // Usando alias @
 import ConsentCheckbox from '@/src/components/ConsentCheckbox'; // Usando alias @
@@ -18,7 +18,6 @@ import { MIN_LOADING_DURATION } from './constants'; // constants.ts está na rai
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
-  const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [hasConsented, setHasConsented] = useState<boolean>(false);
@@ -88,7 +87,7 @@ const MainAppContent: React.FC = () => {
 
     setIsLoading(true);
     setError(null);
-    setProfile(null); // Limpa o perfil anterior antes de uma nova busca
+    // setProfile(null); // Removido: 'profile' não é mais um estado
     setProgressBarProgress(0); // Garante que a barra comece do zero
     setDisplayedMessages([]); // Clear messages for new search
     setAreMessagesDone(false); // Reset message completion state
@@ -149,7 +148,7 @@ const MainAppContent: React.FC = () => {
         ],
       };
       
-      setProfile(mockProfileData);
+      // setProfile(mockProfileData); // Removido: 'profile' não é mais um estado
       navigate('/invasion-concluded', { state: { profileData: mockProfileData } });
 
     } catch (err) {
