@@ -2,18 +2,18 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import type { ProfileData, InteractionProfile } from './types';
 // import { fetchProfileData } from './services/apiService'; // Removido: Não usaremos a API real
-import CustomSearchBar from './components/ui/CustomSearchBar';
-import SparkleButton from './components/ui/SparkleButton';
-import ProfileCard from './components/ProfileCard'; // Caminho corrigido
-import Loader from './components/Loader'; // Caminho corrigido
-import ErrorMessage from './components/ErrorMessage'; // Caminho corrigido
-import ConsentCheckbox from './components/ConsentCheckbox'; // Caminho corrigido
-import { BackgroundBeamsWithCollision } from './components/ui/background-beams-with-collision'; // Caminho corrigido
+import CustomSearchBar from './src/components/ui/CustomSearchBar'; // Caminho corrigido para relativo
+import SparkleButton from './src/components/ui/SparkleButton';
+import ProfileCard from './src/components/ProfileCard';
+import Loader from './src/components/Loader';
+import ErrorMessage from './src/components/ErrorMessage';
+import ConsentCheckbox from './src/components/ConsentCheckbox';
+import { BackgroundBeamsWithCollision } from './src/components/ui/background-beams-with-collision';
 import { Lock } from 'lucide-react';
-import ResultsPage from './pages/ResultsPage'; // Caminho corrigido
-import OverloadPage from './pages/OverloadPage'; // Caminho corrigido
-import InvasionConcludedPage from './pages/InvasionConcludedPage'; // Caminho corrigido
-import ProgressBar from './components/ProgressBar'; // Caminho corrigido
+import ResultsPage from './src/pages/ResultsPage';
+import OverloadPage from './src/pages/OverloadPage';
+import InvasionConcludedPage from './src/pages/InvasionConcludedPage';
+import ProgressBar from './src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
