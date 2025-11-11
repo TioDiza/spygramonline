@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY), // Mantido para compatibilidade
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY), // Mantido para compatibilidade
-        'process.env.VITE_RAPIDAPI_KEY': JSON.stringify(env.VITE_RAPIDAPI_KEY) // Adicionado: Chave da RapidAPI
+        // 'process.env.VITE_RAPIDAPI_KEY': JSON.stringify(env.VITE_RAPIDAPI_KEY) // REMOVIDO: Chave da RapidAPI será gerenciada pelo backend
       },
       resolve: {
         alias: {

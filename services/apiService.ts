@@ -1,9 +1,5 @@
-import { PROXY_FOLLOWERS_URL } from '../constants';
+import { BACKEND_API_BASE_URL } from '../constants';
 import type { ProfileData } from '../types';
-
-// A chave da RapidAPI é acessada via process.env
-const RAPIDAPI_KEY = process.env.VITE_RAPIDAPI_KEY;
-const RAPIDAPI_HOST = 'instagram-scraper-stable-api.p.rapidapi.com'; // Host da RapidAPI
 
 // Dados mockados para usar como fallback
 const mockProfileData: ProfileData = {
@@ -30,61 +26,43 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     throw new Error('Username cannot be empty.');
   }
 
-  if (!RAPIDAPI_KEY) {
-    console.warn('RapidAPI key is not defined. Using mock data.');
-    return mockProfileData; // Retorna mock data se a chave não estiver definida
+  // Se BACKEND_API_BASE_URL não estiver configurado, usamos dados mockados
+  if (!BACKEND_API_BASE_URL || BACKEND_API_BASE_URL === 'http://localhost:3000') {
+    console.warn('BACKEND_API_BASE_URL is not configured or is default. Using mock data.');
+    return mockProfileData;
   }
 
-  const url = new URL(PROXY_FOLLOWERS_URL);
-  url.searchParams.append('username_or_url', username); // CORRIGIDO: O parâmetro esperado pela RapidAPI é 'username_or_url'
+  // Assumimos que o backend proxy terá um endpoint como /api/profile/:username
+  const url = `${BACKEND_API_BASE_URL}/api/profile/${username}`;
 
   try {
     const response = await fetch(url.toString(), {
       method: 'GET',
-      headers: {
-        'x-rapidapi-key': RAPIDAPI_KEY,
-        'x-rapidapi-host': RAPIDAPI_HOST,
-      },
+      // Não precisamos mais de headers da RapidAPI aqui, o backend os gerencia
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`API Error: ${response.status} - ${errorText}`);
-      // Se a API retornar um erro, usamos os dados mockados
-      console.warn('API call failed. Using mock data as fallback.');
+      console.error(`Backend Proxy Error: ${response.status} - ${errorText}`);
+      // Se o proxy retornar um erro, usamos os dados mockados
+      console.warn('Backend proxy call failed. Using mock data as fallback.');
       return mockProfileData;
     }
 
-    const data = await response.json();
+    const data: ProfileData = await response.json();
 
-    // A resposta da RapidAPI para este endpoint parece vir com a chave 'user_data'
-    if (!data || !data.user_data) {
-      console.error('Failed to fetch profile data: Invalid response structure from API. Using mock data.');
-      return mockProfileData; // Retorna mock data se a estrutura for inválida
+    // O backend proxy deve retornar diretamente um objeto ProfileData
+    if (!data || !data.username) {
+      console.error('Failed to fetch profile data: Invalid response structure from backend proxy. Using mock data.');
+      return mockProfileData;
     }
 
-    const userData = data.user_data;
-
-    // Mapeia os dados da API para a interface ProfileData
-    const profileData: ProfileData = {
-      username: userData.username,
-      fullName: userData.full_name,
-      profilePicUrl: userData.profile_pic_url,
-      biography: userData.biography || 'Biografia não disponível.', // Fornece um valor padrão
-      followers: userData.follower_count,
-      following: userData.following_count,
-      postsCount: userData.media_count,
-      isVerified: userData.is_verified,
-      isPrivate: userData.is_private,
-      // topInteractions será gerado no App.tsx ou InvasionConcludedPage.tsx, pois não vem da API
-    };
-
-    return profileData;
+    return data;
   } catch (error) {
     if (error instanceof Error) {
-      console.error(`An error occurred during API fetch: ${error.message}. Using mock data.`);
+      console.error(`An error occurred during backend proxy fetch: ${error.message}. Using mock data.`);
     } else {
-      console.error('An unknown error occurred while fetching data. Using mock data.');
+      console.error('An unknown error occurred while fetching data from backend proxy. Using mock data.');
     }
     return mockProfileData; // Retorna mock data em caso de qualquer erro na requisição
   }
