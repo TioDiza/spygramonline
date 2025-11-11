@@ -23,10 +23,10 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Anti-clone: Desabilita o evento de cópia
-document.addEventListener('copy', (e) => {
-  e.preventDefault();
-});
+// Anti-clone: Desabilita o evento de cópia - REMOVIDO PARA PERMITIR COPIAR ERROS
+// document.addEventListener('copy', (e) => {
+//   e.preventDefault();
+// });
 
 const root = ReactDOM.createRoot(rootElement);
 root.render(
