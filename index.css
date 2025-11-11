@@ -25,13 +25,13 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
-/* Anti-clone: Desabilita a seleção de texto */
-body {
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* IE 10+ */
-  user-select: none;         /* Standard */
-}
+/* Anti-clone: Desabilita a seleção de texto - REMOVIDO PARA PERMITIR COPIAR ERROS */
+/* body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+} */
 
 /* Anti-clone: Esconde o conteúdo na impressão */
 @media print {
