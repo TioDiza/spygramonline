@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { ProfileData } from '../../types'; // Caminho corrigido
 
 interface ProfileCardProps {
@@ -24,14 +24,18 @@ const VerifiedIcon: React.FC = () => (
 
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ data, isPremiumLocked = false }) => {
+  const [profilePicError, setProfilePicError] = useState(false);
+  const fallbackProfilePic = "https://picsum.photos/id/1005/200/200"; // Imagem de placeholder
+
   return (
     <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in">
       <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-6 sm:space-y-0 sm:space-x-8">
         <div className="relative w-32 h-32 rounded-full border-4 border-gray-700 object-cover shadow-md overflow-hidden">
           <img
-            src={data.profilePicUrl}
+            src={profilePicError ? fallbackProfilePic : data.profilePicUrl}
             alt={`${data.username}'s profile picture`}
             className={`w-full h-full object-cover ${isPremiumLocked ? 'blur-sm' : ''}`}
+            onError={() => setProfilePicError(true)} // Define o erro para true se a imagem falhar
           />
           {isPremiumLocked && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white text-xs font-bold">
