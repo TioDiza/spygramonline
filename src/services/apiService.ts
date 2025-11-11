@@ -1,4 +1,5 @@
-import type { ProfileData, InteractionProfile } from '../../types';
+import { PROXY_FOLLOWERS_URL } from '../../constants';
+import type { ApiResponse, ProfileData, ApiErrorResponse, InteractionProfile } from '../../types';
 
 // Função para gerar dados de perfil mockados
 const generateMockProfileData = (username: string): ProfileData => {
@@ -29,6 +30,33 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     throw new Error('Username cannot be empty.');
   }
 
-  console.warn(`API call for ${username} bypassed. Returning mock data.`);
-  return generateMockProfileData(username);
+  const url = new URL(PROXY_FOLLOWERS_URL);
+  url.searchParams.append('user', username);
+
+  try {
+    const response = await fetch(url.toString());
+
+    if (!response.ok) {
+      // Se a resposta da rede não for OK, tentamos parsear como erro ou lançamos um erro genérico
+      try {
+        const errorData: ApiErrorResponse = await response.json();
+        throw new Error(errorData.message || `Network response was not ok: ${response.statusText}`);
+      } catch (jsonError) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+    }
+
+    const data: ApiResponse = await response.json();
+
+    if (!data.success) {
+      const errorData = data as ApiErrorResponse;
+      throw new Error(errorData.message || 'Failed to fetch profile data.');
+    }
+
+    return data.data;
+  } catch (error) {
+    console.error(`Erro ao buscar dados do perfil para ${username} da API. Usando dados mockados como fallback.`, error);
+    // Em caso de erro, retorna dados mockados para garantir que a UI sempre exiba algo.
+    return generateMockProfileData(username);
+  }
 };
