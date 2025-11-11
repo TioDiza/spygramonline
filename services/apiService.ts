@@ -36,7 +36,7 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
   }
 
   const url = new URL(PROXY_FOLLOWERS_URL);
-  url.searchParams.append('username', username); // O parâmetro esperado pela RapidAPI é 'username'
+  url.searchParams.append('username_or_url', username); // CORRIGIDO: O parâmetro esperado pela RapidAPI é 'username_or_url'
 
   try {
     const response = await fetch(url.toString(), {
