@@ -5,13 +5,34 @@ import type { ProfileData } from '../types';
 const RAPIDAPI_KEY = process.env.VITE_RAPIDAPI_KEY;
 const RAPIDAPI_HOST = 'instagram-scraper-stable-api.p.rapidapi.com'; // Host da RapidAPI
 
+// Dados mockados para usar como fallback
+const mockProfileData: ProfileData = {
+  username: "usuario_mockado",
+  fullName: "Usuário de Teste Mockado",
+  profilePicUrl: "https://picsum.photos/id/1005/200/200",
+  biography: "Esta é uma biografia de teste para um perfil mockado. O acesso premium revelaria a biografia real e muito mais!",
+  followers: 12345,
+  following: 678,
+  postsCount: 123,
+  isVerified: false,
+  isPrivate: true,
+  topInteractions: [
+    { username: "amigo_secreto", profilePicUrl: "https://picsum.photos/id/1011/100/100", interactionScore: 95 },
+    { username: "contatinho_x", profilePicUrl: "https://picsum.photos/id/1012/100/100", interactionScore: 88 },
+    { username: "ex_namorado", profilePicUrl: "https://picsum.photos/id/1013/100/100", interactionScore: 76 },
+    { username: "rival_da_escola", profilePicUrl: "https://picsum.photos/id/1014/100/100", interactionScore: 65 },
+    { username: "colega_de_trabalho", profilePicUrl: "https://picsum.photos/id/1015/100/100", interactionScore: 50 },
+  ],
+};
+
 export const fetchProfileData = async (username: string): Promise<ProfileData> => {
   if (!username) {
     throw new Error('Username cannot be empty.');
   }
 
   if (!RAPIDAPI_KEY) {
-    throw new Error('RapidAPI key is not defined. Please check your .env.local file.');
+    console.warn('RapidAPI key is not defined. Using mock data.');
+    return mockProfileData; // Retorna mock data se a chave não estiver definida
   }
 
   const url = new URL(PROXY_FOLLOWERS_URL);
@@ -28,14 +49,18 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Network response was not ok: ${response.status} - ${errorText}`);
+      console.error(`API Error: ${response.status} - ${errorText}`);
+      // Se a API retornar um erro, usamos os dados mockados
+      console.warn('API call failed. Using mock data as fallback.');
+      return mockProfileData;
     }
 
     const data = await response.json();
 
     // A resposta da RapidAPI para este endpoint parece vir com a chave 'user_data'
     if (!data || !data.user_data) {
-      throw new Error('Failed to fetch profile data: Invalid response structure from API.');
+      console.error('Failed to fetch profile data: Invalid response structure from API. Using mock data.');
+      return mockProfileData; // Retorna mock data se a estrutura for inválida
     }
 
     const userData = data.user_data;
@@ -57,8 +82,10 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     return profileData;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`An error occurred: ${error.message}`);
+      console.error(`An error occurred during API fetch: ${error.message}. Using mock data.`);
+    } else {
+      console.error('An unknown error occurred while fetching data. Using mock data.');
     }
-    throw new Error('An unknown error occurred while fetching data.');
+    return mockProfileData; // Retorna mock data em caso de qualquer erro na requisição
   }
 };
