@@ -2,7 +2,7 @@ export interface ProfileData {
   username: string;
   fullName: string;
   profilePicUrl: string;
-  biography: string;
+  biography?: string; // Tornando opcional, pois a API não retorna diretamente
   followers: number;
   following: number;
   postsCount: number;
@@ -17,14 +17,6 @@ export interface InteractionProfile {
   interactionScore: number; // Um score mockado para simular a interação
 }
 
-export interface ApiSuccessResponse {
-  success: true;
-  data: ProfileData;
-}
-
-export interface ApiErrorResponse {
-  success: false;
-  message: string;
-}
-
-export type ApiResponse = ApiSuccessResponse | ApiErrorResponse;
+// A RapidAPI não usa 'success: true/false' no nível superior para dados de perfil,
+// então as interfaces ApiResponse, ApiSuccessResponse e ApiErrorResponse não são mais necessárias
+// para este endpoint específico.
