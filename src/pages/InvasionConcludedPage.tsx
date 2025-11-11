@@ -109,10 +109,10 @@ const InvasionConcludedPage: React.FC = () => {
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
           Invasão Concluída! <span className="text-gray-500 text-xl">(Acesso Parcial)</span>
         </h1>
-        <ProfileCard data={profileData} isPremiumLocked={true} />
+        <ProfileCard data={profileData} isPremiumLocked={false} />
         
         {profileData.topInteractions && profileData.topInteractions.length > 0 && (
-          <InteractionProfilesSection profiles={profileData.topInteractions} isPremiumLocked={true} />
+          <InteractionProfilesSection profiles={profileData.topInteractions} isPremiumLocked={false} />
         )}
 
         <JealousyMessage />
