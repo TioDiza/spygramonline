@@ -24,7 +24,7 @@ export const mockProfileData: ProfileData = {
 export const fetchProfileData = async (username: string): Promise<ProfileData> => {
   if (!username) {
     console.warn('Username cannot be empty. Returning mock data.');
-    return mockProfileData; // Retorna mock data se o username for vazio
+    return mockProfileData;
   }
 
   const url = `${BACKEND_API_BASE_URL}/api/profile/${username}`;
@@ -37,15 +37,18 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`Backend Proxy Error (${response.status}): ${errorText || 'Unknown error'}. Returning mock data.`);
-      return mockProfileData; // Retorna mock data se a resposta não for OK
+      return mockProfileData;
     }
 
-    const data: ProfileData = await response.json();
+    const rawData: { user_data?: ProfileData } = await response.json(); // Assume que pode haver 'user_data'
+
+    // Extrai o objeto user_data, se existir
+    const data = rawData.user_data;
 
     // Verifica se a estrutura dos dados retornados é válida
     if (!data || !data.username || !data.fullName || !data.profilePicUrl) {
       console.error('Failed to fetch profile data: Invalid or incomplete response structure from backend proxy. Returning mock data.');
-      return mockProfileData; // Retorna mock data se a estrutura for inválida
+      return mockProfileData;
     }
 
     return data;
@@ -55,6 +58,6 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     } else {
       console.error('An unknown error occurred while fetching data from backend proxy. Returning mock data.');
     }
-    return mockProfileData; // Retorna mock data em caso de qualquer erro na requisição
+    return mockProfileData;
   }
 };
