@@ -1,7 +1,7 @@
 import { BACKEND_API_BASE_URL } from '../../constants';
 import type { ProfileData } from '../../types';
 
-// Dados mockados para usar como fallback (agora exportados)
+// Dados mockados para usar como fallback (AGORA EXPORTADOS)
 export const mockProfileData: ProfileData = {
   username: "usuario_mockado",
   fullName: "Usuário de Teste Mockado",
