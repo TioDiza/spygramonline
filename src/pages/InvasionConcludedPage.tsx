@@ -14,6 +14,7 @@ import FaqSection from '../components/FaqSection';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import FinalCallToAction from '../components/FinalCallToAction';
+import { mockProfileData } from '../services/apiService'; // Importa os dados mockados
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -103,12 +104,25 @@ const InvasionConcludedPage: React.FC = () => {
     return null;
   }
 
+  // Verifica se os dados do perfil são os dados mockados
+  const isMockData = profileData.username === mockProfileData.username && 
+                     profileData.fullName === mockProfileData.fullName &&
+                     profileData.profilePicUrl === mockProfileData.profilePicUrl;
+
   return (
     <>
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24 pt-16 min-h-screen">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
           Invasão Concluída! <span className="text-gray-500 text-xl">(Acesso Parcial)</span>
         </h1>
+        
+        {isMockData && (
+          <div className="mt-4 mb-8 bg-yellow-900/50 border border-yellow-500 text-yellow-300 px-4 py-3 rounded-lg text-center max-w-2xl mx-auto" role="alert">
+            <p className="font-bold">Aviso: Dados de Exemplo</p>
+            <p className="text-sm">Não foi possível obter os dados reais do perfil. Exibindo dados de exemplo. Por favor, verifique seu backend proxy no Render para garantir que ele está funcionando e retornando dados válidos.</p>
+          </div>
+        )}
+
         <ProfileCard data={profileData} isPremiumLocked={false} />
         
         {profileData.topInteractions && profileData.topInteractions.length > 0 && (
