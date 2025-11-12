@@ -26,13 +26,11 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     throw new Error('Username cannot be empty.');
   }
 
-  // Se BACKEND_API_BASE_URL não estiver configurado, usamos dados mockados
-  if (!BACKEND_API_BASE_URL || BACKEND_API_BASE_URL === 'http://localhost:3000') {
-    console.warn('BACKEND_API_BASE_URL is not configured or is default. Using mock data.');
-    return mockProfileData;
-  }
+  // A verificação anterior para BACKEND_API_BASE_URL ser localhost ou vazio
+  // foi removida, pois a URL agora está explicitamente definida para o Render.
+  // O bloco try-catch abaixo já lida com casos em que o backend está inacessível
+  // ou retorna um erro, usando dados mockados como fallback.
 
-  // Assumimos que o backend proxy terá um endpoint como /api/profile/:username
   const url = `${BACKEND_API_BASE_URL}/api/profile/${username}`;
 
   try {
