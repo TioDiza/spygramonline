@@ -11,7 +11,7 @@ import { Lock } from 'lucide-react';
 import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
 import ProgressBar from '@/src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
-import { fetchProfileData, mockProfileData } from './services/profileService'; // Importa do novo nome do arquivo
+import { fetchProfileData, mockProfileData } from './src/services/profileService'; // Caminho corrigido
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
