@@ -28,6 +28,7 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
   }
 
   const url = `${BACKEND_API_BASE_URL}/api/profile/${username}`;
+  console.log(`Attempting to fetch profile data from: ${url}`); // Log da URL
 
   try {
     const response = await fetch(url.toString(), {
@@ -40,17 +41,18 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
       return mockProfileData;
     }
 
-    const rawData: { user_data?: ProfileData } = await response.json(); // Assume que pode haver 'user_data'
+    const rawData: { user_data?: ProfileData } = await response.json();
+    console.log('Raw data received from backend:', rawData); // Log da resposta bruta
 
-    // Extrai o objeto user_data, se existir
     const data = rawData.user_data;
+    console.log('Extracted user_data from raw data:', data); // Log dos dados extraídos
 
-    // Verifica se a estrutura dos dados retornados é válida
     if (!data || !data.username || !data.fullName || !data.profilePicUrl) {
       console.error('Failed to fetch profile data: Invalid or incomplete response structure from backend proxy. Returning mock data.');
       return mockProfileData;
     }
 
+    console.log('Successfully fetched and parsed real profile data:', data.username); // Log de sucesso
     return data;
   } catch (error) {
     if (error instanceof Error) {
