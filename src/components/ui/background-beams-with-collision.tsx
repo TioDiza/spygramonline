@@ -16,7 +16,7 @@ interface BackgroundBeamsProps {
 
 const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   className,
-  quantity = 800,
+  quantity = 150, // Reduzido para melhorar o desempenho
   duration = 8,
   delay = 0.8,
   beamWidth = 1.5,
@@ -27,7 +27,6 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerDimensions, setContainerDimensions] = useState({ width: 0, height: 0 });
 
-  // Efeito para atualizar as dimensões do container
   useEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {
@@ -36,7 +35,6 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
           height: containerRef.current.offsetHeight,
         });
       } else {
-        // Fallback para a primeira renderização se a ref ainda não estiver disponível
         setContainerDimensions({
           width: window.innerWidth,
           height: window.innerHeight,
@@ -44,14 +42,13 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
       }
     };
 
-    updateDimensions(); // Define as dimensões iniciais
+    updateDimensions();
 
     const handleResize = () => updateDimensions();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []); // Executa apenas uma vez na montagem para configurar o listener de redimensionamento
+  }, []);
 
-  // Efeito para gerar os feixes quando as dimensões do container ou outras props mudam
   useEffect(() => {
     const instagramColors = ['#E1306C', '#C13584', '#FCAF45', '#833AB4', '#FD1D1D'];
 
@@ -59,13 +56,12 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
       const newBeams: React.ReactElement[] = [];
       const { width: currentContainerWidth, height: currentContainerHeight } = containerDimensions;
 
-      // Não gera feixes se as dimensões ainda não foram determinadas
       if (currentContainerWidth === 0 || currentContainerHeight === 0) return;
 
       for (let i = 0; i < quantity; i++) {
-        const initialX = Math.random() * currentContainerWidth; // Distribui por toda a largura do container
-        const initialY = -Math.random() * currentContainerHeight; // Começa aleatoriamente acima da tela
-        const finalY = currentContainerHeight + beamLength; // Termina abaixo da tela
+        const initialX = Math.random() * currentContainerWidth;
+        const initialY = -Math.random() * currentContainerHeight;
+        const finalY = currentContainerHeight + beamLength;
         const randomColor = instagramColors[Math.floor(Math.random() * instagramColors.length)];
         const rotation = Math.random() * 30 - 15;
         const animationDelay = Math.random() * duration;
@@ -101,7 +97,7 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
     };
 
     generateBeams();
-  }, [quantity, duration, delay, beamWidth, beamLength, containerDimensions]); // Re-executa quando as dimensões do container mudam
+  }, [quantity, duration, delay, beamWidth, beamLength, containerDimensions]);
 
   return (
     <div
@@ -110,7 +106,7 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
         "absolute inset-0 overflow-hidden z-0",
         className
       )}
-      style={{ width: '100vw', height: '100vh' }} // Garante que o container ocupe 100% da viewport
+      style={{ width: '100vw', height: '100vh' }}
     >
       {beams}
       {children}
