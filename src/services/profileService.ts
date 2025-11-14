@@ -23,28 +23,35 @@ export const mockProfileData: ProfileData = {
 
 export const fetchProfileData = async (username: string): Promise<ProfileData> => {
   if (!username) {
-    console.warn('Username cannot be empty. Returning mock data.');
+    console.warn('[profileService] Username cannot be empty. Returning mock data.');
     return mockProfileData;
   }
 
-  // Novo endpoint para a API Apify
   const url = `${BACKEND_API_BASE_URL}/perfil/${username}`;
-  console.log(`Attempting to fetch profile data from: ${url}`);
+  console.log(`[profileService] Attempting to fetch profile data from: ${url}`);
 
   try {
+    console.log(`[profileService] Starting fetch for ${username}...`);
     const response = await fetch(url.toString(), {
       method: 'GET',
     });
+    console.log(`[profileService] Fetch response received for ${username}. Status: ${response.status}`);
 
     if (!response.ok) {
-      const errorData = await response.json(); // Tenta ler a mensagem de erro do backend
-      const errorMessage = errorData.erro || errorData.message || 'Unknown error from backend proxy.';
-      console.error(`Backend Proxy Error (${response.status}): ${errorMessage}. Returning mock data.`);
+      const errorText = await response.text(); // Tenta ler o corpo da resposta como texto
+      let errorMessage = `Backend Proxy Error (${response.status}): ${errorText || 'Unknown error'}`;
+      try {
+        const errorData = JSON.parse(errorText); // Tenta parsear como JSON se for válido
+        errorMessage = errorData.erro || errorData.message || errorMessage;
+      } catch (e) {
+        // Se não for JSON, mantém a mensagem original
+      }
+      console.error(`[profileService] ${errorMessage}. Returning mock data.`);
       return mockProfileData;
     }
 
-    const apiData = await response.json(); // A resposta da Apify vem diretamente no objeto
-    console.log('Raw data received from backend (Apify):', apiData);
+    const apiData = await response.json();
+    console.log(`[profileService] Raw data received from backend (Apify) for ${username}:`, apiData);
 
     // Mapeia os campos da resposta da Apify para a interface ProfileData
     const profile: ProfileData = {
@@ -62,17 +69,17 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
 
     // Validação básica para campos essenciais
     if (!profile.username || !profile.fullName || !profile.profilePicUrl) {
-      console.error('Failed to fetch profile data: Invalid or incomplete response structure from backend proxy. Returning mock data.');
+      console.error('[profileService] Failed to fetch profile data: Invalid or incomplete response structure from backend proxy. Returning mock data.');
       return mockProfileData;
     }
 
-    console.log('Successfully fetched and parsed real profile data:', profile.username);
+    console.log(`[profileService] Successfully fetched and parsed real profile data for: ${profile.username}`);
     return profile;
   } catch (error) {
     if (error instanceof Error) {
-      console.error(`An error occurred during backend proxy fetch: ${error.message}. Returning mock data.`);
+      console.error(`[profileService] An error occurred during backend proxy fetch for ${username}: ${error.message}. Returning mock data.`);
     } else {
-      console.error('An unknown error occurred while fetching data from backend proxy. Returning mock data.');
+      console.error('[profileService] An unknown error occurred while fetching data from backend proxy. Returning mock data.');
     }
     return mockProfileData;
   }
