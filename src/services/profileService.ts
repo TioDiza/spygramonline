@@ -1,7 +1,7 @@
 import { BACKEND_API_BASE_URL } from '../../constants';
 import type { ProfileData } from '../../types';
 
-// Dados mockados para usar como fallback (AGORA EXPORTADOS)
+// Dados mockados para usar como fallback
 export const mockProfileData: ProfileData = {
   username: "usuario_mockado",
   fullName: "Usuário de Teste Mockado",
@@ -27,8 +27,9 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     return mockProfileData;
   }
 
-  const url = `${BACKEND_API_BASE_URL}/api/profile/${username}`;
-  console.log(`Attempting to fetch profile data from: ${url}`); // Log da URL
+  // Novo endpoint para a API Apify
+  const url = `${BACKEND_API_BASE_URL}/perfil/${username}`;
+  console.log(`Attempting to fetch profile data from: ${url}`);
 
   try {
     const response = await fetch(url.toString(), {
@@ -36,24 +37,37 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Backend Proxy Error (${response.status}): ${errorText || 'Unknown error'}. Returning mock data.`);
+      const errorData = await response.json(); // Tenta ler a mensagem de erro do backend
+      const errorMessage = errorData.erro || errorData.message || 'Unknown error from backend proxy.';
+      console.error(`Backend Proxy Error (${response.status}): ${errorMessage}. Returning mock data.`);
       return mockProfileData;
     }
 
-    const rawData: { user_data?: ProfileData } = await response.json();
-    console.log('Raw data received from backend:', rawData); // Log da resposta bruta
+    const apiData = await response.json(); // A resposta da Apify vem diretamente no objeto
+    console.log('Raw data received from backend (Apify):', apiData);
 
-    const data = rawData.user_data;
-    console.log('Extracted user_data from raw data:', data); // Log dos dados extraídos
+    // Mapeia os campos da resposta da Apify para a interface ProfileData
+    const profile: ProfileData = {
+      username: apiData.username,
+      fullName: apiData.fullName,
+      profilePicUrl: apiData.profilePicUrl,
+      biography: apiData.biography,
+      followers: apiData.followersCount, // Mapeia followersCount para followers
+      following: apiData.followsCount,   // Mapeia followsCount para following
+      postsCount: apiData.postsCount,
+      isVerified: apiData.verified,      // Mapeia verified para isVerified
+      isPrivate: apiData.private,        // Mapeia private para isPrivate
+      topInteractions: mockProfileData.topInteractions, // Mantém mock para interações, pois a Apify não fornece
+    };
 
-    if (!data || !data.username || !data.fullName || !data.profilePicUrl) {
+    // Validação básica para campos essenciais
+    if (!profile.username || !profile.fullName || !profile.profilePicUrl) {
       console.error('Failed to fetch profile data: Invalid or incomplete response structure from backend proxy. Returning mock data.');
       return mockProfileData;
     }
 
-    console.log('Successfully fetched and parsed real profile data:', data.username); // Log de sucesso
-    return data;
+    console.log('Successfully fetched and parsed real profile data:', profile.username);
+    return profile;
   } catch (error) {
     if (error instanceof Error) {
       console.error(`An error occurred during backend proxy fetch: ${error.message}. Returning mock data.`);

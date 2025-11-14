@@ -120,13 +120,13 @@ const MainAppContent: React.FC = () => {
       
       // Chama a API real para buscar os dados do perfil
       const fetchedProfileData = await fetchProfileData(searchQuery.trim());
-      console.log('Fetched profile data (before mock check in App.tsx):', fetchedProfileData); // Log aqui
+      console.log('Fetched profile data (before mock check in App.tsx):', fetchedProfileData);
 
       // VERIFICAÇÃO EXPLÍCITA PARA DADOS MOCKADOS RETORNADOS PELO BACKEND
       if (fetchedProfileData.username === mockProfileData.username &&
           fetchedProfileData.fullName === mockProfileData.fullName &&
           fetchedProfileData.profilePicUrl === mockProfileData.profilePicUrl) {
-        throw new Error('O backend retornou dados de exemplo. Por favor, verifique a configuração do seu backend proxy ou o serviço RapidAPI.');
+        throw new Error('O backend retornou dados de exemplo. Por favor, verifique a configuração do seu backend proxy.');
       }
 
       // Gera dados mockados para topInteractions, pois a API não os fornece
