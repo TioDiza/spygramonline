@@ -246,7 +246,7 @@ const MainAppContent: React.FC = () => {
                 width: '120px', // Ajuste o tamanho conforme necessário
                 top: '-10px',    // Ajustado para -10px (30px mais para baixo)
                 left: '50%',
-                transform: 'translateX(-50%) rotate(15deg)', // Centraliza e adiciona uma leve rotação
+                transform: 'translateX(-50%) rotate(5deg)', // Centraliza e adiciona uma leve rotação
                 filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.5))', // Adiciona uma sombra para destacar
               }}
             />
