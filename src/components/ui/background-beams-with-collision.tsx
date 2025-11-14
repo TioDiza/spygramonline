@@ -19,8 +19,8 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   quantity = 105, // Mantido em 105 para bom desempenho
   duration = 8,
   delay = 0.8,
-  beamWidth = 1.5,
-  beamLength = 10,
+  beamWidth = 2, // Aumentado para 2px
+  beamLength = 15, // Aumentado para 15px
   children,
 }) => {
   const [beams, setBeams] = useState<React.ReactElement[]>([]);
@@ -69,19 +69,25 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
         newBeams.push(
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: initialY, x: initialX, rotate: rotation, scale: 1 }}
+            initial={{ opacity: 0, y: initialY, x: initialX, rotate: rotation, scale: 1, boxShadow: '0 0 0px rgba(0,0,0,0)' }}
             animate={{
-              opacity: [0, 0.8, 0.8, 0], // Fade in, permanece opaco, fade out ao sair da tela
+              opacity: [0, 0.8, 1, 0], // Fade in, permanece opaco, pico de opacidade no splash, depois fade out
               y: [initialY, finalY], // Queda do topo para o fundo
               rotate: rotation, // Mantém a rotação constante durante a queda
-              scale: [1, 1, 2, 0], // Escala para 2x no final para o efeito de "explosão", depois desaparece
+              scale: [1, 1, 3, 0], // Escala para 3x no splash, depois desaparece
+              boxShadow: [
+                '0 0 0px rgba(0,0,0,0)', // Sem sombra no início
+                '0 0 0px rgba(0,0,0,0)', // Sem sombra durante a queda
+                `0 0 20px 10px ${randomColor}AA`, // Sombra colorida no splash (AA = 66% opacidade)
+                `0 0 50px 20px ${randomColor}00` // Sombra se expande e desaparece (00 = 0% opacidade)
+              ],
             }}
             transition={{
               duration: duration,
               repeat: Infinity,
               delay: animationDelay,
               ease: "linear",
-              times: [0, 0.8, 0.9, 1], // Ajustado para o scale-up e fade-out acontecerem nos últimos 20% da animação
+              times: [0, 0.9, 0.95, 1], // Splash effect nos últimos 10% da animação
             }}
             style={{
               position: "absolute",
