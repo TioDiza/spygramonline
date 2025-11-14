@@ -49,7 +49,7 @@ const MockChat: React.FC<MockChatProps> = ({
       </div>
 
       {/* Corpo (Apenas Mensagens) */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col p-3">
+      <div className="flex-1 overflow-y-auto scrollbar-hide flex flex-col p-2"> {/* Alterado p-3 para p-2 */}
         {messages.map((msg: Message) => (
           <ChatMessage
             key={msg.id}

@@ -1,27 +1,94 @@
-import React from 'react';
-import { cn } from '../../lib/utils';
+"use client";
 
-interface BackgroundBeamsWithCollisionProps {
+import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { cn } from "../../lib/utils";
+
+interface BackgroundBeamsProps {
   className?: string;
-  children?: React.ReactNode;
-  // Removendo React.HTMLAttributes<HTMLDivElement> para evitar que props desconhecidas
-  // como 'parentRef' e 'containerRef' sejam passadas para o elemento div.
-  // Se houver props específicas para as 'beams', elas precisariam ser adicionadas aqui.
+  quantity?: number; // Número de feixes
+  duration?: number; // Duração da animação
+  delay?: number; // Atraso entre as animações dos feixes
+  size?: number; // Tamanho de cada feixe
+  color?: string; // Cor dos feixes
+  children?: React.ReactNode; // Adicionado para permitir elementos filhos
 }
 
-export const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsWithCollisionProps> = ({
+const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   className,
-  children,
-  // Não espalhamos '...props' aqui para evitar passar props não reconhecidas para o DOM.
+  quantity = 150, // Quantidade aumentada para um efeito mais denso
+  duration = 10,
+  delay = 0.8,
+  size = 0.5, // Tamanho menor para um efeito sutil
+  color = "rgba(128, 0, 128, 0.3)", // Roxo com alguma transparência
+  children, // Desestruturado para ser renderizado
 }) => {
+  const [beams, setBeams] = useState<React.ReactElement[]>([]); // Corrigido JSX.Element[] para React.ReactElement[]
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const generateBeams = () => {
+      const newBeams: React.ReactElement[] = []; // Corrigido JSX.Element[] para React.ReactElement[]
+      const containerWidth = containerRef.current?.offsetWidth || window.innerWidth;
+      const containerHeight = containerRef.current?.offsetHeight || window.innerHeight;
+
+      for (let i = 0; i < quantity; i++) {
+        const x = Math.random() * containerWidth;
+        const y = Math.random() * containerHeight;
+        const rotation = Math.random() * 360;
+        const scale = 0.5 + Math.random() * 0.5; // Escala aleatória para variação
+        const animationDelay = Math.random() * duration;
+
+        newBeams.push(
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: [0, 0.5, 0], scale: [0, scale, 0] }}
+            transition={{
+              duration: duration,
+              repeat: Infinity,
+              delay: animationDelay,
+              ease: "easeInOut",
+            }}
+            style={{
+              position: "absolute",
+              left: x,
+              top: y,
+              width: `${size}px`,
+              height: `${size * 50}px`, // Torná-los feixes verticais
+              backgroundColor: color,
+              borderRadius: "9999px", // Pontas arredondadas
+              transform: `rotate(${rotation}deg)`,
+              transformOrigin: "center",
+            }}
+            className="pointer-events-none"
+          />
+        );
+      }
+      setBeams(newBeams);
+    };
+
+    generateBeams();
+    // Regenerar feixes se a janela for redimensionada
+    const handleResize = () => generateBeams();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [quantity, duration, delay, size, color]);
+
   return (
     <div
-      className={cn("relative h-screen w-full bg-black flex flex-col items-center justify-center antialiased", className)}
-      // Não passamos 'ref' aqui, pois não estamos usando React.forwardRef nesta versão simplificada.
+      ref={containerRef}
+      className={cn(
+        "h-full w-full absolute inset-0 overflow-hidden z-0", // z-0 para garantir que esteja no fundo
+        className
+      )}
     >
-      {children}
-      {/* A lógica real para renderizar as 'beams' precisaria ser adicionada aqui,
-          mas para resolver o erro de props, estamos começando com uma versão básica. */}
+      {beams}
+      {children} {/* Renderiza os elementos filhos aqui */}
     </div>
   );
 };
+
+export { BackgroundBeamsWithCollision };
