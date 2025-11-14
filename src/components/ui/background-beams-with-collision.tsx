@@ -16,26 +16,26 @@ interface BackgroundBeamsProps {
 
 const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   className,
-  quantity = 500, // Quantidade aumentada para um efeito mais denso
+  quantity = 400, // Ajustado para uma quantidade boa sem ser exagerada
   duration = 10, // Duração da animação (velocidade da queda)
   delay = 0.8, // Atraso entre as animações dos feixes
-  beamWidth = 1.5, // Largura do feixe (mais fino)
-  beamLength = 100, // Comprimento do feixe (mais longo para rastro)
+  beamWidth = 2, // Largura do feixe (mais visível)
+  beamLength = 80, // Comprimento do feixe (mais visível)
   children, // Desestruturado para ser renderizado
 }) => {
   const [beams, setBeams] = useState<React.ReactElement[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    // Forçar o uso das dimensões da janela para garantir cobertura total
+    const containerWidth = window.innerWidth;
+    const containerHeight = window.innerHeight;
 
     const generateBeams = () => {
       const newBeams: React.ReactElement[] = [];
-      const containerWidth = containerRef.current?.offsetWidth || window.innerWidth;
-      const containerHeight = containerRef.current?.offsetHeight || window.innerHeight;
 
       for (let i = 0; i < quantity; i++) {
-        const initialX = Math.random() * containerWidth;
+        const initialX = Math.random() * containerWidth; // Distribui por toda a largura da janela
         const initialY = -Math.random() * containerHeight; // Começa aleatoriamente acima da tela
         const finalY = containerHeight + beamLength; // Termina abaixo da tela
 
