@@ -130,7 +130,7 @@ const InvasionConcludedPage: React.FC = () => {
             <ProfileCard data={profileData} isPremiumLocked={false} />
             
             {profileData.topInteractions && profileData.topInteractions.length > 0 && (
-              <InteractionProfilesSection profiles={profileData.topInteractions} isPremiumLocked={false} />
+              <InteractionProfilesSection profiles={profileData.topInteractions} isPremiumLocked={true} />
             )}
           </>
         ) : (

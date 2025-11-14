@@ -136,6 +136,7 @@ const JealousyMessage: React.FC = () => {
               otherProfilePic={chat.profilePic}
               username={chat.username}
               messages={chat.messages}
+              isBlurredProfile={true} // Adicionado para desfocar o perfil
             />
           ))}
         </div>

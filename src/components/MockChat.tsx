@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, Video, Info, Smile, Camera, Mic, Image, ChevronLeft } from 'lucide-react';
 import ChatMessage from './ChatMessage';
+import { cn } from '../lib/utils'; // Importando cn para classes condicionais
 
 interface Message {
   id: string;
@@ -14,12 +15,14 @@ interface MockChatProps {
   otherProfilePic?: string;
   username: string;
   messages: Message[];
+  isBlurredProfile?: boolean; // Nova prop para desfocar o perfil
 }
 
 const MockChat: React.FC<MockChatProps> = ({
   otherProfilePic = 'https://picsum.photos/id/64/50/50',
   username,
   messages,
+  isBlurredProfile = false, // Valor padrão é false
 }) => {
   return (
     <div className="w-[320px] h-[640px] bg-black rounded-2xl p-0 flex flex-col overflow-hidden border border-gray-800 shadow-lg shadow-purple-500/10 flex-shrink-0">
@@ -27,9 +30,15 @@ const MockChat: React.FC<MockChatProps> = ({
       <div className="flex items-center justify-between p-3 border-b border-gray-800 flex-shrink-0">
         <div className="flex items-center space-x-3">
           <ChevronLeft className="w-6 h-6 text-white" />
-          <img src={otherProfilePic} alt="Chat Partner" className="w-8 h-8 rounded-full" />
+          <img
+            src={otherProfilePic}
+            alt="Chat Partner"
+            className={cn("w-8 h-8 rounded-full", isBlurredProfile && "blur-sm select-none")}
+          />
           <div>
-            <span className="font-semibold text-white text-sm">{username}</span>
+            <span className={cn("font-semibold text-white text-sm", isBlurredProfile && "blur-sm select-none")}>
+              {isBlurredProfile ? 'Usuário Oculto' : username}
+            </span>
           </div>
         </div>
         <div className="flex items-center space-x-4">
@@ -47,7 +56,6 @@ const MockChat: React.FC<MockChatProps> = ({
             sender={msg.sender}
             text={msg.text}
             timestamp={msg.timestamp}
-            // profilePic={msg.sender === 'other' ? otherProfilePic : undefined} // Removido: profilePic não é uma prop de ChatMessage
             isBlurred={msg.isBlurred}
           />
         ))}
