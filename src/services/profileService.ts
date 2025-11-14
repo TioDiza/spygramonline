@@ -30,11 +30,16 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
   const url = `${BACKEND_API_BASE_URL}/perfil/${username}`;
   console.log(`[profileService] Attempting to fetch profile data from: ${url}`);
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // Timeout de 15 segundos
+
   try {
     console.log(`[profileService] Starting fetch for ${username}...`);
     const response = await fetch(url.toString(), {
       method: 'GET',
+      signal: controller.signal, // Associa o AbortController à requisição
     });
+    clearTimeout(timeoutId); // Limpa o timeout se a requisição for concluída a tempo
     console.log(`[profileService] Fetch response received for ${username}. Status: ${response.status}`);
 
     if (!response.ok) {
@@ -76,8 +81,14 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     console.log(`[profileService] Successfully fetched and parsed real profile data for: ${profile.username}`);
     return profile;
   } catch (error) {
+    clearTimeout(timeoutId); // Garante que o timeout seja limpo mesmo em caso de erro
     if (error instanceof Error) {
-      console.error(`[profileService] An error occurred during backend proxy fetch for ${username}: ${error.message}. Returning mock data.`);
+      if (error.name === 'AbortError') {
+        console.error(`[profileService] Fetch for ${username} timed out after 15 seconds. Returning mock data.`);
+        // Você pode querer lançar um erro específico aqui para o frontend exibir "Requisição demorou demais"
+      } else {
+        console.error(`[profileService] An error occurred during backend proxy fetch for ${username}: ${error.message}. Returning mock data.`);
+      }
     } else {
       console.error('[profileService] An unknown error occurred while fetching data from backend proxy. Returning mock data.');
     }
