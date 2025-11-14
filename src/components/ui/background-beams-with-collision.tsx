@@ -9,16 +9,18 @@ interface BackgroundBeamsProps {
   quantity?: number; // Número de feixes
   duration?: number; // Duração da animação
   delay?: number; // Atraso entre as animações dos feixes
-  size?: number; // Tamanho de cada feixe (largura do pingo)
+  beamWidth?: number; // Largura de cada feixe
+  beamLength?: number; // Comprimento de cada feixe
   children?: React.ReactNode; // Adicionado para permitir elementos filhos
 }
 
 const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   className,
-  quantity = 400, // Quantidade aumentada para um efeito mais denso
-  duration = 8, // Duração da animação (velocidade da queda)
+  quantity = 500, // Quantidade aumentada para um efeito mais denso
+  duration = 10, // Duração da animação (velocidade da queda)
   delay = 0.8, // Atraso entre as animações dos feixes
-  size = 1.5, // Tamanho da largura do pingo
+  beamWidth = 1.5, // Largura do feixe (mais fino)
+  beamLength = 100, // Comprimento do feixe (mais longo para rastro)
   children, // Desestruturado para ser renderizado
 }) => {
   const [beams, setBeams] = useState<React.ReactElement[]>([]);
@@ -35,35 +37,33 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
       for (let i = 0; i < quantity; i++) {
         const initialX = Math.random() * containerWidth;
         const initialY = -Math.random() * containerHeight; // Começa aleatoriamente acima da tela
-        const finalY = containerHeight + (size * 20); // Termina abaixo da tela, considerando o comprimento do traçante
-        const rotation = Math.random() * 360; // Rotação aleatória para variação
+        const finalY = containerHeight + beamLength; // Termina abaixo da tela
+
         const animationDelay = Math.random() * duration;
 
         newBeams.push(
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: initialY, x: initialX, rotate: rotation }}
+            initial={{ opacity: 0, y: initialY, x: initialX }}
             animate={{
-              opacity: [0, 0.7, 0.7, 0], // Fade in, permanece opaco, fade out rápido no final
+              opacity: [0, 0.6, 0.6, 0], // Fade in, permanece opaco, fade out ao sair da tela
               y: [initialY, finalY], // Queda do topo para o fundo
-              scale: [1, 1, 1.2, 1], // Leve aumento de escala no final para efeito de splash
             }}
             transition={{
               duration: duration,
               repeat: Infinity,
               delay: animationDelay,
               ease: "linear", // Velocidade de queda consistente
-              times: [0, 0.8, 0.9, 1], // Controla quando as mudanças de opacidade e escala acontecem
+              times: [0, 0.1, 0.9, 1], // Controla quando as mudanças de opacidade acontecem
             }}
             style={{
               position: "absolute",
-              width: `${size}px`, // Largura do pingo
-              height: `${size * 20}px`, // Comprimento do traçante
+              width: `${beamWidth}px`, // Largura do feixe
+              height: `${beamLength}px`, // Comprimento do feixe
               background: `linear-gradient(to bottom, #E1306C, #C13584, #FCAF45, transparent)`, // Gradiente de cores do Instagram
-              borderRadius: "50%", // Topo arredondado
-              transformOrigin: "center top", // Gira a partir do topo do pingo
+              borderRadius: "9999px", // Pontas arredondadas para o rastro
+              pointerEvents: "none",
             }}
-            className="pointer-events-none"
           />
         );
       }
@@ -75,7 +75,7 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
     const handleResize = () => generateBeams();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [quantity, duration, delay, size]); // Removido 'color' das dependências, pois agora é um gradiente fixo
+  }, [quantity, duration, delay, beamWidth, beamLength]);
 
   return (
     <div
