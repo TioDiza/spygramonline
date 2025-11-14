@@ -88,13 +88,14 @@ const MainAppContent: React.FC = () => {
     setDisplayedMessages([]); // Clear messages for new search
     setAreMessagesDone(false); // Reset message completion state
 
-    const searchStartTime = Date.now();
-
     try {
-      // Função para exibir mensagens sequencialmente
-      const displayMessagesSequentially = async () => {
+      // 1. Inicia a busca de dados da API imediatamente
+      const fetchPromise = fetchProfileData(searchQuery.trim());
+
+      // 2. Inicia a exibição das mensagens de carregamento em segundo plano
+      const messageDisplayPromise = (async () => {
         for (let i = 0; i < loadingMessages.length; i++) {
-          await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 segundos de atraso
+          await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 segundos de atraso por mensagem
           const messageText = loadingMessages[i];
           const now = new Date();
           const timestamp = new Intl.DateTimeFormat('pt-BR', {
@@ -106,20 +107,18 @@ const MainAppContent: React.FC = () => {
           setDisplayedMessages((prev: { text: string; timestamp: string }[]) => [...prev, { text: messageText, timestamp }]);
         }
         setAreMessagesDone(true); // Marca as mensagens como concluídas
-      };
+      })();
 
-      // Executa a exibição das mensagens e simula o tempo de carregamento
-      await displayMessagesSequentially();
+      // 3. Garante uma duração mínima de carregamento para a interface
+      const minimumDurationPromise = new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
 
-      // Garante que a duração mínima de carregamento tenha passado
-      const elapsedTime = Date.now() - searchStartTime;
-      const remainingTime = MIN_LOADING_DURATION - elapsedTime;
-      if (remainingTime > 0) {
-        await new Promise(resolve => setTimeout(resolve, remainingTime));
-      }
-      
-      // Chama a API real para buscar os dados do perfil
-      const fetchedProfileData = await fetchProfileData(searchQuery.trim());
+      // 4. Aguarda todas as promessas: busca de dados, exibição de mensagens e duração mínima
+      const [fetchedProfileData] = await Promise.all([
+        fetchPromise,
+        messageDisplayPromise,
+        minimumDurationPromise,
+      ]);
+
       console.log('Fetched profile data (before mock check in App.tsx):', fetchedProfileData);
 
       // VERIFICAÇÃO EXPLÍCITA PARA DADOS MOCKADOS RETORNADOS PELO BACKEND
@@ -144,6 +143,7 @@ const MainAppContent: React.FC = () => {
         topInteractions: mockTopInteractions,
       };
       
+      console.log('Navigating to /invasion-concluded with profileData for:', finalProfileData.username); // Log de navegação
       navigate('/invasion-concluded', { state: { profileData: finalProfileData } });
 
     } catch (err) {
@@ -152,6 +152,7 @@ const MainAppContent: React.FC = () => {
       } else {
         setError('Ocorreu um erro inesperado ao invadir o perfil.');
       }
+      console.error('Error during search process:', err); // Log de erro detalhado
     } finally {
       setIsLoading(false);
       setProgressBarProgress(100);

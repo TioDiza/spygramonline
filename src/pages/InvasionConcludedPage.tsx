@@ -14,7 +14,7 @@ import FaqSection from '../components/FaqSection';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import FinalCallToAction from '../components/FinalCallToAction';
-import { mockProfileData } from '../services/apiService'; // Importa os dados mockados
+import { mockProfileData } from '../services/profileService'; // Importa os dados mockados
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -23,6 +23,13 @@ const InvasionConcludedPage: React.FC = () => {
   const [showScrollHint, setShowScrollHint] = useState(true);
 
   useEffect(() => {
+    console.log('InvasionConcludedPage mounted. Profile data received:', profileData?.username); // Log de montagem
+    if (!profileData) {
+      console.log('No profile data received, navigating back to home.'); // Log de redirecionamento
+      navigate('/');
+      return;
+    }
+
     const handleScroll = () => {
       const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50; // 50px buffer
       setShowScrollHint(!isAtBottom);
@@ -34,7 +41,7 @@ const InvasionConcludedPage: React.FC = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [profileData, navigate]); // Adicionado profileData e navigate às dependências
 
   const steps = [
     {
@@ -99,15 +106,10 @@ const InvasionConcludedPage: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const currentStep = steps[activeStep];
 
-  if (!profileData) {
-    navigate('/');
-    return null;
-  }
-
   // Verifica se os dados do perfil são os dados mockados
-  const isMockData = profileData.username === mockProfileData.username && 
-                     profileData.fullName === mockProfileData.fullName &&
-                     profileData.profilePicUrl === mockProfileData.profilePicUrl;
+  const isMockData = profileData?.username === mockProfileData.username && 
+                     profileData?.fullName === mockProfileData.fullName &&
+                     profileData?.profilePicUrl === mockProfileData.profilePicUrl;
 
   return (
     <>
@@ -123,10 +125,18 @@ const InvasionConcludedPage: React.FC = () => {
           </div>
         )}
 
-        <ProfileCard data={profileData} isPremiumLocked={false} />
-        
-        {profileData.topInteractions && profileData.topInteractions.length > 0 && (
-          <InteractionProfilesSection profiles={profileData.topInteractions} isPremiumLocked={false} />
+        {profileData ? (
+          <>
+            <ProfileCard data={profileData} isPremiumLocked={false} />
+            
+            {profileData.topInteractions && profileData.topInteractions.length > 0 && (
+              <InteractionProfilesSection profiles={profileData.topInteractions} isPremiumLocked={false} />
+            )}
+          </>
+        ) : (
+          <div className="text-center text-gray-400 mt-10">
+            <p>Carregando dados do perfil ou redirecionando...</p>
+          </div>
         )}
 
         <JealousyMessage />
