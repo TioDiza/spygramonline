@@ -78,6 +78,14 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
       return mockProfileData;
     }
 
+    // --- NOVA LÓGICA PARA PROXY DE IMAGEM ---
+    // Se a URL da imagem de perfil for do Instagram, proxy através do nosso backend
+    if (profile.profilePicUrl && profile.profilePicUrl.includes('cdninstagram.com')) {
+      profile.profilePicUrl = `${BACKEND_API_BASE_URL}/image-proxy?url=${encodeURIComponent(profile.profilePicUrl)}`;
+      console.log(`[profileService] Proxied profilePicUrl: ${profile.profilePicUrl}`);
+    }
+    // --- FIM DA NOVA LÓGICA ---
+
     console.log(`[profileService] Successfully fetched and parsed real profile data for: ${profile.username}`);
     return profile;
   } catch (error) {
