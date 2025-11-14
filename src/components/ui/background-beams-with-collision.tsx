@@ -16,7 +16,7 @@ interface BackgroundBeamsProps {
 
 const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   className,
-  quantity = 105, // Reduzido em 30% (de 150 para 105)
+  quantity = 105, // Mantido em 105 para bom desempenho
   duration = 8,
   delay = 0.8,
   beamWidth = 1.5,
@@ -74,14 +74,14 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
               opacity: [0, 0.8, 0.8, 0], // Fade in, permanece opaco, fade out ao sair da tela
               y: [initialY, finalY], // Queda do topo para o fundo
               rotate: rotation, // Mantém a rotação constante durante a queda
-              scale: [1, 1, 1, 1.5], // Escala para 1.5x no final para o efeito de "explosão"
+              scale: [1, 1, 2, 0], // Escala para 2x no final para o efeito de "explosão", depois desaparece
             }}
             transition={{
               duration: duration,
               repeat: Infinity,
               delay: animationDelay,
               ease: "linear",
-              times: [0, 0.1, 0.95, 1], // Ajustado para o fade out e escala acontecerem nos últimos 5%
+              times: [0, 0.8, 0.9, 1], // Ajustado para o scale-up e fade-out acontecerem nos últimos 20% da animação
             }}
             style={{
               position: "absolute",
