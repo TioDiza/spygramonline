@@ -6,12 +6,12 @@ import SparkleButton from '@/src/components/ui/SparkleButton';
 import Loader from '@/src/components/Loader';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import ConsentCheckbox from '@/src/components/ConsentCheckbox';
-import { BackgroundBeamsWithCollision } from '@/src/components/ui/background-beams-with-collision';
+import { ChristmasSnowfall } from '@/src/components/ui/ChristmasSnowfall'; // Importa o novo componente
 import { Lock } from 'lucide-react';
 import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
 import ProgressBar from '@/src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
-import { fetchProfileData, mockProfileData } from './src/services/profileService'; // Caminho corrigido
+import { fetchProfileData, mockProfileData } from './src/services/profileService';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -162,7 +162,7 @@ const MainAppContent: React.FC = () => {
   }, [searchQuery, hasConsented, navigate, loadingMessages]);
 
   return (
-    <BackgroundBeamsWithCollision className="min-h-screen">
+    <ChristmasSnowfall className="min-h-screen"> {/* Usando o novo componente */}
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full">
         <style>{`
@@ -339,7 +339,7 @@ const MainAppContent: React.FC = () => {
           <p>Todos os direitos reservados a SpyGram</p>
         </footer>
       </div>
-    </BackgroundBeamsWithCollision>
+    </ChristmasSnowfall>
   );
 };
 
