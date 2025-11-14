@@ -237,19 +237,6 @@ const MainAppContent: React.FC = () => {
               alt="SpyGram Logo"
               className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
             />
-            {/* Touca de Papai Noel */}
-            <img
-              src="/santa_hat.png" // Certifique-se de que este arquivo exista em public/
-              alt="Touca de Papai Noel"
-              className="absolute z-30" // Z-index maior para ficar acima do logo
-              style={{
-                width: '120px', // Ajuste o tamanho conforme necessário
-                top: '-10px',    // Ajustado para -10px (30px mais para baixo)
-                left: '50%',
-                transform: 'translateX(-50%) rotate(5deg)', // Centraliza e adiciona uma leve rotação
-                filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.5))', // Adiciona uma sombra para destacar
-              }}
-            />
           </div>
 
           {!isLoading && ( // Oculta este parágrafo quando estiver carregando
