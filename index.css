@@ -25,17 +25,8 @@
   display: none; /* Chrome, Safari, Opera */
 }
 
-/* Anti-clone: Desabilita a seleção de texto - REMOVIDO PARA PERMITIR COPIAR ERROS */
-/* body {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-} */
-
-/* Anti-clone: Esconde o conteúdo na impressão */
-@media print {
-  body * {
-    visibility: hidden !important;
-  }
+/* Reset de margin e padding para html e body */
+html, body {
+  margin: 0;
+  padding: 0;
 }
