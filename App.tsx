@@ -6,7 +6,7 @@ import SparkleButton from '@/src/components/ui/SparkleButton';
 import Loader from '@/src/components/Loader';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import ConsentCheckbox from '@/src/components/ConsentCheckbox';
-import { ChristmasSnowfall } from '@/src/components/ui/ChristmasSnowfall'; // Importa o novo componente
+import { ChristmasSnowfall } from '@/src/components/ui/ChristmasSnowfall';
 import { Lock } from 'lucide-react';
 import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
 import ProgressBar from '@/src/components/ProgressBar';
@@ -162,7 +162,7 @@ const MainAppContent: React.FC = () => {
   }, [searchQuery, hasConsented, navigate, loadingMessages]);
 
   return (
-    <ChristmasSnowfall className="min-h-screen"> {/* Usando o novo componente */}
+    <ChristmasSnowfall className="min-h-screen">
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full">
         <style>{`
@@ -236,6 +236,19 @@ const MainAppContent: React.FC = () => {
               src="/spygram_transparentebranco.png"
               alt="SpyGram Logo"
               className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
+            />
+            {/* Touca de Papai Noel */}
+            <img
+              src="/santa_hat.png" // Certifique-se de que este arquivo exista em public/
+              alt="Touca de Papai Noel"
+              className="absolute z-30" // Z-index maior para ficar acima do logo
+              style={{
+                width: '120px', // Ajuste o tamanho conforme necessário
+                top: '-40px',    // Ajuste a posição vertical
+                left: '50%',
+                transform: 'translateX(-50%) rotate(15deg)', // Centraliza e adiciona uma leve rotação
+                filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.5))', // Adiciona uma sombra para destacar
+              }}
             />
           </div>
 
