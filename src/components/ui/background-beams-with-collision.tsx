@@ -9,18 +9,16 @@ interface BackgroundBeamsProps {
   quantity?: number; // Número de feixes
   duration?: number; // Duração da animação
   delay?: number; // Atraso entre as animações dos feixes
-  size?: number; // Tamanho de cada feixe
-  color?: string; // Cor dos feixes
+  size?: number; // Tamanho de cada feixe (largura do pingo)
   children?: React.ReactNode; // Adicionado para permitir elementos filhos
 }
 
 const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   className,
-  quantity = 300, // Quantidade aumentada para um efeito mais denso
-  duration = 10,
-  delay = 0.8,
-  size = 1.5, // Tamanho maior para um efeito mais visível
-  color = "rgba(255, 0, 255, 0.7)", // Roxo/Magenta mais brilhante e opaco
+  quantity = 400, // Quantidade aumentada para um efeito mais denso
+  duration = 8, // Duração da animação (velocidade da queda)
+  delay = 0.8, // Atraso entre as animações dos feixes
+  size = 1.5, // Tamanho da largura do pingo
   children, // Desestruturado para ser renderizado
 }) => {
   const [beams, setBeams] = useState<React.ReactElement[]>([]);
@@ -35,31 +33,35 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
       const containerHeight = containerRef.current?.offsetHeight || window.innerHeight;
 
       for (let i = 0; i < quantity; i++) {
-        const x = Math.random() * containerWidth;
-        const y = Math.random() * containerHeight; // Posição inicial aleatória
-        const rotation = Math.random() * 360;
-        // const scale = 0.5 + Math.random() * 0.5; // Variável 'scale' removida
+        const initialX = Math.random() * containerWidth;
+        const initialY = -Math.random() * containerHeight; // Começa aleatoriamente acima da tela
+        const finalY = containerHeight + (size * 20); // Termina abaixo da tela, considerando o comprimento do traçante
+        const rotation = Math.random() * 360; // Rotação aleatória para variação
         const animationDelay = Math.random() * duration;
 
         newBeams.push(
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: y - containerHeight, rotate: rotation }} // Começa acima da tela, com rotação
-            animate={{ opacity: [0, 0.7, 0], y: y + containerHeight * 1.5, rotate: rotation }} // Cai e desaparece
+            initial={{ opacity: 0, y: initialY, x: initialX, rotate: rotation }}
+            animate={{
+              opacity: [0, 0.7, 0.7, 0], // Fade in, permanece opaco, fade out rápido no final
+              y: [initialY, finalY], // Queda do topo para o fundo
+              scale: [1, 1, 1.2, 1], // Leve aumento de escala no final para efeito de splash
+            }}
             transition={{
               duration: duration,
               repeat: Infinity,
               delay: animationDelay,
-              ease: "linear", // Animação linear para queda constante
+              ease: "linear", // Velocidade de queda consistente
+              times: [0, 0.8, 0.9, 1], // Controla quando as mudanças de opacidade e escala acontecem
             }}
             style={{
               position: "absolute",
-              left: x,
-              width: `${size}px`,
-              height: `${size * 100}px`, // Torná-los feixes verticais e mais longos
-              backgroundColor: color,
-              borderRadius: "9999px", // Pontas arredondadas
-              transformOrigin: "center",
+              width: `${size}px`, // Largura do pingo
+              height: `${size * 20}px`, // Comprimento do traçante
+              background: `linear-gradient(to bottom, #E1306C, #C13584, #FCAF45, transparent)`, // Gradiente de cores do Instagram
+              borderRadius: "50%", // Topo arredondado
+              transformOrigin: "center top", // Gira a partir do topo do pingo
             }}
             className="pointer-events-none"
           />
@@ -73,7 +75,7 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
     const handleResize = () => generateBeams();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [quantity, duration, delay, size, color]);
+  }, [quantity, duration, delay, size]); // Removido 'color' das dependências, pois agora é um gradiente fixo
 
   return (
     <div
