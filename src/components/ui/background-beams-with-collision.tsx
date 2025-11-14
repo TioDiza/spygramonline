@@ -10,17 +10,17 @@ interface BackgroundBeamsProps {
   duration?: number; // Duração da animação
   delay?: number; // Atraso entre as animações dos feixes
   beamWidth?: number; // Largura de cada feixe
-  beamLength?: number; // Comprimento de cada feixe
+  beamLength?: number; // Comprimento de cada feixe (para faíscas, será curto)
   children?: React.ReactNode; // Adicionado para permitir elementos filhos
 }
 
 const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   className,
-  quantity = 105, // Mantido em 105
+  quantity = 105, // Mantido em 105 para bom desempenho
   duration = 8,
   delay = 0.8,
-  beamWidth = 1.5, // Largura fina para as linhas
-  beamLength = 80, // Comprimento maior para as linhas
+  beamWidth = 2, // Aumentado para 2px
+  beamLength = 15, // Aumentado para 15px
   children,
 }) => {
   const [beams, setBeams] = useState<React.ReactElement[]>([]);
@@ -60,42 +60,41 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
 
       for (let i = 0; i < quantity; i++) {
         const initialX = Math.random() * currentContainerWidth;
-        const initialY = -Math.random() * currentContainerHeight; // Começa acima da tela
-        const finalY = currentContainerHeight + beamLength; // Termina abaixo da tela
-        
-        const startColor = instagramColors[Math.floor(Math.random() * instagramColors.length)];
-        let endColor = instagramColors[Math.floor(Math.random() * instagramColors.length)];
-        while (endColor === startColor) { // Garante cores de início e fim diferentes
-          endColor = instagramColors[Math.floor(Math.random() * instagramColors.length)];
-        }
-        const gradient = `linear-gradient(to bottom, ${startColor}, ${endColor})`;
-
-        const rotation = Math.random() * 30 - 15; // Leve rotação para um efeito mais dinâmico
+        const initialY = -Math.random() * currentContainerHeight;
+        const finalY = currentContainerHeight + beamLength;
+        const randomColor = instagramColors[Math.floor(Math.random() * instagramColors.length)];
+        const rotation = Math.random() * 30 - 15;
         const animationDelay = Math.random() * duration;
 
         newBeams.push(
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: initialY, x: initialX, rotate: rotation, scale: 1 }}
+            initial={{ opacity: 0, y: initialY, x: initialX, rotate: rotation, scale: 1, boxShadow: '0 0 0px rgba(0,0,0,0)' }}
             animate={{
-              opacity: [0, 1, 1, 0], // Fade in, permanece opaco, fade out
+              opacity: [0, 0.8, 1, 0], // Fade in, permanece opaco, pico de opacidade no splash, depois fade out
               y: [initialY, finalY], // Queda do topo para o fundo
-              rotate: rotation, // Mantém a rotação constante
-              scale: 1, // Sem efeito de escala de "explosão"
+              rotate: rotation, // Mantém a rotação constante durante a queda
+              scale: [1, 1, 3, 0], // Escala para 3x no splash, depois desaparece
+              boxShadow: [
+                '0 0 0px rgba(0,0,0,0)', // Sem sombra no início
+                '0 0 0px rgba(0,0,0,0)', // Sem sombra durante a queda
+                `0 0 20px 10px ${randomColor}AA`, // Sombra colorida no splash (AA = 66% opacidade)
+                `0 0 50px 20px ${randomColor}00` // Sombra se expande e desaparece (00 = 0% opacidade)
+              ],
             }}
             transition={{
               duration: duration,
               repeat: Infinity,
               delay: animationDelay,
               ease: "linear",
-              times: [0, 0.05, 0.95, 1], // Fade in rápido, visível na maior parte, fade out rápido
+              times: [0, 0.9, 0.95, 1], // Splash effect nos últimos 10% da animação
             }}
             style={{
               position: "absolute",
               width: `${beamWidth}px`,
               height: `${beamLength}px`,
-              background: gradient, // Aplica o gradiente de cores
-              borderRadius: "1px", // Levemente arredondado nas pontas
+              backgroundColor: randomColor,
+              borderRadius: "50%",
               pointerEvents: "none",
             }}
           />
