@@ -12,7 +12,7 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/64/150/150',
       username: 'carol_santos_ofc', // Nome de usuário mais realista
       messages: [
-        { id: '1', sender: 'other' as const, text: 'aquela nossa noite não sai da minha cabeça...', timestamp: '23:15', isBlurred: true },
+        { id: '1', sender: 'other' as const, text: 'aquela nossa noite não sai da minha cabeça...', timestamp: '23:15', isBlurred: false }, // Desborrado
         { id: '2', sender: 'self' as const, text: 'foi tudo perfeito, cada detalhe.', timestamp: '23:17', isBlurred: true },
         { id: '3', sender: 'other' as const, text: 'precisamos fazer de novo, mas em um lugar que a gente possa fazer mais barulho ;)', timestamp: '23:18', isBlurred: true },
         { id: '4', sender: 'self' as const, text: 'com certeza! tô livre amanhã a noite toda...', timestamp: '23:19', isBlurred: true },
@@ -29,7 +29,7 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/65/150/150',
       username: 'gui_fernandes_92', // Nome de usuário mais realista
       messages: [
-        { id: '1', sender: 'other' as const, text: 'acha que alguém desconfia?', timestamp: '18:05', isBlurred: true },
+        { id: '1', sender: 'other' as const, text: 'acha que alguém desconfia?', timestamp: '18:05', isBlurred: false }, // Desborrado
         { id: '2', sender: 'self' as const, text: 'impossível. a gente disfarça bem demais.', timestamp: '18:07', isBlurred: true },
         { id: '3', sender: 'other' as const, text: 'mas é isso que deixa tudo mais gostoso, né? o perigo do nosso segredo.', timestamp: '18:08', isBlurred: true },
         { id: '4', sender: 'self' as const, text: 'tô com saudade já. mesmo lugar amanhã?', timestamp: '18:10', isBlurred: true },
@@ -46,7 +46,7 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/66/150/150',
       username: 'ana_clara_x', // Nome de usuário mais realista
       messages: [
-        { id: '1', sender: 'other' as const, text: 'ainda tô sentindo seu cheiro no meu travesseiro.', timestamp: '09:10', isBlurred: true },
+        { id: '1', sender: 'other' as const, text: 'ainda tô sentindo seu cheiro no meu travesseiro.', timestamp: '09:10', isBlurred: false }, // Desborrado
         { id: '2', sender: 'self' as const, text: 'e eu ainda sinto o gosto do seu beijo.', timestamp: '09:12', isBlurred: true },
         { id: '3', sender: 'other' as const, text: 'não fala assim que eu largo tudo e vou aí agora.', timestamp: '09:13', isBlurred: true },
         { id: '4', sender: 'self' as const, text: 'a porta tá sempre aberta pra você...', timestamp: '09:15', isBlurred: true },
@@ -63,7 +63,7 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/67/150/150',
       username: 'pedro_henrique_rj', // Nome de usuário mais realista
       messages: [
-        { id: '1', sender: 'other' as const, text: 'sonhei com você de novo essa noite...', timestamp: '08:30', isBlurred: true },
+        { id: '1', sender: 'other' as const, text: 'sonhei com você de novo essa noite...', timestamp: '08:30', isBlurred: false }, // Desborrado
         { id: '2', sender: 'self' as const, text: 'coisa boa ou ruim? haha', timestamp: '08:32', isBlurred: true },
         { id: '3', sender: 'other' as const, text: 'foi o melhor sonho da minha vida. pena que eu acordei.', timestamp: '08:33', isBlurred: true },
         { id: '4', sender: 'self' as const, text: 'a gente pode continuar ele na vida real. casa livre hoje.', timestamp: '08:34', isBlurred: true },
@@ -80,7 +80,7 @@ const JealousyMessage: React.FC = () => {
       profilePic: 'https://picsum.photos/id/68/150/150',
       username: 'julia_almeida_sp', // Nome de usuário mais realista
       messages: [
-        { id: '1', sender: 'other' as const, text: 'gostou do presente que eu deixei pra vc?', timestamp: '20:00', isBlurred: true },
+        { id: '1', sender: 'other' as const, text: 'gostou do presente que eu deixei pra vc?', timestamp: '20:00', isBlurred: false }, // Desborrado
         { id: '2', sender: 'self' as const, text: 'eu AMEI. ficou perfeito em mim.', timestamp: '20:02', isBlurred: true },
         { id: '3', sender: 'other' as const, text: 'imagino... pena que não tô aí pra ver pessoalmente.', timestamp: '20:03', isBlurred: true },
         { id: '4', sender: 'self' as const, text: 'mas logo vc vai ver. e vai poder tirar com a boca. que delicia.', timestamp: '20:04', isBlurred: true },

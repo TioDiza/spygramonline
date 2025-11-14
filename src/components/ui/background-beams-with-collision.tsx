@@ -19,48 +19,46 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   quantity = 300, // Quantidade aumentada para um efeito mais denso
   duration = 10,
   delay = 0.8,
-  size = 1, // Tamanho maior para um efeito mais visível
-  color = "rgba(255, 0, 255, 0.5)", // Roxo/Magenta mais brilhante e opaco
+  size = 1.5, // Tamanho maior para um efeito mais visível
+  color = "rgba(255, 0, 255, 0.7)", // Roxo/Magenta mais brilhante e opaco
   children, // Desestruturado para ser renderizado
 }) => {
-  const [beams, setBeams] = useState<React.ReactElement[]>([]); // Corrigido JSX.Element[] para React.ReactElement[]
+  const [beams, setBeams] = useState<React.ReactElement[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     const generateBeams = () => {
-      const newBeams: React.ReactElement[] = []; // Corrigido JSX.Element[] para React.ReactElement[]
+      const newBeams: React.ReactElement[] = [];
       const containerWidth = containerRef.current?.offsetWidth || window.innerWidth;
       const containerHeight = containerRef.current?.offsetHeight || window.innerHeight;
 
       for (let i = 0; i < quantity; i++) {
         const x = Math.random() * containerWidth;
-        const y = Math.random() * containerHeight;
+        const y = Math.random() * containerHeight; // Posição inicial aleatória
         const rotation = Math.random() * 360;
-        const scale = 0.5 + Math.random() * 0.5; // Escala aleatória para variação
+        // const scale = 0.5 + Math.random() * 0.5; // Variável 'scale' removida
         const animationDelay = Math.random() * duration;
 
         newBeams.push(
           <motion.div
             key={i}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: [0, 0.5, 0], scale: [0, scale, 0] }}
+            initial={{ opacity: 0, y: y - containerHeight, rotate: rotation }} // Começa acima da tela, com rotação
+            animate={{ opacity: [0, 0.7, 0], y: y + containerHeight * 1.5, rotate: rotation }} // Cai e desaparece
             transition={{
               duration: duration,
               repeat: Infinity,
               delay: animationDelay,
-              ease: "easeInOut",
+              ease: "linear", // Animação linear para queda constante
             }}
             style={{
               position: "absolute",
               left: x,
-              top: y,
               width: `${size}px`,
               height: `${size * 100}px`, // Torná-los feixes verticais e mais longos
               backgroundColor: color,
               borderRadius: "9999px", // Pontas arredondadas
-              transform: `rotate(${rotation}deg)`,
               transformOrigin: "center",
             }}
             className="pointer-events-none"
