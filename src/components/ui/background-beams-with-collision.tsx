@@ -16,7 +16,7 @@ interface BackgroundBeamsProps {
 
 const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   className,
-  quantity = 600, // Aumentado para maior densidade, como na imagem
+  quantity = 800, // Aumentado para maior densidade e melhor distribuição
   duration = 8, // Duração da animação (velocidade da queda)
   delay = 0.8, // Atraso entre as animações dos feixes
   beamWidth = 1.5, // Largura do feixe
@@ -31,13 +31,13 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
 
     const generateBeams = () => {
       const newBeams: React.ReactElement[] = [];
-      const containerWidth = window.innerWidth; // Usa a largura total da janela
-      const containerHeight = window.innerHeight; // Usa a altura total da janela
+      const currentWindowWidth = window.innerWidth; // Usa a largura total da janela
+      const currentWindowHeight = window.innerHeight; // Usa a altura total da janela
 
       for (let i = 0; i < quantity; i++) {
-        const initialX = Math.random() * containerWidth; // Distribui por toda a largura
-        const initialY = -Math.random() * containerHeight; // Começa aleatoriamente acima da tela
-        const finalY = containerHeight + beamLength; // Termina abaixo da tela
+        const initialX = Math.random() * currentWindowWidth; // Distribui por toda a largura da janela
+        const initialY = -Math.random() * currentWindowHeight; // Começa aleatoriamente acima da tela
+        const finalY = currentWindowHeight + beamLength; // Termina abaixo da tela
         const randomColor = instagramColors[Math.floor(Math.random() * instagramColors.length)]; // Cor aleatória por pingo
         const rotation = Math.random() * 30 - 15; // Rotação aleatória entre -15 e 15 graus
         const animationDelay = Math.random() * duration;
@@ -83,9 +83,10 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
     <div
       ref={containerRef}
       className={cn(
-        "h-full w-full absolute inset-0 overflow-hidden z-0", // z-0 para garantir que esteja no fundo
+        "absolute inset-0 overflow-hidden z-0", // Removido h-full w-full daqui
         className
       )}
+      style={{ width: '100vw', height: '100vh' }} // Força o container a ocupar 100% da viewport
     >
       {beams}
       {children} {/* Renderiza os elementos filhos aqui */}
