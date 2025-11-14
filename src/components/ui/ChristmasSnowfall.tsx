@@ -8,7 +8,7 @@ interface ChristmasSnowfallProps {
 const ChristmasSnowfall: React.FC<ChristmasSnowfallProps> = ({ children, className }) => {
   const numberOfHats = 5; // Quantidade de toucas caindo
   const numberOfSnowflakes = 50; // Quantidade de flocos de neve caindo
-  const accumulatedSnowHeight = 100; // Altura da neve acumulada em pixels
+  const accumulatedSnowHeight = 80; // Altura da neve acumulada em pixels, ajustada para ser um pouco menor
 
   // Gera as toucas de Papai Noel
   const hats = Array.from({ length: numberOfHats }).map((_, i) => {
@@ -52,7 +52,7 @@ const ChristmasSnowfall: React.FC<ChristmasSnowfallProps> = ({ children, classNa
     <div className={`relative w-full h-full overflow-hidden ${className}`}>
       <style>{`
         :root {
-          --accumulated-snow-height: ${accumulatedSnowHeight}px; /* Define a altura da neve acumulada */
+          --accumulated-snow-height: ${accumulatedSnowHeight}px;
         }
 
         @keyframes fall-snowflake {
@@ -60,12 +60,16 @@ const ChristmasSnowfall: React.FC<ChristmasSnowfallProps> = ({ children, classNa
             transform: translateY(-100%);
             opacity: var(--initial-opacity, 1);
           }
-          85% { /* Começa a desaparecer um pouco antes de tocar a neve acumulada */
+          80% { /* Flocos totalmente visíveis */
             opacity: var(--initial-opacity, 1);
           }
+          95% { /* Começam a desaparecer suavemente */
+            opacity: 0.2;
+          }
           100% {
-            transform: translateY(calc(100vh - var(--accumulated-snow-height)));
-            opacity: 0; /* Desaparece completamente */
+            /* Param para que a base do floco toque a neve acumulada */
+            transform: translateY(calc(100vh - var(--accumulated-snow-height) - var(--snowflake-size)));
+            opacity: 0; /* Totalmente transparente */
           }
         }
 
@@ -75,7 +79,7 @@ const ChristmasSnowfall: React.FC<ChristmasSnowfallProps> = ({ children, classNa
             opacity: var(--initial-opacity, 1);
           }
           100% {
-            transform: translateY(150vh) rotate(var(--final-rotation, 0deg)); /* Hats fall completely off-screen */
+            transform: translateY(150vh) rotate(var(--final-rotation, 0deg));
             opacity: var(--final-opacity, 1);
           }
         }
@@ -90,8 +94,9 @@ const ChristmasSnowfall: React.FC<ChristmasSnowfallProps> = ({ children, classNa
             left: `${snowflake.left}%`,
             animation: `fall-snowflake ${snowflake.duration}s linear ${snowflake.delay}s infinite`,
             '--initial-opacity': `${snowflake.opacity}`,
+            '--snowflake-size': `${snowflake.size}px`, // Passa o tamanho para o CSS
             zIndex: 0,
-          } as React.CSSProperties} // Type assertion for custom CSS properties
+          } as React.CSSProperties}
         />
       ))}
       {hats.map((hat) => (
@@ -110,18 +115,19 @@ const ChristmasSnowfall: React.FC<ChristmasSnowfallProps> = ({ children, classNa
             '--initial-opacity': '0.4',
             '--final-opacity': '0.4',
             zIndex: 0,
-          } as React.CSSProperties} // Type assertion for custom CSS properties
+          } as React.CSSProperties}
         />
       ))}
 
       {/* Camada de Neve Acumulada */}
       <div
-        className="fixed bottom-0 left-0 right-0 bg-white pointer-events-none"
+        className="fixed bottom-0 left-0 right-0 bg-white/90 pointer-events-none" // Branco levemente translúcido
         style={{
           height: 'var(--accumulated-snow-height)',
           zIndex: 5, // Acima dos elementos caindo, abaixo do conteúdo principal
-          boxShadow: '0 -5px 20px rgba(255,255,255,0.3)', // Sombra suave para profundidade
-          borderRadius: '20px 20px 0 0', // Cantos superiores arredondados
+          boxShadow: '0 -5px 30px rgba(255,255,255,0.5)', // Sombra mais forte e suave
+          borderRadius: '50px 50px 0 0', // Cantos superiores mais arredondados
+          filter: 'blur(1px)', // Desfoque sutil para suavidade
         }}
       />
 
