@@ -6,7 +6,7 @@ import InteractionProfilesSection from '../components/InteractionProfilesSection
 import ScrollHint from '../components/ScrollHint';
 import JealousyMessage from '../components/JealousyMessage';
 import IphoneMockup from '../components/IphoneMockup';
-import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle, Gift } from 'lucide-react'; // Adicionado Gift
 import BenefitsCarousel from '../components/BenefitsCarousel';
 import LiveChat from '../components/LiveChat';
 import SparkleButton from '../components/ui/SparkleButton';
@@ -15,6 +15,7 @@ import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import FinalCallToAction from '../components/FinalCallToAction';
 import { mockProfileData } from '../services/profileService'; // Importa os dados mockados
+import { ChristmasSnowfall } from '../components/ui/ChristmasSnowfall'; // Importa ChristmasSnowfall
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -112,10 +113,10 @@ const InvasionConcludedPage: React.FC = () => {
                      profileData?.profilePicUrl === mockProfileData.profilePicUrl;
 
   return (
-    <>
+    <ChristmasSnowfall className="min-h-screen"> {/* Envolve o conteúdo com ChristmasSnowfall */}
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24 pt-16 min-h-screen">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
-          Invasão Concluída! <span className="text-gray-500 text-xl">(Acesso Parcial)</span>
+          Invasão Concluída! 🎄 Oferta de Natal!
         </h1>
         
         {isMockData && (
@@ -143,7 +144,7 @@ const InvasionConcludedPage: React.FC = () => {
 
         <div className="mt-12 flex justify-center">
             <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
-              Desbloquear Acesso Total AGORA!
+              Desbloquear Acesso Total AGORA! 🎁
             </SparkleButton>
         </div>
 
@@ -211,7 +212,7 @@ const InvasionConcludedPage: React.FC = () => {
           <div className="mt-16 p-6 bg-gray-900/50 border border-yellow-500/50 rounded-xl max-w-3xl mx-auto flex items-start gap-4 text-left">
             <AlertTriangle className="w-12 h-12 text-yellow-400 flex-shrink-0" />
             <div>
-              <h3 className="text-xl font-bold text-white mb-1">Aviso Importante</h3>
+              <h3 className="text-xl font-bold text-white mb-1">Aviso Importante 🎁</h3>
               <p className="text-gray-300">
                 Garantimos o completo anonimato de todos os nossos clientes. Contudo, o SpyGram é uma ferramenta de monitoramento e não nos responsabilizamos por nenhuma ação realizada dentro da conta acessada. Use com responsabilidade.
               </p>
@@ -219,7 +220,7 @@ const InvasionConcludedPage: React.FC = () => {
           </div>
           <div className="mt-12 flex justify-center">
             <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
-              Quero Acesso a Todos Benefícios
+              Quero Acesso a Todos Benefícios 🎁
             </SparkleButton>
           </div>
         </div>
@@ -236,7 +237,7 @@ const InvasionConcludedPage: React.FC = () => {
 
         <div className="mt-20 w-full max-w-4xl mx-auto text-center p-8 bg-gray-900/50 border border-green-500/30 rounded-2xl">
           <div className="mx-auto mb-6 w-32 h-32 rounded-full border-4 border-green-500 bg-gray-800/50 flex flex-col items-center justify-center text-white">
-            <ShieldCheck className="w-10 h-10 text-green-400 mb-1" />
+            <Gift className="w-10 h-10 text-green-400 mb-1" /> {/* Ícone de presente */}
             <span className="text-2xl font-bold">7 Dias</span>
             <span className="text-xs font-semibold">de Garantia</span>
           </div>
@@ -248,7 +249,7 @@ const InvasionConcludedPage: React.FC = () => {
           </p>
           <div className="mt-8 flex justify-center">
             <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
-              Desbloquear Acesso Total Agora (Sem Risco)
+              Desbloquear Acesso Total Agora (Sem Risco) 🎁
             </SparkleButton>
           </div>
         </div>
@@ -260,7 +261,7 @@ const InvasionConcludedPage: React.FC = () => {
         </AnimatePresence>
       </div>
       <FloatingWhatsAppButton />
-    </>
+    </ChristmasSnowfall>
   );
 };
 
