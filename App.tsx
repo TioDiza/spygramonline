@@ -244,7 +244,7 @@ const MainAppContent: React.FC = () => {
               className="absolute z-30" // Z-index maior para ficar acima do logo
               style={{
                 width: '120px', // Ajuste o tamanho conforme necessário
-                top: '-40px',    // Ajuste a posição vertical
+                top: '-10px',    // Ajustado para -10px (30px mais para baixo)
                 left: '50%',
                 transform: 'translateX(-50%) rotate(15deg)', // Centraliza e adiciona uma leve rotação
                 filter: 'drop-shadow(0 5px 10px rgba(0,0,0,0.5))', // Adiciona uma sombra para destacar
