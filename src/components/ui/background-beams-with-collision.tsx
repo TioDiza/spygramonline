@@ -16,11 +16,11 @@ interface BackgroundBeamsProps {
 
 const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
   className,
-  quantity = 150, // Quantidade aumentada para um efeito mais denso
+  quantity = 300, // Quantidade aumentada para um efeito mais denso
   duration = 10,
   delay = 0.8,
-  size = 0.5, // Tamanho menor para um efeito sutil
-  color = "rgba(128, 0, 128, 0.3)", // Roxo com alguma transparência
+  size = 1, // Tamanho maior para um efeito mais visível
+  color = "rgba(255, 0, 255, 0.5)", // Roxo/Magenta mais brilhante e opaco
   children, // Desestruturado para ser renderizado
 }) => {
   const [beams, setBeams] = useState<React.ReactElement[]>([]); // Corrigido JSX.Element[] para React.ReactElement[]
@@ -57,7 +57,7 @@ const BackgroundBeamsWithCollision: React.FC<BackgroundBeamsProps> = ({
               left: x,
               top: y,
               width: `${size}px`,
-              height: `${size * 50}px`, // Torná-los feixes verticais
+              height: `${size * 100}px`, // Torná-los feixes verticais e mais longos
               backgroundColor: color,
               borderRadius: "9999px", // Pontas arredondadas
               transform: `rotate(${rotation}deg)`,
