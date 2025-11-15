@@ -17,8 +17,6 @@ const purchasedItems = [
   "Histórico de Conversas Secretas"
 ];
 
-// O array profilePics não é mais necessário, pois as fotos de perfil foram removidas.
-
 const PurchaseNotification: React.FC = () => {
   useEffect(() => {
     const generateNotification = () => {
@@ -29,27 +27,26 @@ const PurchaseNotification: React.FC = () => {
         <div
           className={`${
             t.visible ? 'animate-enter' : 'animate-leave'
-          } max-w-lg w-full bg-emerald-600 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+          } w-64 bg-emerald-600 shadow-lg rounded-md pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
         >
-          <div className="flex-1 w-0 p-4">
+          <div className="flex-1 p-2"> {/* Padding reduzido */}
             <div className="flex items-start">
-              {/* A imagem de perfil foi removida daqui */}
-              <div className="ml-0 flex-1"> {/* Ajustado ml-3 para ml-0 */}
-                <p className="text-lg font-bold text-white"> {/* Aumentado o tamanho e negrito */}
+              <div className="ml-0 flex-1">
+                <p className="text-sm font-semibold text-white"> {/* Fonte menor e menos negrito */}
                   {randomName}
                 </p>
-                <p className="mt-1 text-base text-emerald-100"> {/* Aumentado o tamanho */}
-                  Acabou de comprar <span className="font-extrabold text-white">{randomItem}</span>! {/* Mais destaque */}
+                <p className="mt-1 text-xs text-emerald-100"> {/* Fonte menor */}
+                  Acabou de comprar <span className="font-bold text-white">{randomItem}</span>!
                 </p>
               </div>
             </div>
           </div>
-          <div className="flex border-l border-emerald-700"> {/* Cor da borda ajustada */}
+          <div className="flex border-l border-emerald-700">
             <button
               onClick={() => toast.dismiss(t.id)}
-              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-emerald-100 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full border border-transparent rounded-none rounded-r-md p-2 flex items-center justify-center text-sm font-medium text-emerald-100 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
             >
-              <CheckCircle className="h-5 w-5 text-white" /> {/* Ícone branco para contraste */}
+              <CheckCircle className="h-4 w-4 text-white" /> {/* Ícone menor */}
             </button>
           </div>
         </div>
