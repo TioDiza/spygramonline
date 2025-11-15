@@ -2,9 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { LockOpen, Zap } from 'lucide-react';
 
-const FinalCallToAction: React.FC = () => {
+interface FinalCallToActionProps {
+  checkoutUrl: string; // Adicionando prop para o URL de checkout
+}
+
+const FinalCallToAction: React.FC<FinalCallToActionProps> = ({ checkoutUrl }) => {
   const handleClick = () => {
-    alert('Redirecionando para a página de compra final...');
+    window.open(checkoutUrl, '_blank'); // Abre o URL em uma nova aba
   };
 
   return (

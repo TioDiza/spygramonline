@@ -15,7 +15,6 @@ import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import FinalCallToAction from '../components/FinalCallToAction';
 import { mockProfileData } from '../services/profileService';
-// import { ChristmasSnowfall } from '../components/ui/ChristmasSnowfall'; // Removido
 import PurchaseNotification from '../components/PurchaseNotification'; // Importa o novo componente
 
 const InvasionConcludedPage: React.FC = () => {
@@ -23,6 +22,9 @@ const InvasionConcludedPage: React.FC = () => {
   const navigate = useNavigate();
   const profileData = location.state?.profileData as ProfileData | undefined;
   const [showScrollHint, setShowScrollHint] = useState(true);
+
+  // URL de checkout
+  const checkoutUrl = "https://go.perfectpay.com.br/PPU38CPUD1S";
 
   useEffect(() => {
     console.log('InvasionConcludedPage mounted. Profile data received:', profileData?.username);
@@ -114,8 +116,8 @@ const InvasionConcludedPage: React.FC = () => {
                      profileData?.profilePicUrl === mockProfileData.profilePicUrl;
 
   return (
-    <div className="min-h-screen"> {/* Removido ChristmasSnowfall e seu className */}
-      <PurchaseNotification /> {/* Adiciona o componente de notificações de compra aqui */}
+    <div className="min-h-screen">
+      <PurchaseNotification />
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24 pt-16 min-h-screen">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
           Invasão Concluída! 🎄 Oferta de Natal!
@@ -147,7 +149,7 @@ const InvasionConcludedPage: React.FC = () => {
         </div>
 
         <div className="mt-12 flex justify-center">
-            <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
+            <SparkleButton checkoutUrl={checkoutUrl}>
               Desbloquear Acesso Total AGORA! 🎁
             </SparkleButton>
         </div>
@@ -223,7 +225,7 @@ const InvasionConcludedPage: React.FC = () => {
             </div>
           </div>
           <div className="mt-12 flex justify-center">
-            <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
+            <SparkleButton checkoutUrl={checkoutUrl}>
               Quero Acesso a Todos Benefícios 🎁
             </SparkleButton>
           </div>
@@ -254,7 +256,7 @@ const InvasionConcludedPage: React.FC = () => {
             Você tem 7 dias para testar o SpyGram sem riscos. Se por qualquer motivo você não estiver satisfeito, basta nos enviar um e-mail e devolveremos 100% do seu investimento, sem perguntas.
           </p>
           <div className="mt-8 flex justify-center">
-            <SparkleButton onClick={() => alert('Redirecionando para a página de compra...')}>
+            <SparkleButton checkoutUrl={checkoutUrl}>
               Desbloquear Acesso Total Agora (Sem Risco) 🎁
             </SparkleButton>
           </div>
@@ -265,7 +267,7 @@ const InvasionConcludedPage: React.FC = () => {
         </div>
 
         <AnimatePresence>
-          {!showScrollHint && <FinalCallToAction />}
+          {!showScrollHint && <FinalCallToAction checkoutUrl={checkoutUrl} />}
         </AnimatePresence>
       </div>
       <FloatingWhatsAppButton />
