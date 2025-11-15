@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 const ToastProvider: React.FC = () => {
   return (
     <Toaster
-      position="top-right" // Posição padrão para as notificações
+      position="bottom-left" // Alterado para 'bottom-left'
       toastOptions={{
         duration: 4000, // Duração padrão de 4 segundos
         style: {
