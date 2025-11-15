@@ -27,7 +27,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ data, isPremiumLocked = false
   const [profilePicError, setProfilePicError] = useState(false);
 
   return (
-    <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in">
+    <div className="mt-10 w-full max-w-2xl mx-auto bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300">
       <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-6 sm:space-y-0 sm:space-x-8">
         <div className="relative w-32 h-32 rounded-full border-4 border-gray-700 object-cover shadow-md overflow-hidden">
           {profilePicError ? (
