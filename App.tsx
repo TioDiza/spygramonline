@@ -37,6 +37,25 @@ const MainAppContent: React.FC = () => {
   const [displayedMessages, setDisplayedMessages] = useState<{ text: string; timestamp: string }[]>([]);
   const [areMessagesDone, setAreMessagesDone] = useState<boolean>(false);
 
+  // Efeito para garantir que o estado de carregamento seja resetado
+  useEffect(() => {
+    // Reseta o estado de carregamento quando o componente é montado
+    setIsLoading(false);
+    setProgressBarProgress(0);
+    setDisplayedMessages([]);
+    setAreMessagesDone(false);
+    setLoadingStartTime(null);
+
+    // Função de limpeza para garantir que o estado seja resetado quando o componente é desmontado
+    return () => {
+      setIsLoading(false);
+      setProgressBarProgress(0);
+      setDisplayedMessages([]);
+      setAreMessagesDone(false);
+      setLoadingStartTime(null);
+    };
+  }, []); // Array de dependências vazio: executa uma vez na montagem e a limpeza na desmontagem
+
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;

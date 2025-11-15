@@ -27,7 +27,7 @@ const InvasionConcludedPage: React.FC = () => {
   useEffect(() => {
     console.log('InvasionConcludedPage mounted. Profile data received:', profileData?.username);
     if (!profileData) {
-      console.log('No profile data received, navigating back to home.');
+      console.warn('No profile data received in InvasionConcludedPage. Navigating back to home.');
       navigate('/');
       return;
     }
@@ -249,7 +249,7 @@ const InvasionConcludedPage: React.FC = () => {
           </div>
           <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
             Sua Satisfação ou Seu Dinheiro de Volta
-          </h2>
+          </h2 >
           <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
             Você tem 7 dias para testar o SpyGram sem riscos. Se por qualquer motivo você não estiver satisfeito, basta nos enviar um e-mail e devolveremos 100% do seu investimento, sem perguntas.
           </p>
