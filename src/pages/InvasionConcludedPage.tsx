@@ -6,7 +6,7 @@ import InteractionProfilesSection from '../components/InteractionProfilesSection
 import ScrollHint from '../components/ScrollHint';
 import JealousyMessage from '../components/JealousyMessage';
 import IphoneMockup from '../components/IphoneMockup';
-import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle, Gift } from 'lucide-react'; // Adicionado Gift
+import { ShieldCheck, History, KeyRound, MapPin, Eye, Smartphone, AlertTriangle, Gift } from 'lucide-react';
 import BenefitsCarousel from '../components/BenefitsCarousel';
 import LiveChat from '../components/LiveChat';
 import SparkleButton from '../components/ui/SparkleButton';
@@ -14,8 +14,9 @@ import FaqSection from '../components/FaqSection';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import FinalCallToAction from '../components/FinalCallToAction';
-import { mockProfileData } from '../services/profileService'; // Importa os dados mockados
-import { ChristmasSnowfall } from '../components/ui/ChristmasSnowfall'; // Importa ChristmasSnowfall
+import { mockProfileData } from '../services/profileService';
+import { ChristmasSnowfall } from '../components/ui/ChristmasSnowfall';
+import PurchaseNotification from '../components/PurchaseNotification'; // Importa o novo componente
 
 const InvasionConcludedPage: React.FC = () => {
   const location = useLocation();
@@ -24,25 +25,25 @@ const InvasionConcludedPage: React.FC = () => {
   const [showScrollHint, setShowScrollHint] = useState(true);
 
   useEffect(() => {
-    console.log('InvasionConcludedPage mounted. Profile data received:', profileData?.username); // Log de montagem
+    console.log('InvasionConcludedPage mounted. Profile data received:', profileData?.username);
     if (!profileData) {
-      console.log('No profile data received, navigating back to home.'); // Log de redirecionamento
+      console.log('No profile data received, navigating back to home.');
       navigate('/');
       return;
     }
 
     const handleScroll = () => {
-      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50; // 50px buffer
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50;
       setShowScrollHint(!isAtBottom);
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check
+    handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [profileData, navigate]); // Adicionado profileData e navigate às dependências
+  }, [profileData, navigate]);
 
   const steps = [
     {
@@ -113,7 +114,8 @@ const InvasionConcludedPage: React.FC = () => {
                      profileData?.profilePicUrl === mockProfileData.profilePicUrl;
 
   return (
-    <ChristmasSnowfall className="min-h-screen"> {/* Envolve o conteúdo com ChristmasSnowfall */}
+    <ChristmasSnowfall className="min-h-screen">
+      <PurchaseNotification /> {/* Adiciona o componente de notificações de compra aqui */}
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24 pt-16 min-h-screen">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-fade-in">
           Invasão Concluída! 🎄 Oferta de Natal!
@@ -237,7 +239,7 @@ const InvasionConcludedPage: React.FC = () => {
 
         <div className="mt-20 w-full max-w-4xl mx-auto text-center p-8 bg-gray-900/50 border border-green-500/30 rounded-2xl">
           <div className="mx-auto mb-6 w-32 h-32 rounded-full border-4 border-green-500 bg-gray-800/50 flex flex-col items-center justify-center text-white">
-            <Gift className="w-10 h-10 text-green-400 mb-1" /> {/* Ícone de presente */}
+            <Gift className="w-10 h-10 text-green-400 mb-1" />
             <span className="text-2xl font-bold">7 Dias</span>
             <span className="text-xs font-semibold">de Garantia</span>
           </div>
