@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import ToastProvider from './src/components/ToastProvider'; // Importa o ToastProvider
+import { ChristmasSnowfall } from './src/components/ui/ChristmasSnowfall'; // Importa ChristmasSnowfall
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -11,7 +12,9 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <ToastProvider /> {/* Adiciona o ToastProvider aqui */}
-    <App />
+    <ChristmasSnowfall className="min-h-screen"> {/* Envolve toda a aplicação aqui */}
+      <ToastProvider />
+      <App />
+    </ChristmasSnowfall>
   </React.StrictMode>
 );

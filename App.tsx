@@ -6,7 +6,6 @@ import SparkleButton from '@/src/components/ui/SparkleButton';
 import Loader from '@/src/components/Loader';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import ConsentCheckbox from '@/src/components/ConsentCheckbox';
-import { ChristmasSnowfall } from '@/src/components/ui/ChristmasSnowfall';
 import { Lock } from 'lucide-react';
 import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
 import ProgressBar from '@/src/components/ProgressBar';
@@ -162,7 +161,7 @@ const MainAppContent: React.FC = () => {
   }, [searchQuery, hasConsented, navigate, loadingMessages]);
 
   return (
-    <ChristmasSnowfall className="min-h-screen">
+    <div className="min-h-screen"> {/* Removido ChristmasSnowfall e seu className */}
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full">
         <style>{`
@@ -339,7 +338,7 @@ const MainAppContent: React.FC = () => {
           <p>Todos os direitos reservados a SpyGram</p>
         </footer>
       </div>
-    </ChristmasSnowfall>
+    </div>
   );
 };
 

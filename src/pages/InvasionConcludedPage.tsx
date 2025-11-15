@@ -15,7 +15,7 @@ import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import FinalCallToAction from '../components/FinalCallToAction';
 import { mockProfileData } from '../services/profileService';
-import { ChristmasSnowfall } from '../components/ui/ChristmasSnowfall';
+// import { ChristmasSnowfall } from '../components/ui/ChristmasSnowfall'; // Removido
 import PurchaseNotification from '../components/PurchaseNotification'; // Importa o novo componente
 
 const InvasionConcludedPage: React.FC = () => {
@@ -114,7 +114,7 @@ const InvasionConcludedPage: React.FC = () => {
                      profileData?.profilePicUrl === mockProfileData.profilePicUrl;
 
   return (
-    <ChristmasSnowfall className="min-h-screen">
+    <div className="min-h-screen"> {/* Removido ChristmasSnowfall e seu className */}
       <PurchaseNotification /> {/* Adiciona o componente de notificações de compra aqui */}
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full pb-24 pt-16 min-h-screen">
         <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
@@ -269,7 +269,7 @@ const InvasionConcludedPage: React.FC = () => {
         </AnimatePresence>
       </div>
       <FloatingWhatsAppButton />
-    </ChristmasSnowfall>
+    </div>
   );
 };
 
