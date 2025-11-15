@@ -124,7 +124,7 @@ const MainAppContent: React.FC = () => {
       if (fetchedProfileData.username === mockProfileData.username &&
           fetchedProfileData.fullName === mockProfileData.fullName &&
           fetchedProfileData.profilePicUrl === mockProfileData.profilePicUrl) {
-        throw new Error('O backend retornou dados de exemplo. Por favor, verifique a configuração do seu backend proxy.');
+        throw new Error('Servidor com alta demanda de pedidos, tente novamente');
       }
 
       // Gera dados mockados para topInteractions, pois a API não os fornece
@@ -161,7 +161,7 @@ const MainAppContent: React.FC = () => {
   }, [searchQuery, hasConsented, navigate, loadingMessages]);
 
   return (
-    <div className="min-h-screen"> {/* Removido ChristmasSnowfall e seu className */}
+    <div className="min-h-screen">
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full">
         <style>{`
