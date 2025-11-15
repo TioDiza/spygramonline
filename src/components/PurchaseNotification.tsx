@@ -17,27 +17,13 @@ const purchasedItems = [
   "Histórico de Conversas Secretas"
 ];
 
-// As profilePics não são mais necessárias, mas mantidas para evitar erros de referência se usadas em outro lugar
-// const profilePics = [
-//   "https://picsum.photos/id/1005/50/50",
-//   "https://picsum.photos/id/1011/50/50",
-//   "https://picsum.photos/id/1012/50/50",
-//   "https://picsum.photos/id/1013/50/50",
-//   "https://picsum.photos/id/1014/50/50",
-//   "https://picsum.photos/id/1015/50/50",
-//   "https://picsum.photos/id/1016/50/50",
-//   "https://picsum.photos/id/1018/50/50",
-//   "https://picsum.photos/id/1020/50/50",
-//   "https://picsum.photos/id/1025/50/50",
-// ];
+// O array profilePics não é mais necessário, pois as fotos de perfil foram removidas.
 
 const PurchaseNotification: React.FC = () => {
   useEffect(() => {
     const generateNotification = () => {
       const randomName = names[Math.floor(Math.random() * names.length)];
       const randomItem = purchasedItems[Math.floor(Math.random() * purchasedItems.length)];
-      // randomPic não é mais usado, mas mantido para consistência com a lógica anterior
-      // const randomPic = profilePics[Math.floor(Math.random() * profilePics.length)]; 
 
       toast.custom((t) => (
         <div
@@ -47,7 +33,7 @@ const PurchaseNotification: React.FC = () => {
         >
           <div className="flex-1 w-0 p-4">
             <div className="flex items-start">
-              {/* Removido o div com a imagem de perfil */}
+              {/* A imagem de perfil foi removida daqui */}
               <div className="ml-0 flex-1"> {/* Ajustado ml-3 para ml-0 */}
                 <p className="text-lg font-bold text-white"> {/* Aumentado o tamanho e negrito */}
                   {randomName}
