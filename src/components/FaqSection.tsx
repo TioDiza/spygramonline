@@ -26,7 +26,7 @@ const faqs = [
 
 const FaqSection: React.FC = () => {
   return (
-    <div className="mt-20 w-full max-w-4xl mx-auto text-center">
+    <div className="mt-20 w-full max-w-4xl mx-auto text-center animate-fade-in">
       <h2 className="text-4xl font-extrabold mb-8 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
         Perguntas Frequentes
       </h2>

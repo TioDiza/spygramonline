@@ -109,9 +109,9 @@ const JealousyMessage: React.FC = () => {
   };
 
   return (
-    <div className="mt-20 w-full text-center">
+    <div className="mt-20 w-full text-center animate-fade-in">
       <HeartCrack className="w-20 h-20 text-red-600 mx-auto mb-8 animate-pulse" />
-      <h2 className="text-5xl font-extrabold mb-2 bg-gradient-to-r from-red-600 via-pink-700 to-purple-800 text-transparent bg-clip-text">
+      <h2 className="text-5xl font-extrabold mb-2 bg-gradient-to-r from-red-600 via-pink-700 to-purple-800 text-transparent bg-clip-text animate-fade-in">
         A VERDADE DÓI.
       </h2>
       <p className="text-2xl text-gray-300 font-medium mb-8">
