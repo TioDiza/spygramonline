@@ -1,92 +1,116 @@
 import React from 'react';
 
 interface ChristmasSnowfallProps {
-  children: React.ReactNode;
   className?: string;
+  children?: React.ReactNode; // Adicionado: 'children' para permitir conteúdo dentro do componente
 }
 
-const ChristmasSnowfall: React.FC<ChristmasSnowfallProps> = ({ children, className }) => {
-  const numberOfHats = 5; // Quantidade de toucas caindo
-  const numberOfSnowflakes = 50; // Quantidade de flocos de neve caindo
-
-  // Gera as toucas de Papai Noel
-  const hats = Array.from({ length: numberOfHats }).map((_, i) => {
-    const duration = Math.random() * 10 + 10; // Duração entre 10s e 20s
-    const delay = Math.random() * 10; // Atraso entre 0s e 10s
-    const left = Math.random() * 100; // Posição horizontal entre 0% e 100%
-    const size = Math.random() * 30 + 40; // Tamanho entre 40px e 70px
-    const initialRotation = Math.random() * 360; // Rotação inicial aleatória
-    const finalRotation = initialRotation + (Math.random() > 0.5 ? 360 : -360); // Gira uma volta completa
-
-    return (
-      <img
-        key={`hat-${i}`}
-        src="/santa_hat.png"
-        alt="Santa Hat"
-        className="absolute opacity-40 pointer-events-none"
-        style={{
-          width: `${size}px`,
-          height: 'auto',
-          left: `${left}%`,
-          animation: `fall ${duration}s linear ${delay}s infinite`,
-          '--initial-rotation': `${initialRotation}deg`,
-          '--final-rotation': `${finalRotation}deg`,
-          '--initial-opacity': '0.4',
-          '--final-opacity': '0.4',
-          zIndex: 0, // Garante que fique no fundo
-        } as React.CSSProperties} // Type assertion for custom CSS properties
-      />
-    );
-  });
-
-  // Gera os flocos de neve
-  const snowflakes = Array.from({ length: numberOfSnowflakes }).map((_, i) => {
-    const duration = Math.random() * 8 + 5; // Duração entre 5s e 13s
-    const delay = Math.random() * 10; // Atraso entre 0s e 10s
-    const left = Math.random() * 100; // Posição horizontal entre 0% e 100%
-    const size = Math.random() * 3 + 2; // Tamanho entre 2px e 5px
-    const opacity = Math.random() * 0.5 + 0.3; // Opacidade entre 0.3 e 0.8
-
-    return (
-      <div
-        key={`snow-${i}`}
-        className="absolute bg-white rounded-full pointer-events-none"
-        style={{
-          width: `${size}px`,
-          height: `${size}px`,
-          left: `${left}%`,
-          animation: `fall ${duration}s linear ${delay}s infinite`,
-          '--initial-rotation': '0deg', // Neve não gira
-          '--final-rotation': '0deg',
-          '--initial-opacity': `${opacity}`,
-          '--final-opacity': `${opacity}`,
-          zIndex: 0, // Garante que fique no fundo
-        } as React.CSSProperties} // Type assertion for custom CSS properties
-      />
-    );
-  });
-
+const ChristmasSnowfallComponent: React.FC<ChristmasSnowfallProps> = ({ className, children }) => {
   return (
-    <div className={`relative w-full h-full overflow-hidden ${className}`}>
+    <>
       <style>{`
-        @keyframes fall {
+        /* Estilos para a neve */
+        .snow-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          overflow: hidden;
+          z-index: 1; /* Abaixo do conteúdo principal */
+        }
+
+        .snowflake {
+          position: absolute;
+          background: white;
+          border-radius: 50%;
+          opacity: 0.8;
+          animation: snowfall linear infinite;
+        }
+
+        @keyframes snowfall {
           0% {
-            transform: translateY(-100%) rotate(var(--initial-rotation, 0deg));
-            opacity: var(--initial-opacity, 1);
+            transform: translateY(-10vh);
+            opacity: 0;
+          }
+          20% {
+            opacity: 0.8;
           }
           100% {
-            transform: translateY(150vh) rotate(var(--final-rotation, 0deg));
-            opacity: var(--final-opacity, 1);
+            transform: translateY(100vh);
+            opacity: 0;
+          }
+        }
+
+        /* Estilos para os chapéus de Papai Noel */
+        .santa-hat-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          overflow: hidden;
+          z-index: 2; /* Acima da neve, mas abaixo do conteúdo principal */
+        }
+
+        .santa-hat {
+          position: absolute;
+          width: 50px; /* Tamanho do chapéu */
+          height: auto;
+          opacity: 0.9;
+          animation: hatfall linear infinite;
+        }
+
+        @keyframes hatfall {
+          0% {
+            transform: translateY(-10vh) rotate(0deg);
+            opacity: 0;
+          }
+          20% {
+            opacity: 0.9;
+          }
+          100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
           }
         }
       `}</style>
-      {snowflakes}
-      {hats}
-      <div className="relative z-10"> {/* Conteúdo principal com z-index maior */}
-        {children}
+      <div className="snow-container">
+        {Array.from({ length: 50 }).map((_, i) => (
+          <div
+            key={`snow-${i}`}
+            className="snowflake"
+            style={{
+              width: `${Math.random() * 5 + 2}px`,
+              height: `${Math.random() * 5 + 2}px`,
+              left: `${Math.random() * 100}%`,
+              animationDuration: `${Math.random() * 10 + 5}s`,
+              animationDelay: `${Math.random() * 5}s`,
+            }}
+          ></div>
+        ))}
       </div>
-    </div>
+      <div className="santa-hat-container">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <img
+            key={`hat-${i}`}
+            src="/santa_hat.png" // Certifique-se de que esta imagem está em sua pasta public/
+            alt="Santa Hat"
+            className="santa-hat"
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDuration: `${Math.random() * 15 + 8}s`,
+              animationDelay: `${Math.random() * 7}s`,
+              transform: `scale(${Math.random() * 0.5 + 0.5})`, // Varia o tamanho
+            }}
+          />
+        ))}
+      </div>
+      <div className={className}>{children}</div>
+    </>
   );
 };
 
-export { ChristmasSnowfall };
+export const ChristmasSnowfall = React.memo(ChristmasSnowfallComponent);
