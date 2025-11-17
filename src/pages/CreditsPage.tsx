@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Coins, Infinity, Star } from 'lucide-react'; // 'Zap' removido
+import { ShieldCheck, Coins, Infinity, Star } from 'lucide-react';
 import SparkleButton from '../components/ui/SparkleButton'; 
 import toast from 'react-hot-toast'; // Importa o toast
 
@@ -103,7 +103,7 @@ const CreditsPage: React.FC = () => {
           ))}
         </div>
 
-        <div className="mt-12 w-full max-w-xs"> {/* Adicionado um contêiner para o botão */}
+        <div className="mt-12 w-full max-w-xs">
           <SparkleButton onClick={handleInvadeClick}>
             Realizar invasão
           </SparkleButton>
