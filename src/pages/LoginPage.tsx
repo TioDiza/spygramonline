@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
 
     if (username === correctUsername && password === correctPassword) {
       console.log('Login bem-sucedido!');
-      navigate('/'); // Redireciona para a página inicial após o login
+      navigate('/servers'); // Redireciona para a página de servidores após o login
     } else {
       setError('Nome de usuário ou senha incorretos.');
     }
