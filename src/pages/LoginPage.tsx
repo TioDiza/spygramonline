@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck } from 'lucide-react'; // Usando ShieldCheck para o ícone 'Site Seguro'
+import { ShieldCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext'; // Importa o hook useAuth
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { login } = useAuth(); // Usa o hook useAuth para acessar a função login
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Credenciais fixas para o login
     const correctUsername = 'user403@spygram.com';
     const correctPassword = 'spygram1234';
 
@@ -23,7 +24,8 @@ const LoginPage: React.FC = () => {
 
     if (username === correctUsername && password === correctPassword) {
       console.log('Login bem-sucedido!');
-      navigate('/servers'); // Redireciona para a página de servidores após o login
+      login(); // Chama a função login do contexto
+      navigate('/servers'); // Redireciona para a página de servidores
     } else {
       setError('Nome de usuário ou senha incorretos.');
     }
@@ -31,7 +33,6 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
-      {/* Header com o logo SpyGram */}
       <header className="absolute top-4 left-4 flex items-center gap-2">
         <img src="/spygram_transparentebranco.png" alt="SpyGram Logo" className="h-8" />
         <span className="text-xl font-bold">SpyGram</span>

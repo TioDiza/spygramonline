@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShieldCheck } from 'lucide-react';
 
 interface ServerCardProps {
@@ -7,9 +7,7 @@ interface ServerCardProps {
 }
 
 const ServerCard: React.FC<ServerCardProps> = ({ serverNumber, ping }) => {
-  // Calcula a largura da barra de ping baseada no ping (quanto menor o ping, mais cheia a barra)
-  // Invertemos a lógica para que pings menores (melhores) mostrem mais preenchimento
-  const maxPing = 100; // Ping máximo para escala
+  const maxPing = 100;
   const fillPercentage = Math.max(0, Math.min(100, 100 - (ping / maxPing) * 100));
 
   return (
@@ -30,7 +28,7 @@ const ServerCard: React.FC<ServerCardProps> = ({ serverNumber, ping }) => {
 };
 
 const ServersPage: React.FC = () => {
-  const servers = [
+  const initialServers = [
     { id: 0, ping: 24 },
     { id: 1, ping: 88 },
     { id: 2, ping: 52 },
@@ -38,6 +36,34 @@ const ServersPage: React.FC = () => {
     { id: 4, ping: 82 },
     { id: 5, ping: 12 },
   ];
+
+  const [servers, setServers] = useState(initialServers);
+  const [onlineUsers, setOnlineUsers] = useState(
+    Math.floor(Math.random() * (590 - 390 + 1)) + 390
+  );
+
+  // Efeito para atualizar os pings dos servidores
+  useEffect(() => {
+    const pingInterval = setInterval(() => {
+      setServers((prevServers) =>
+        prevServers.map((server) => ({
+          ...server,
+          ping: Math.floor(Math.random() * (100 - 10 + 1)) + 10, // Pings entre 10 e 100ms
+        }))
+      );
+    }, 3000); // Atualiza a cada 3 segundos
+
+    return () => clearInterval(pingInterval);
+  }, []);
+
+  // Efeito para atualizar o número de usuários online
+  useEffect(() => {
+    const usersInterval = setInterval(() => {
+      setOnlineUsers(Math.floor(Math.random() * (590 - 390 + 1)) + 390); // Usuários entre 390 e 590
+    }, 5000); // Atualiza a cada 5 segundos
+
+    return () => clearInterval(usersInterval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8">
@@ -75,7 +101,7 @@ const ServersPage: React.FC = () => {
 
         <div className="flex items-center gap-2 text-gray-400 text-sm mb-20">
           <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-          <span>390 Usuários Online</span>
+          <span>{onlineUsers} Usuários Online</span>
         </div>
       </main>
 

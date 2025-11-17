@@ -8,11 +8,13 @@ import ErrorMessage from '@/src/components/ErrorMessage';
 import ConsentCheckbox from '@/src/components/ConsentCheckbox';
 import { Lock } from 'lucide-react';
 import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
-import LoginPage from '@/src/pages/LoginPage'; // Importa a nova página de login
-import ServersPage from '@/src/pages/ServersPage'; // Importa a nova página de servidores
+import LoginPage from '@/src/pages/LoginPage';
+import ServersPage from '@/src/pages/ServersPage';
 import ProgressBar from '@/src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData, mockProfileData } from './src/services/profileService';
+import { AuthProvider } from './src/context/AuthContext'; // Importa AuthProvider
+import ProtectedRoute from './src/components/ProtectedRoute'; // Importa ProtectedRoute
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -348,12 +350,21 @@ const MainAppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<MainAppContent />} />
-        <Route path="/invasion-concluded" element={<InvasionConcludedPage />} />
-        <Route path="/login" element={<LoginPage />} /> {/* Nova rota para a página de login */}
-        <Route path="/servers" element={<ServersPage />} /> {/* Nova rota para a página de servidores */}
-      </Routes>
+      <AuthProvider> {/* Envolve toda a aplicação com AuthProvider */}
+        <Routes>
+          <Route path="/" element={<MainAppContent />} />
+          <Route path="/invasion-concluded" element={<InvasionConcludedPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route 
+            path="/servers" 
+            element={
+              <ProtectedRoute> {/* Protege a rota /servers */}
+                <ServersPage />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 };
