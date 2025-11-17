@@ -12,19 +12,21 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setError(null);
 
-    // Simulação de login:
-    // Em um cenário real, você faria uma chamada de API para autenticar o usuário.
-    // Por enquanto, vamos apenas verificar se os campos não estão vazios.
+    // Credenciais fixas para o login
+    const correctUsername = 'user403@spygram.com';
+    const correctPassword = 'spygram1234';
+
     if (username.trim() === '' || password.trim() === '') {
       setError('Por favor, preencha todos os campos.');
       return;
     }
 
-    // Se o login for "bem-sucedido" (neste mock), redireciona para a página inicial
-    // ou para uma página de dashboard de membros.
-    // Por enquanto, vamos redirecionar para a página inicial.
-    console.log('Attempting login with:', { username, password });
-    navigate('/'); // Redireciona para a página inicial após o "login"
+    if (username === correctUsername && password === correctPassword) {
+      console.log('Login bem-sucedido!');
+      navigate('/'); // Redireciona para a página inicial após o login
+    } else {
+      setError('Nome de usuário ou senha incorretos.');
+    }
   };
 
   return (
