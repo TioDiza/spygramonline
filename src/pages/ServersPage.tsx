@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 
 interface ServerCardProps {
   serverNumber: number;
   ping: number;
+  onClick: () => void; // Adiciona prop onClick
 }
 
-const ServerCard: React.FC<ServerCardProps> = ({ serverNumber, ping }) => {
+const ServerCard: React.FC<ServerCardProps> = ({ serverNumber, ping, onClick }) => {
   const maxPing = 100;
   const fillPercentage = Math.max(0, Math.min(100, 100 - (ping / maxPing) * 100));
 
   return (
-    <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 w-full max-w-[200px] flex flex-col items-start">
+    <button
+      onClick={onClick} // Torna o card clicável
+      className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 w-full max-w-[200px] flex flex-col items-start
+                 hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-200 cursor-pointer"
+    >
       <div className="flex items-center gap-2 mb-2">
         <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
         <span className="text-white font-semibold text-sm">SERVER #{serverNumber}</span>
@@ -23,11 +29,12 @@ const ServerCard: React.FC<ServerCardProps> = ({ serverNumber, ping }) => {
           style={{ width: `${fillPercentage}%` }}
         ></div>
       </div>
-    </div>
+    </button>
   );
 };
 
 const ServersPage: React.FC = () => {
+  const navigate = useNavigate(); // Hook para navegação
   const initialServers = [
     { id: 0, ping: 24 },
     { id: 1, ping: 88 },
@@ -65,6 +72,10 @@ const ServersPage: React.FC = () => {
     return () => clearInterval(usersInterval);
   }, []);
 
+  const handleServerClick = () => {
+    navigate('/credits'); // Redireciona para a página de créditos
+  };
+
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8">
       {/* Header */}
@@ -95,7 +106,7 @@ const ServersPage: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-12">
           {servers.map((server) => (
-            <ServerCard key={server.id} serverNumber={server.id} ping={server.ping} />
+            <ServerCard key={server.id} serverNumber={server.id} ping={server.ping} onClick={handleServerClick} />
           ))}
         </div>
 

@@ -10,11 +10,12 @@ import { Lock } from 'lucide-react';
 import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
 import LoginPage from '@/src/pages/LoginPage';
 import ServersPage from '@/src/pages/ServersPage';
+import CreditsPage from '@/src/pages/CreditsPage'; // Importa a nova página de créditos
 import ProgressBar from '@/src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData, mockProfileData } from './src/services/profileService';
-import { AuthProvider } from './src/context/AuthContext'; // Importa AuthProvider
-import ProtectedRoute from './src/components/ProtectedRoute'; // Importa ProtectedRoute
+import { AuthProvider } from './src/context/AuthContext';
+import ProtectedRoute from './src/components/ProtectedRoute';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -360,6 +361,14 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute> {/* Protege a rota /servers */}
                 <ServersPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/credits" 
+            element={
+              <ProtectedRoute> {/* Protege a rota /credits */}
+                <CreditsPage />
               </ProtectedRoute>
             } 
           />
