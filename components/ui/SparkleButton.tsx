@@ -12,7 +12,7 @@ interface SparkleButtonProps {
 const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabled = false, checkoutUrl }) => {
   const baseButtonClasses = `
     relative z-10 flex items-center justify-center gap-1 rounded-full border-none
-    w-full px-6 py-3 text-lg font-medium text-white
+    w-full px-5 py-2.5 text-base font-medium text-white
     bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400
     transition-all duration-300 ease-in-out
     focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black
@@ -34,7 +34,7 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
   };
 
   return (
-    <div className={cn("relative w-full", !disabled && "group")}> {/* Alterado de w-[350px] para w-full */}
+    <div className={cn("relative w-full", !disabled && "group")}>
       {/* O div para o brilho desfocado */}
       <div className="absolute inset-2 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
       
