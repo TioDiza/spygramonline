@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Coins, Zap, Infinity, Star } from 'lucide-react';
-// SparkleButton não é mais necessário aqui, pois os cards serão clicáveis diretamente
-// import SparkleButton from '../components/ui/SparkleButton'; 
+import SparkleButton from '../components/ui/SparkleButton'; 
+import toast from 'react-hot-toast'; // Importa o toast
 
 interface CreditPackage {
   id: number;
@@ -50,6 +50,10 @@ const CreditsPage: React.FC = () => {
     window.open(url, '_blank');
   };
 
+  const handleInvadeClick = () => {
+    toast.error("Você está sem créditos, realize uma recarga pra conseguir invadir uma conta");
+  };
+
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8 flex flex-col">
       {/* Header */}
@@ -76,7 +80,7 @@ const CreditsPage: React.FC = () => {
           {creditPackages.map((pkg) => (
             <div
               key={pkg.id}
-              onClick={() => handleCardClick(pkg.checkoutUrl)} // Torna o card clicável
+              onClick={() => handleCardClick(pkg.checkoutUrl)}
               className={`relative bg-gray-900/70 backdrop-blur-sm border rounded-2xl shadow-lg p-6 flex flex-col items-center transition-all duration-300 cursor-pointer
                 ${pkg.highlight ? 'border-purple-500 shadow-purple-500/30 scale-105' : 'border-gray-700 shadow-purple-500/10 hover:border-purple-400 hover:shadow-purple-500/20'}`}
             >
@@ -91,9 +95,14 @@ const CreditsPage: React.FC = () => {
                 {pkg.price}
               </p>
               <p className="text-gray-300 text-sm mb-6 flex-1">{pkg.description}</p>
-              {/* SparkleButton removido */}
             </div>
           ))}
+        </div>
+
+        <div className="mt-12 w-full max-w-xs"> {/* Adicionado um contêiner para o botão */}
+          <SparkleButton onClick={handleInvadeClick}>
+            Realizar invasão
+          </SparkleButton>
         </div>
       </main>
 
