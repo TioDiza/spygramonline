@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Coins, Zap, Infinity, Star } from 'lucide-react';
+import { ShieldCheck, Coins, Infinity, Star } from 'lucide-react'; // 'Zap' removido
 import SparkleButton from '../components/ui/SparkleButton'; 
 import toast from 'react-hot-toast'; // Importa o toast
 
@@ -10,7 +10,7 @@ interface CreditPackage {
   price: string;
   description: string;
   checkoutUrl: string;
-  icon: React.ElementType;
+  icon: React.ElementType | string; // Permite componente React ou string (URL)
   highlight?: boolean;
 }
 
@@ -23,7 +23,7 @@ const CreditsPage: React.FC = () => {
       price: "R$ 49,50",
       description: "Créditos imediatos após confirmação.",
       checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU1",
-      icon: Zap,
+      icon: "/credit_card_icon.png", // Usando a nova imagem
     },
     {
       id: 2,
@@ -89,7 +89,11 @@ const CreditsPage: React.FC = () => {
                   MAIS POPULAR
                 </span>
               )}
-              <pkg.icon className="w-12 h-12 text-purple-400 mb-4" />
+              {typeof pkg.icon === 'string' ? (
+                <img src={pkg.icon} alt={pkg.title} className="w-12 h-12 mb-4" />
+              ) : (
+                <pkg.icon className="w-12 h-12 text-purple-400 mb-4" />
+              )}
               <h2 className="text-2xl font-bold text-white mb-2">{pkg.title}</h2>
               <p className="text-4xl font-extrabold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text mb-4">
                 {pkg.price}
