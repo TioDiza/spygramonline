@@ -1,9 +1,49 @@
 import React from 'react';
-import { ShieldCheck, ShoppingCart } from 'lucide-react';
-import SparkleButton from '../components/ui/SparkleButton'; // Importa o SparkleButton
+import { ShieldCheck, ShoppingCart, Zap, Infinity, Star } from 'lucide-react'; // Adicionado Zap, Infinity, Star para ícones
+import SparkleButton from '../components/ui/SparkleButton';
+
+interface CreditPackage {
+  id: number;
+  amount: number | string;
+  title: string;
+  price: string;
+  description: string;
+  checkoutUrl: string;
+  icon: React.ElementType;
+  highlight?: boolean;
+}
 
 const CreditsPage: React.FC = () => {
-  const checkoutUrl = "https://go.perfectpay.com.br/PPU38CPUD1S"; // URL de checkout para comprar créditos
+  const creditPackages: CreditPackage[] = [
+    {
+      id: 1,
+      amount: 10,
+      title: "10 Créditos",
+      price: "R$ 27,90",
+      description: "Créditos imediatos após confirmação.",
+      checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU1",
+      icon: Zap,
+    },
+    {
+      id: 2,
+      amount: 30,
+      title: "30 Créditos",
+      price: "R$ 47,90",
+      description: "Melhor custo-benefício mensal.",
+      checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU6",
+      icon: Star,
+      highlight: true, // Para destacar este pacote
+    },
+    {
+      id: 3,
+      amount: "Ilimitados",
+      title: "Créditos Ilimitados",
+      price: "R$ 97,90",
+      description: "Uso sem limites permanentemente.",
+      checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU8",
+      icon: Infinity,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8 flex flex-col">
@@ -20,16 +60,36 @@ const CreditsPage: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto text-center">
-        <div className="bg-gray-900/70 backdrop-blur-sm border border-gray-700 rounded-2xl shadow-lg shadow-purple-500/10 p-8 w-full max-w-md flex flex-col items-center">
-          <ShoppingCart className="w-20 h-20 text-purple-400 mb-6" />
-          <h1 className="text-4xl font-extrabold text-white mb-4">Créditos: 0</h1>
-          <p className="text-gray-400 text-lg mb-8">
-            Você precisa comprar créditos para acessar os servidores e invadir perfis.
-          </p>
-          <SparkleButton checkoutUrl={checkoutUrl}>
-            Comprar Créditos Agora!
-          </SparkleButton>
+      <main className="flex-1 flex flex-col items-center justify-center max-w-6xl mx-auto text-center">
+        <ShoppingCart className="w-20 h-20 text-purple-400 mb-6" />
+        <h1 className="text-4xl font-extrabold text-white mb-4">Comprar Créditos</h1>
+        <p className="text-gray-400 text-lg mb-12 max-w-2xl">
+          Escolha o pacote de créditos que melhor se adapta às suas necessidades e comece a invadir perfis agora mesmo!
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
+          {creditPackages.map((pkg) => (
+            <div
+              key={pkg.id}
+              className={`relative bg-gray-900/70 backdrop-blur-sm border rounded-2xl shadow-lg p-6 flex flex-col items-center transition-all duration-300
+                ${pkg.highlight ? 'border-purple-500 shadow-purple-500/30 scale-105' : 'border-gray-700 shadow-purple-500/10 hover:border-purple-400 hover:shadow-purple-500/20'}`}
+            >
+              {pkg.highlight && (
+                <span className="absolute -top-3 px-3 py-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-bold rounded-full shadow-md">
+                  MAIS POPULAR
+                </span>
+              )}
+              <pkg.icon className="w-12 h-12 text-purple-400 mb-4" />
+              <h2 className="text-2xl font-bold text-white mb-2">{pkg.title}</h2>
+              <p className="text-4xl font-extrabold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text mb-4">
+                {pkg.price}
+              </p>
+              <p className="text-gray-300 text-sm mb-6 flex-1">{pkg.description}</p>
+              <SparkleButton checkoutUrl={pkg.checkoutUrl}>
+                Comprar {pkg.amount} Créditos
+              </SparkleButton>
+            </div>
+          ))}
         </div>
       </main>
 
