@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Coins, Zap, Infinity, Star } from 'lucide-react';
-import SparkleButton from '../components/ui/SparkleButton';
+// SparkleButton não é mais necessário aqui, pois os cards serão clicáveis diretamente
+// import SparkleButton from '../components/ui/SparkleButton'; 
 
 interface CreditPackage {
   id: number;
@@ -19,7 +20,7 @@ const CreditsPage: React.FC = () => {
       id: 1,
       amount: 10,
       title: "10 Créditos",
-      price: "R$ 49,50", // Preço corrigido
+      price: "R$ 49,50",
       description: "Créditos imediatos após confirmação.",
       checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU1",
       icon: Zap,
@@ -28,7 +29,7 @@ const CreditsPage: React.FC = () => {
       id: 2,
       amount: 30,
       title: "30 Créditos",
-      price: "R$ 79,50", // Preço corrigido
+      price: "R$ 79,50",
       description: "Melhor custo-benefício mensal.",
       checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU6",
       icon: Star,
@@ -38,12 +39,16 @@ const CreditsPage: React.FC = () => {
       id: 3,
       amount: "Ilimitados",
       title: "Créditos Ilimitados",
-      price: "R$ 149,00", // Preço corrigido
+      price: "R$ 149,00",
       description: "Uso sem limites permanentemente.",
       checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU8",
       icon: Infinity,
     },
   ];
+
+  const handleCardClick = (url: string) => {
+    window.open(url, '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8 flex flex-col">
@@ -71,7 +76,8 @@ const CreditsPage: React.FC = () => {
           {creditPackages.map((pkg) => (
             <div
               key={pkg.id}
-              className={`relative bg-gray-900/70 backdrop-blur-sm border rounded-2xl shadow-lg p-6 flex flex-col items-center transition-all duration-300
+              onClick={() => handleCardClick(pkg.checkoutUrl)} // Torna o card clicável
+              className={`relative bg-gray-900/70 backdrop-blur-sm border rounded-2xl shadow-lg p-6 flex flex-col items-center transition-all duration-300 cursor-pointer
                 ${pkg.highlight ? 'border-purple-500 shadow-purple-500/30 scale-105' : 'border-gray-700 shadow-purple-500/10 hover:border-purple-400 hover:shadow-purple-500/20'}`}
             >
               {pkg.highlight && (
@@ -85,9 +91,7 @@ const CreditsPage: React.FC = () => {
                 {pkg.price}
               </p>
               <p className="text-gray-300 text-sm mb-6 flex-1">{pkg.description}</p>
-              <SparkleButton checkoutUrl={pkg.checkoutUrl}>
-                Comprar {pkg.amount} Créditos
-              </SparkleButton>
+              {/* SparkleButton removido */}
             </div>
           ))}
         </div>
