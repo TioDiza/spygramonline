@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, ShoppingCart, Zap, Infinity, Star } from 'lucide-react'; // Adicionado Zap, Infinity, Star para ícones
+import { ShieldCheck, Coins, Zap, Infinity, Star } from 'lucide-react'; // Adicionado Coins, Zap, Infinity, Star para ícones
 import SparkleButton from '../components/ui/SparkleButton';
 
 interface CreditPackage {
@@ -61,7 +61,7 @@ const CreditsPage: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center max-w-6xl mx-auto text-center">
-        <ShoppingCart className="w-20 h-20 text-purple-400 mb-6" />
+        <Coins className="w-20 h-20 text-purple-400 mb-6" /> {/* Ícone de moedas */}
         <h1 className="text-4xl font-extrabold text-white mb-4">Comprar Créditos</h1>
         <p className="text-gray-400 text-lg mb-12 max-w-2xl">
           Escolha o pacote de créditos que melhor se adapta às suas necessidades e comece a invadir perfis agora mesmo!

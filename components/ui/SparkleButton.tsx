@@ -34,7 +34,7 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
   };
 
   return (
-    <div className={cn("relative w-[350px]", !disabled && "group")}> {/* Aplica 'group' condicionalmente para o brilho */}
+    <div className={cn("relative w-full", !disabled && "group")}> {/* Alterado de w-[350px] para w-full */}
       {/* O div para o brilho desfocado */}
       <div className="absolute inset-2 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
       
