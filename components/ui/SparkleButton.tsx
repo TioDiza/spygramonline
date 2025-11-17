@@ -12,7 +12,7 @@ interface SparkleButtonProps {
 const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabled = false, checkoutUrl }) => {
   const baseButtonClasses = `
     relative z-10 flex items-center justify-center gap-1 rounded-full border-none
-    w-full px-5 py-2.5 text-base font-medium text-white
+    w-full px-4 py-2 text-sm font-medium text-white
     bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400
     transition-all duration-300 ease-in-out
     focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black
@@ -46,7 +46,7 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
           !disabled && interactiveClasses // Aplica classes interativas apenas se não estiver desabilitado
         )}
       >
-        <Sparkles className="w-5 h-5 text-white" /> {/* Usando o ícone Sparkles */}
+        <Sparkles className="w-4 h-4 text-white" /> {/* Reduzido o tamanho do ícone */}
         <span className="text-center">{children}</span>
       </button>
     </div>

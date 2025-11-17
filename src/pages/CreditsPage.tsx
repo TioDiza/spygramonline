@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Coins, Zap, Infinity, Star } from 'lucide-react'; // Adicionado Coins, Zap, Infinity, Star para ícones
+import { ShieldCheck, Coins, Zap, Infinity, Star } from 'lucide-react';
 import SparkleButton from '../components/ui/SparkleButton';
 
 interface CreditPackage {
@@ -19,7 +19,7 @@ const CreditsPage: React.FC = () => {
       id: 1,
       amount: 10,
       title: "10 Créditos",
-      price: "R$ 27,90",
+      price: "R$ 49,50", // Preço corrigido
       description: "Créditos imediatos após confirmação.",
       checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU1",
       icon: Zap,
@@ -28,17 +28,17 @@ const CreditsPage: React.FC = () => {
       id: 2,
       amount: 30,
       title: "30 Créditos",
-      price: "R$ 47,90",
+      price: "R$ 79,50", // Preço corrigido
       description: "Melhor custo-benefício mensal.",
       checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU6",
       icon: Star,
-      highlight: true, // Para destacar este pacote
+      highlight: true,
     },
     {
       id: 3,
       amount: "Ilimitados",
       title: "Créditos Ilimitados",
-      price: "R$ 97,90",
+      price: "R$ 149,00", // Preço corrigido
       description: "Uso sem limites permanentemente.",
       checkoutUrl: "https://checkout.perfectpay.com.br/pay/PPU38COTFU8",
       icon: Infinity,
@@ -61,7 +61,7 @@ const CreditsPage: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center max-w-6xl mx-auto text-center">
-        <Coins className="w-20 h-20 text-purple-400 mb-6" /> {/* Ícone de moedas */}
+        <Coins className="w-20 h-20 text-purple-400 mb-6" />
         <h1 className="text-4xl font-extrabold text-white mb-4">Comprar Créditos</h1>
         <p className="text-gray-400 text-lg mb-12 max-w-2xl">
           Escolha o pacote de créditos que melhor se adapta às suas necessidades e comece a invadir perfis agora mesmo!
