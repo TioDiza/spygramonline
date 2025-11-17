@@ -8,6 +8,7 @@ import ErrorMessage from '@/src/components/ErrorMessage';
 import ConsentCheckbox from '@/src/components/ConsentCheckbox';
 import { Lock } from 'lucide-react';
 import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
+import LoginPage from '@/src/pages/LoginPage'; // Importa a nova página de login
 import ProgressBar from '@/src/components/ProgressBar';
 import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData, mockProfileData } from './src/services/profileService';
@@ -349,6 +350,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<MainAppContent />} />
         <Route path="/invasion-concluded" element={<InvasionConcludedPage />} />
+        <Route path="/login" element={<LoginPage />} /> {/* Nova rota para a página de login */}
       </Routes>
     </Router>
   );
