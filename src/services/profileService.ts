@@ -1,4 +1,3 @@
-import { BACKEND_API_BASE_URL } from '../../constants';
 import type { ProfileData } from '../../types';
 
 export const fetchProfileData = async (username: string): Promise<ProfileData> => {
@@ -6,7 +5,7 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     throw new Error('Username cannot be empty.');
   }
 
-  const url = `${BACKEND_API_BASE_URL}/perfil/${username}`;
+  const url = `https://api-instagram-ofc.vercel.app/api/first?tipo=perfil&username=${username}`;
   console.log(`[profileService] Attempting to fetch profile data from: ${url}`);
 
   const controller = new AbortController();
@@ -16,69 +15,76 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     console.log(`[profileService] Starting fetch for ${username}...`);
     const response = await fetch(url.toString(), {
       method: 'GET',
-      signal: controller.signal, // Associa o AbortController à requisição
+      signal: controller.signal,
     });
-    clearTimeout(timeoutId); // Limpa o timeout se a requisição for concluída a tempo
+    clearTimeout(timeoutId);
     console.log(`[profileService] Fetch response received for ${username}. Status: ${response.status}`);
 
     if (!response.ok) {
-      const errorText = await response.text(); // Tenta ler o corpo da resposta como texto
-      let errorMessage = `Backend Proxy Error (${response.status}): ${errorText || 'Unknown error'}`;
+      const errorText = await response.text();
+      let errorMessage = `Backend API Error (${response.status}): ${errorText || 'Unknown error'}`;
       try {
-        const errorData = JSON.parse(errorText); // Tenta parsear como JSON se for válido
+        const errorData = JSON.parse(errorText);
         errorMessage = errorData.erro || errorData.message || errorMessage;
       } catch (e) {
-        // Se não for JSON, mantém a mensagem original
+        // Not JSON, use original message
       }
       console.error(`[profileService] ${errorMessage}.`);
       throw new Error(errorMessage);
     }
 
     const apiData = await response.json();
-    console.log(`[profileService] Raw data received from backend (Apify) for ${username}:`, apiData);
+    console.log(`[profileService] Raw data received from backend for ${username}:`, apiData);
 
-    // Mapeia os campos da resposta da Apify para a interface ProfileData
+    // A API pode retornar um array ou um objeto com uma propriedade de resultados.
+    // Vamos pegar o primeiro resultado, como solicitado.
+    let profileDataFromApi;
+    if (apiData.results && Array.isArray(apiData.results) && apiData.results.length > 0) {
+        profileDataFromApi = apiData.results[0];
+    } else if (Array.isArray(apiData) && apiData.length > 0) {
+        profileDataFromApi = apiData[0];
+    } else if (typeof apiData === 'object' && apiData !== null && !Array.isArray(apiData) && apiData.username) {
+        // Lida com o caso de ser um único objeto de perfil
+        profileDataFromApi = apiData;
+    } else {
+        console.error('[profileService] Failed to fetch profile data: Invalid or empty response structure from backend.');
+        throw new Error('Nenhum perfil encontrado na resposta da API.');
+    }
+
+    // Mapeia os campos da nova resposta da API para nossa interface ProfileData
     const profile: ProfileData = {
-      username: apiData.username,
-      fullName: apiData.fullName,
-      profilePicUrl: apiData.profilePicUrl,
-      biography: apiData.biography,
-      followers: apiData.followersCount, // Mapeia followersCount para followers
-      following: apiData.followsCount,   // Mapeia followsCount para following
-      postsCount: apiData.postsCount,
-      isVerified: apiData.verified,      // Mapeia verified para isVerified
-      isPrivate: apiData.private,        // Mapeia private para isPrivate
+      username: profileDataFromApi.username,
+      fullName: profileDataFromApi.full_name,
+      profilePicUrl: profileDataFromApi.profile_pic_url,
+      biography: profileDataFromApi.biography,
+      followers: profileDataFromApi.follower_count,
+      following: profileDataFromApi.following_count,
+      postsCount: profileDataFromApi.media_count,
+      isVerified: profileDataFromApi.is_verified,
+      isPrivate: profileDataFromApi.is_private,
     };
 
     // Validação básica para campos essenciais
     if (!profile.username || !profile.fullName || !profile.profilePicUrl) {
-      console.error('[profileService] Failed to fetch profile data: Invalid or incomplete response structure from backend proxy.');
-      throw new Error('Invalid or incomplete profile data from backend.');
+      console.error('[profileService] Failed to fetch profile data: Invalid or incomplete response structure from backend.');
+      throw new Error('Dados do perfil inválidos ou incompletos do backend.');
     }
-
-    // --- NOVA LÓGICA PARA PROXY DE IMAGEM ---
-    // Se a URL da imagem de perfil for do Instagram, proxy através do nosso backend
-    if (profile.profilePicUrl && profile.profilePicUrl.includes('cdninstagram.com')) {
-      profile.profilePicUrl = `${BACKEND_API_BASE_URL}/image-proxy?url=${encodeURIComponent(profile.profilePicUrl)}`;
-      console.log(`[profileService] Proxied profilePicUrl: ${profile.profilePicUrl}`);
-    }
-    // --- FIM DA NOVA LÓGICA ---
 
     console.log(`[profileService] Successfully fetched and parsed real profile data for: ${profile.username}`);
     return profile;
   } catch (error) {
-    clearTimeout(timeoutId); // Garante que o timeout seja limpo mesmo em caso de erro
+    clearTimeout(timeoutId);
     if (error instanceof Error) {
       if (error.name === 'AbortError') {
         console.error(`[profileService] Fetch for ${username} timed out after 15 seconds.`);
-        throw new Error(`Fetch for ${username} timed out after 15 seconds.`);
+        throw new Error(`A busca por ${username} demorou muito para responder.`);
       } else {
-        console.error(`[profileService] An error occurred during backend proxy fetch for ${username}: ${error.message}.`);
+        console.error(`[profileService] An error occurred during backend fetch for ${username}: ${error.message}.`);
         throw error;
       }
     } else {
-      console.error('[profileService] An unknown error occurred while fetching data from backend proxy.');
-      throw new Error('An unknown error occurred while fetching data from backend proxy.');
+      console.error('[profileService] An unknown error occurred while fetching data from backend.');
+      throw new Error('Ocorreu um erro desconhecido ao buscar dados do backend.');
     }
   }
 };
