@@ -141,9 +141,6 @@ const InvasionSimulationPage: React.FC = () => {
         {stage === 'feed_locked' && (
           <motion.div
             key="feed"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
             className="w-full"
           >
             <div className="block md:hidden">
