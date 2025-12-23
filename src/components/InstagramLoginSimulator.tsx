@@ -14,75 +14,56 @@ const passwords = [
   'spygram123', 'acessototal', 'verdadeoculta', 'senhacerta' // The successful one
 ];
 
+type AttemptStage = 'typing' | 'attempting' | 'error';
+
 const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profileData, onSuccess }) => {
   const [attemptIndex, setAttemptIndex] = useState(0);
   const [currentPassword, setCurrentPassword] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const [stage, setStage] = useState<AttemptStage>('typing');
 
   const currentAttempt = passwords[attemptIndex];
   const totalAttempts = passwords.length;
 
   useEffect(() => {
-    if (attemptIndex >= totalAttempts) {
-      return; // Stop if all attempts are done
-    }
+    if (attemptIndex >= totalAttempts) return;
 
     let timer: NodeJS.Timeout | undefined;
-    let loginTimeout: NodeJS.Timeout | undefined;
-    let errorTimeout: NodeJS.Timeout | undefined;
 
-    if (isTyping) {
-      // Phase 1: Typing
+    if (stage === 'typing') {
       if (currentPassword.length < currentAttempt.length) {
         timer = setTimeout(() => {
-          // Use functional update for safety
           setCurrentPassword(prev => currentAttempt.substring(0, prev.length + 1));
-        }, 50); // Velocidade de digitação ajustada para 50ms
+        }, 80); // Typing speed slowed down slightly to 80ms
       } else {
-        // Typing finished, transition to login attempt phase
-        setIsTyping(false);
-        setIsError(false);
-        
-        const currentIdx = attemptIndex; 
-
-        // Inicia a tentativa de login após a digitação
-        loginTimeout = setTimeout(() => {
-          // Phase 2: Login attempt (simulated network delay)
-          if (currentIdx === totalAttempts - 1) {
-            // Success!
-            onSuccess();
-          } else {
-            // Failure, show error briefly
-            setIsError(true);
-            
-            // Phase 3: Reset and move to next attempt after showing error
-            errorTimeout = setTimeout(() => {
-              setCurrentPassword('');
-              setAttemptIndex(prev => prev + 1);
-              setIsTyping(true);
-              setIsError(false);
-            }, 1500); // Aumentado para 1500ms (1.5 segundos) para melhor visualização do erro
-          }
-        }, 600); // Tempo de espera da tentativa de login (600ms)
+        // Finished typing, move to attempting stage
+        setStage('attempting');
       }
+    } else if (stage === 'attempting') {
+      // Simulate login attempt delay
+      timer = setTimeout(() => {
+        if (attemptIndex === totalAttempts - 1) {
+          onSuccess();
+        } else {
+          setStage('error');
+        }
+      }, 1000); // 1 second for "verifying"
+    } else if (stage === 'error') {
+      // Show error for a moment, then move to the next attempt
+      timer = setTimeout(() => {
+        setAttemptIndex(prev => prev + 1);
+        setCurrentPassword('');
+        setStage('typing');
+      }, 1500); // 1.5 seconds for error display
     }
-    
-    // Cleanup function: clears all potential timers
-    return () => {
-      if (timer) clearTimeout(timer);
-      if (loginTimeout) clearTimeout(loginTimeout);
-      if (errorTimeout) clearTimeout(errorTimeout);
-    };
 
-  }, [attemptIndex, currentPassword, isTyping, currentAttempt, totalAttempts, onSuccess]);
+    return () => clearTimeout(timer);
+  }, [attemptIndex, currentPassword, stage, currentAttempt, totalAttempts, onSuccess]);
 
   const getPasswordDisplay = () => {
-    if (isTyping) {
+    if (stage === 'typing') {
       return currentPassword;
     }
     // Show dots during login attempt or error display
-    // We use the length of the current attempt to determine the number of dots
     return '•'.repeat(currentAttempt.length);
   };
 
@@ -93,7 +74,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
           src="/spygram_transparentebranco.png"
           alt="Instagram Logo"
           className="h-12 mx-auto mb-8"
-          style={{ filter: 'invert(1)' }} // Simula o logo do Instagram em dark mode
+          style={{ filter: 'invert(1)' }}
         />
         
         <div className="mb-6">
@@ -112,47 +93,37 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
             readOnly
             className="w-full bg-gray-800 text-gray-400 px-4 py-3 rounded-lg border border-gray-700 text-sm mb-3"
           />
-          <div className={`relative w-full transition-all duration-300 ${isError ? 'animate-shake' : ''}`}>
+          <div className={`relative w-full transition-all duration-300 ${stage === 'error' ? 'animate-shake' : ''}`}>
             <input
               type="password"
               value={getPasswordDisplay()}
               readOnly
               placeholder="Senha"
               className={`w-full px-4 py-3 rounded-lg text-sm font-mono
-                ${isError ? 'bg-red-900/50 border-red-500 text-red-300' : 'bg-gray-800 border-gray-700 text-white'}
+                ${stage === 'error' ? 'bg-red-900/50 border-red-500 text-red-300' : 'bg-gray-800 border-gray-700 text-white'}
                 border focus:outline-none`}
             />
-            {isTyping && (
+            {stage === 'typing' && (
               <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white animate-pulse">|</span>
             )}
           </div>
         </div>
 
         <motion.button
-          initial={{ opacity: 0.5 }}
-          animate={{ opacity: isTyping ? 0.5 : 1 }}
-          transition={{ duration: 0.2 }}
           className={`w-full py-3 rounded-lg font-bold text-white text-sm flex items-center justify-center gap-2
-            ${isTyping ? 'bg-blue-900/50 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 transition-colors'}`}
-          disabled={isTyping || isError} // Disable button during typing and error display
+            ${stage === 'error' ? 'bg-red-500' : 'bg-blue-500'} transition-colors`}
+          disabled={true}
         >
-          {isTyping ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Tentando...
-            </>
-          ) : isError ? (
-            `Falha na Tentativa ${attemptIndex + 1}/${totalAttempts}`
-          ) : (
-            'Entrar'
-          )}
+          {stage === 'typing' && <><Loader2 className="w-4 h-4 animate-spin" /> Digitando...</>}
+          {stage === 'attempting' && <><Loader2 className="w-4 h-4 animate-spin" /> Verificando...</>}
+          {stage === 'error' && `Falha na Tentativa ${attemptIndex + 1}/${totalAttempts}`}
         </motion.button>
 
         <p className="mt-4 text-xs text-gray-500">
           Tentativa {attemptIndex + 1} de {totalAttempts}
         </p>
         
-        {isError && (
+        {stage === 'error' && (
           <p className="text-red-400 text-xs mt-2">
             Senha incorreta. Tente novamente.
           </p>
