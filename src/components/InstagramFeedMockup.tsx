@@ -23,8 +23,9 @@ const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData }
     <div className="w-full max-w-md mx-auto bg-black min-h-screen flex flex-col shadow-2xl shadow-purple-500/20 md:shadow-none relative">
       {showNotification && (
         <InstagramNotification
-          senderName="f*****"
+          title="f*****"
           message="Vai dar certo me ver essa semana,amor?"
+          time="agora"
           onClose={() => setShowNotification(false)}
           duration={8000} // A notificação some após 8 segundos
         />
