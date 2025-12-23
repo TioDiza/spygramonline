@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import InstagramFeedContent from './InstagramFeedContent';
-import { ProfileData, SuggestedProfile } from '../../types';
+import { ProfileData } from '../../types';
 import { InstagramNotification } from './InstagramNotification';
 
 interface InstagramFeedMockupProps {
   profileData: ProfileData;
-  suggestedProfiles: SuggestedProfile[];
 }
 
-const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, suggestedProfiles }) => {
+const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData }) => {
   const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
@@ -31,7 +30,7 @@ const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, 
           duration={8000} // A notificação some após 8 segundos
         />
       )}
-      <InstagramFeedContent profileData={profileData} suggestedProfiles={suggestedProfiles} />
+      <InstagramFeedContent profileData={profileData} />
     </div>
   );
 };
