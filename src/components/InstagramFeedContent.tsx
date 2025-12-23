@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, Home, Plus, ChevronDown, Search, Clapperboard } from 'lucide-react';
+import { Lock, MoreHorizontal, ChevronDown, Plus } from 'lucide-react';
 import { ProfileData, SuggestedProfile, FeedPost } from '../../types';
 
 // Helper function to mask usernames
@@ -16,12 +16,16 @@ interface ClickableProps {
 
 const InstagramHeader: React.FC<ClickableProps> = ({ onLockedFeatureClick }) => (
   <header className="grid grid-cols-3 items-center px-4 py-2 border-b border-gray-800 bg-black sticky top-0 z-10 md:hidden">
-    <button onClick={() => onLockedFeatureClick('criar uma publicação')} className="flex justify-start"><Plus className="w-8 h-8 text-white" /></button>
+    <button onClick={() => onLockedFeatureClick('criar uma publicação')} className="flex justify-start">
+      <img src="/icons/add-content.png" alt="Criar" className="w-7 h-7" style={{ filter: 'invert(1)' }} />
+    </button>
     <div onClick={() => onLockedFeatureClick('trocar de conta')} className="flex justify-center items-center gap-1 cursor-pointer">
       <img src="/instagram-logo.png" alt="Instagram Logo" className="h-8" style={{ filter: 'invert(1)' }} />
       <ChevronDown className="w-5 h-5 text-white mt-1" />
     </div>
-    <button onClick={() => onLockedFeatureClick('ver as notificações')} className="flex justify-end"><Heart className="w-7 h-7 text-white" /></button>
+    <button onClick={() => onLockedFeatureClick('ver as notificações')} className="flex justify-end">
+      <img src="/icons/heart.png" alt="Notificações" className="w-7 h-7" style={{ filter: 'invert(1)' }} />
+    </button>
   </header>
 );
 
@@ -29,11 +33,17 @@ const InstagramFooter: React.FC<{ profileData: ProfileData } & ClickableProps> =
   const navigate = useNavigate();
   return (
     <footer className="flex justify-around items-center py-3 border-t border-gray-800 bg-black sticky bottom-0 z-10 md:hidden">
-      <button onClick={() => onLockedFeatureClick('acessar a página inicial')}><Home className="w-7 h-7 text-white" fill="white" /></button>
-      <button onClick={() => onLockedFeatureClick('fazer uma pesquisa')}><Search className="w-7 h-7 text-white" /></button>
-      <button onClick={() => onLockedFeatureClick('ver os Reels')}><Clapperboard className="w-7 h-7 text-white" /></button>
+      <button onClick={() => onLockedFeatureClick('acessar a página inicial')}>
+        <img src="/icons/home.png" alt="Página Inicial" className="w-7 h-7" style={{ filter: 'invert(1)' }} />
+      </button>
+      <button onClick={() => onLockedFeatureClick('fazer uma pesquisa')}>
+        <img src="/icons/search.png" alt="Pesquisa" className="w-7 h-7" style={{ filter: 'invert(1)' }} />
+      </button>
+      <button onClick={() => onLockedFeatureClick('ver os Reels')}>
+        <img src="/icons/reels.png" alt="Reels" className="w-7 h-7" style={{ filter: 'invert(1)' }} />
+      </button>
       <button onClick={() => navigate('/messages')} className="relative">
-        <Send className="w-7 h-7 text-white" />
+        <img src="/icons/send.png" alt="Mensagens" className="w-7 h-7" style={{ filter: 'invert(1)' }} />
         <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-black"></div>
       </button>
       <button onClick={() => onLockedFeatureClick('ver o seu perfil')}>
@@ -69,11 +79,19 @@ const RealPost: React.FC<{ postData: FeedPost; location?: string } & ClickablePr
 
       <div className="flex justify-between items-center p-3">
         <div className="flex space-x-4">
-          <button onClick={() => onLockedFeatureClick('curtir publicações')}><Heart className="w-6 h-6 text-white" /></button>
-          <button onClick={() => onLockedFeatureClick('ver os comentários')}><MessageCircle className="w-6 h-6 text-white" /></button>
-          <button onClick={() => navigate('/messages')}><Send className="w-6 h-6 text-white" /></button>
+          <button onClick={() => onLockedFeatureClick('curtir publicações')}>
+            <img src="/icons/heart.png" alt="Curtir" className="w-6 h-6" style={{ filter: 'invert(1)' }} />
+          </button>
+          <button onClick={() => onLockedFeatureClick('ver os comentários')}>
+            <img src="/icons/comment.png" alt="Comentar" className="w-6 h-6" style={{ filter: 'invert(1)' }} />
+          </button>
+          <button onClick={() => navigate('/messages')}>
+            <img src="/icons/send.png" alt="Enviar" className="w-6 h-6" style={{ filter: 'invert(1)' }} />
+          </button>
         </div>
-        <button onClick={() => onLockedFeatureClick('salvar publicações')}><Bookmark className="w-6 h-6 text-white" /></button>
+        <button onClick={() => onLockedFeatureClick('salvar publicações')}>
+          <img src="/icons/bookmark.png" alt="Salvar" className="w-6 h-6" style={{ filter: 'invert(1)' }} />
+        </button>
       </div>
       <div className="px-3 pb-3 text-xs">
         <p onClick={() => onLockedFeatureClick('ver as curtidas')} className="font-semibold text-white mb-1 cursor-pointer">{new Intl.NumberFormat().format(post.like_count)} curtidas</p>
@@ -107,8 +125,12 @@ const LockedPost: React.FC<{ location?: string }> = ({ location }) => {
         </div>
       </div>
       <div className="flex justify-between items-center p-3">
-        <div className="flex space-x-4"><Heart className="w-6 h-6 text-white" /><MessageCircle className="w-6 h-6 text-white" /><Send className="w-6 h-6 text-white" /></div>
-        <Bookmark className="w-6 h-6 text-white" />
+        <div className="flex space-x-4">
+          <img src="/icons/heart.png" alt="Curtir" className="w-6 h-6" style={{ filter: 'invert(1)' }} />
+          <img src="/icons/comment.png" alt="Comentar" className="w-6 h-6" style={{ filter: 'invert(1)' }} />
+          <img src="/icons/send.png" alt="Enviar" className="w-6 h-6" style={{ filter: 'invert(1)' }} />
+        </div>
+        <img src="/icons/bookmark.png" alt="Salvar" className="w-6 h-6" style={{ filter: 'invert(1)' }} />
       </div>
       <div className="px-3 pb-3 text-xs space-y-1 blur-sm select-none pointer-events-none">
         <p className="font-semibold text-white mb-1">1,234 curtidas</p>
