@@ -5,7 +5,7 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     throw new Error('Username cannot be empty.');
   }
 
-  const url = `https://api-instagram-ofc.vercel.app/api/first?tipo=perfil&username=${username}`;
+  const url = `https://api-instagram-ofc.vercel.app/api/first?tipo=perfil&username=${encodeURIComponent(username)}`;
   console.log(`[profileService] Attempting to fetch profile data from: ${url}`);
 
   const controller = new AbortController();
@@ -86,7 +86,7 @@ export const fetchSuggestedProfiles = async (username: string): Promise<Suggeste
     return [];
   }
 
-  const url = `https://api-instagram-ofc.vercel.app/api/first?tipo=sugestoes&username=${username}`;
+  const url = `https://api-instagram-ofc.vercel.app/api/first?tipo=sugestoes&username=${encodeURIComponent(username)}`;
   console.log(`[profileService] Attempting to fetch suggested profiles from: ${url}`);
 
   try {
