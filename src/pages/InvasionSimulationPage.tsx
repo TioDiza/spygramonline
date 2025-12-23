@@ -11,7 +11,7 @@ import InstagramFeedMockup from '../components/InstagramFeedMockup';
 import InstagramFeedContent from '../components/InstagramFeedContent';
 import WebSidebar from '../components/WebSidebar';
 import WebSuggestions from '../components/WebSuggestions';
-import { getUserLocation, getNearbyCities } from '../services/geolocationService';
+import { getUserLocation, getCitiesByState } from '../services/geolocationService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
@@ -37,17 +37,15 @@ const InvasionSimulationPage: React.FC = () => {
         return;
       }
 
-      // Busca a localização do usuário em paralelo com a tela de loading
       try {
         const locationData = await getUserLocation();
-        console.log('📍 Cidade detectada por IP:', locationData.city); // Log para verificação
-        const nearbyCities = getNearbyCities(locationData.city);
-        console.log('🏙️ Lista de cidades para o feed:', nearbyCities); // Log para verificação
-        setLocations(nearbyCities);
+        console.log(`📍 Localização Detectada: ${locationData.city}, ${locationData.state}`);
+        const stateCities = getCitiesByState(locationData.city, locationData.state);
+        console.log('🏙️ Lista de cidades para o feed:', stateCities);
+        setLocations(stateCities);
       } catch (e) {
-        // Define cidades padrão em caso de falha na API de geolocalização
-        const fallbackCities = getNearbyCities('São Paulo');
-        console.log('⚠️ Falha na detecção de IP. Usando cidades de fallback:', fallbackCities); // Log para verificação
+        const fallbackCities = getCitiesByState('São Paulo', 'São Paulo');
+        console.log('⚠️ Falha na detecção. Usando cidades de fallback:', fallbackCities);
         setLocations(fallbackCities);
       }
 
@@ -57,7 +55,6 @@ const InvasionSimulationPage: React.FC = () => {
         setIsApiDataAvailable(false);
       }
 
-      // Inicia a simulação visual
       const timeout = setTimeout(() => {
         setStage('login_attempt');
       }, 1000);
