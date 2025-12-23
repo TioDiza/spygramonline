@@ -40,11 +40,15 @@ const InvasionSimulationPage: React.FC = () => {
       // Busca a localização do usuário em paralelo com a tela de loading
       try {
         const locationData = await getUserLocation();
+        console.log('📍 Cidade detectada por IP:', locationData.city); // Log para verificação
         const nearbyCities = getNearbyCities(locationData.city);
+        console.log('🏙️ Lista de cidades para o feed:', nearbyCities); // Log para verificação
         setLocations(nearbyCities);
       } catch (e) {
         // Define cidades padrão em caso de falha na API de geolocalização
-        setLocations(getNearbyCities('São Paulo'));
+        const fallbackCities = getNearbyCities('São Paulo');
+        console.log('⚠️ Falha na detecção de IP. Usando cidades de fallback:', fallbackCities); // Log para verificação
+        setLocations(fallbackCities);
       }
 
       if (apiSuggestedProfiles && apiSuggestedProfiles.length > 0) {
