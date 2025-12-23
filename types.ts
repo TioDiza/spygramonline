@@ -9,3 +9,8 @@ export interface ProfileData {
   isVerified: boolean;
   isPrivate: boolean;
 }
+
+export interface SuggestedProfile {
+  username: string;
+  profile_pic_url: string;
+}

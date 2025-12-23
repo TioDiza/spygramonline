@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { ProfileData } from '../../types';
+import type { ProfileData, SuggestedProfile } from '../../types';
 import InstagramLoginSimulator from '../components/InstagramLoginSimulator';
 import InvasionSuccessCard from '../components/InvasionSuccessCard';
 import Loader from '../components/Loader';
@@ -11,6 +11,7 @@ import InstagramFeedMockup from '../components/InstagramFeedMockup';
 import InstagramFeedContent from '../components/InstagramFeedContent';
 import WebSidebar from '../components/WebSidebar';
 import WebSuggestions from '../components/WebSuggestions';
+import { fetchSuggestedProfiles } from '../services/profileService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
@@ -21,6 +22,7 @@ const InvasionSimulationPage: React.FC = () => {
   
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
 
   useEffect(() => {
     if (!profileData) {
@@ -30,6 +32,12 @@ const InvasionSimulationPage: React.FC = () => {
       setStage('error');
       return;
     }
+
+    const getSuggestions = async () => {
+      const suggestions = await fetchSuggestedProfiles(profileData.username);
+      setSuggestedProfiles(suggestions);
+    };
+    getSuggestions();
 
     const timeout = setTimeout(() => {
       setStage('login_attempt');
@@ -88,14 +96,14 @@ const InvasionSimulationPage: React.FC = () => {
           >
             {/* Mobile View */}
             <div className="block md:hidden">
-              <InstagramFeedMockup profileData={profileData} />
+              <InstagramFeedMockup profileData={profileData} suggestedProfiles={suggestedProfiles} />
             </div>
 
             {/* Desktop View */}
             <div className="hidden md:flex w-full justify-center">
               <WebSidebar profileData={profileData} />
               <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
-                <InstagramFeedContent profileData={profileData} />
+                <InstagramFeedContent profileData={profileData} suggestedProfiles={suggestedProfiles} />
               </main>
               <WebSuggestions profileData={profileData} />
             </div>
