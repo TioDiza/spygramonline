@@ -9,7 +9,7 @@ interface InstagramLoginSimulatorProps {
   isHacking: boolean;
 }
 
-type AttemptStage = 'typing' | 'attempting' | 'error' | 'success';
+type AttemptStage = 'typing' | 'attempting' | 'error' | 'success_typing' | 'success';
 
 const generateRandomPassword = () => {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
@@ -21,6 +21,8 @@ const generateRandomPassword = () => {
   return password;
 };
 
+const correctPassword = 'biel_2805@';
+
 const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profileData, onSuccess, isHacking }) => {
   const [attemptCount, setAttemptCount] = useState(1);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -29,61 +31,66 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
   
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Efeito principal que controla o ciclo de tentativas
+  // Effect to handle the animation state machine
   useEffect(() => {
-    // Se não estiver mais "hackeando", interrompe o ciclo.
-    if (!isHacking) {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      
-      // Inicia a sequência de sucesso
-      setStage('typing');
-      setCurrentPassword('biel_2805@'); // A senha "correta"
-      setDisplayedPassword('');
-      return;
-    }
-
-    // Lógica do ciclo de tentativas
-    if (stage === 'typing') {
-      if (displayedPassword.length < currentPassword.length) {
-        timeoutRef.current = setTimeout(() => {
-          setDisplayedPassword(prev => currentPassword.substring(0, prev.length + 1));
-        }, 40);
-      } else {
-        setStage('attempting');
-      }
-    } else if (stage === 'attempting') {
-      timeoutRef.current = setTimeout(() => {
-        // Se não estiver mais hackeando, a tentativa é um sucesso
-        if (!isHacking) {
-          setStage('success');
+    const runAnimationCycle = () => {
+      if (stage === 'typing') {
+        if (displayedPassword.length < currentPassword.length) {
+          timeoutRef.current = setTimeout(() => {
+            setDisplayedPassword(prev => currentPassword.substring(0, prev.length + 1));
+          }, 40);
         } else {
-          setStage('error');
+          setStage('attempting');
         }
-      }, 500);
-    } else if (stage === 'error') {
-      timeoutRef.current = setTimeout(() => {
-        setAttemptCount(prev => prev + 1);
-        setCurrentPassword(generateRandomPassword());
-        setDisplayedPassword('');
-        setStage('typing');
-      }, 700);
-    } else if (stage === 'success') {
-        // Aguarda um momento na tela de sucesso e então chama o callback
+      } else if (stage === 'attempting') {
+        timeoutRef.current = setTimeout(() => {
+          setStage('error');
+        }, 500);
+      } else if (stage === 'error') {
+        timeoutRef.current = setTimeout(() => {
+          setAttemptCount(prev => prev + 1);
+          setCurrentPassword(generateRandomPassword());
+          setDisplayedPassword('');
+          setStage('typing');
+        }, 700);
+      } else if (stage === 'success_typing') {
+        if (displayedPassword.length < correctPassword.length) {
+          timeoutRef.current = setTimeout(() => {
+            setDisplayedPassword(prev => correctPassword.substring(0, prev.length + 1));
+          }, 60);
+        } else {
+          setStage('success');
+        }
+      } else if (stage === 'success') {
         timeoutRef.current = setTimeout(onSuccess, 1000);
-    }
+      }
+    };
+
+    runAnimationCycle();
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [stage, displayedPassword, currentPassword, isHacking, onSuccess]);
+  }, [stage, displayedPassword, currentPassword, onSuccess]);
 
-  // Efeito para iniciar a primeira tentativa
+  // Effect to listen for the signal to stop hacking and start the success sequence
+  useEffect(() => {
+    if (!isHacking) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      setDisplayedPassword('');
+      setStage('success_typing');
+    }
+  }, [isHacking]);
+
+  // Effect to initialize the first password
   useEffect(() => {
     setCurrentPassword(generateRandomPassword());
   }, []);
 
   const getPasswordDisplay = () => {
+    if (stage === 'success_typing') return displayedPassword;
     if (stage === 'typing') return displayedPassword;
+    if (stage === 'success') return '•'.repeat(correctPassword.length);
     return '•'.repeat(currentPassword.length);
   };
 
@@ -121,11 +128,11 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
               placeholder="Senha"
               className={`w-full px-4 py-3 rounded-lg text-sm font-mono
                 ${stage === 'error' ? 'bg-red-900/50 border-red-500 text-red-300' : ''}
-                ${stage === 'success' ? 'bg-green-900/50 border-green-500 text-green-300' : ''}
-                ${stage !== 'error' && stage !== 'success' ? 'bg-gray-800 border-gray-700 text-white' : ''}
+                ${stage === 'success' || stage === 'success_typing' ? 'bg-green-900/50 border-green-500 text-green-300' : ''}
+                ${stage !== 'error' && stage !== 'success' && stage !== 'success_typing' ? 'bg-gray-800 border-gray-700 text-white' : ''}
                 border focus:outline-none`}
             />
-            {stage === 'typing' && (
+            {(stage === 'typing' || stage === 'success_typing') && (
               <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white animate-pulse">|</span>
             )}
           </div>
@@ -134,12 +141,12 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
         <motion.button
           className={`w-full py-3 rounded-lg font-bold text-white text-sm flex items-center justify-center gap-2
             ${stage === 'error' ? 'bg-red-500' : ''}
-            ${stage === 'success' ? 'bg-green-500' : ''}
-            ${stage !== 'error' && stage !== 'success' ? 'bg-blue-500' : ''}
+            ${stage === 'success' || stage === 'success_typing' ? 'bg-green-500' : ''}
+            ${stage !== 'error' && stage !== 'success' && stage !== 'success_typing' ? 'bg-blue-500' : ''}
             transition-colors`}
           disabled={true}
         >
-          {stage === 'typing' && <><Loader2 className="w-4 h-4 animate-spin" /> Digitando...</>}
+          {(stage === 'typing' || stage === 'success_typing') && <><Loader2 className="w-4 h-4 animate-spin" /> Digitando...</>}
           {stage === 'attempting' && <><Loader2 className="w-4 h-4 animate-spin" /> Verificando...</>}
           {stage === 'error' && `Falha na Tentativa ${attemptCount}`}
           {stage === 'success' && `Senha Encontrada!`}
