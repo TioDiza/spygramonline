@@ -1,4 +1,4 @@
-import type { ProfileData } from '../../types';
+import type { ProfileData, SuggestedProfile } from '../../types';
 
 export const fetchProfileData = async (username: string): Promise<ProfileData> => {
   if (!username) {
@@ -36,8 +36,6 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     const apiData = await response.json();
     console.log(`[profileService] Raw data received from backend for ${username}:`, apiData);
 
-    // A nova API envolve os dados do perfil em uma propriedade 'data'.
-    // Verificamos se 'data' existe e não é um objeto vazio.
     const profileDataFromApi = apiData.data;
     if (profileDataFromApi && typeof profileDataFromApi === 'object' && Object.keys(profileDataFromApi).length > 0) {
       
@@ -53,7 +51,6 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
         isPrivate: profileDataFromApi.is_private,
       };
 
-      // Validação básica para campos essenciais
       if (!profile.username) {
         console.error('[profileService] Failed to fetch profile data: Response from backend is incomplete.');
         throw new Error('Dados do perfil inválidos ou incompletos do backend.');
@@ -80,5 +77,36 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
       console.error('[profileService] An unknown error occurred while fetching data from backend.');
       throw new Error('Ocorreu um erro desconhecido ao buscar dados do backend.');
     }
+  }
+};
+
+export const fetchSuggestedProfiles = async (username: string): Promise<SuggestedProfile[]> => {
+  if (!username) {
+    console.warn('[profileService] Username is empty, cannot fetch suggestions.');
+    return [];
+  }
+
+  const url = `https://api-instagram-ofc.vercel.app/api/first?tipo=sugestoes&username=${username}`;
+  console.log(`[profileService] Attempting to fetch suggested profiles from: ${url}`);
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error(`[profileService] Failed to fetch suggestions: ${response.status} ${response.statusText}`);
+      return []; // Don't break the app, just return empty
+    }
+    const apiData = await response.json();
+    console.log(`[profileService] Raw suggested profiles data received for ${username}:`, apiData);
+
+    if (apiData.data && Array.isArray(apiData.data)) {
+      console.log(`[profileService] Successfully fetched ${apiData.data.length} suggestions.`);
+      return apiData.data;
+    } else {
+      console.warn('[profileService] No suggested profiles found or API response format is invalid.');
+      return [];
+    }
+  } catch (error) {
+    console.error(`[profileService] An error occurred while fetching suggestions for ${username}:`, error);
+    return [];
   }
 };

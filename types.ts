@@ -10,4 +10,9 @@ export interface ProfileData {
   isPrivate: boolean;
 }
 
+export interface SuggestedProfile {
+  username: string;
+  profile_pic_url: string;
+}
+
 // InteractionProfile interface was removed as it is no longer needed.

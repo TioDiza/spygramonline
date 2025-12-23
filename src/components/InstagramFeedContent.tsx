@@ -1,6 +1,6 @@
 import React from 'react';
 import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, Home, Plus, ChevronDown, Search, Clapperboard } from 'lucide-react';
-import { ProfileData } from '../../types';
+import { ProfileData, SuggestedProfile } from '../../types';
 import { cn } from '../lib/utils';
 
 // Mock data for posts, including a sponsored one
@@ -8,15 +8,6 @@ const mockPosts = [
   { id: 1, imageUrl: 'https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6', caption: 'HOJE - VIRADA DE LOTE', likes: 1245, comments: 45, sponsored: true, sponsorName: 'reveillonfestival', sponsorPic: 'https://i.pravatar.cc/150?u=reveillon' },
   { id: 2, imageUrl: 'https://picsum.photos/id/1025/600/600', caption: 'Novo look para o inverno. O que acharam? 🧥', likes: 890, comments: 22 },
   { id: 3, imageUrl: 'https://picsum.photos/id/1033/600/600', caption: 'Melhor café da cidade! ☕', likes: 2100, comments: 78 },
-];
-
-// Mock data for stories with different states (live, seen, unseen)
-const mockStories = [
-  { username: 'beltran', live: true, imageUrl: 'https://i.pravatar.cc/150?u=beltran' },
-  { username: 'brendalabanca_', live: false, seen: false, imageUrl: 'https://i.pravatar.cc/150?u=brenda' },
-  { username: 'gabrielbianchin...', live: false, seen: false, imageUrl: 'https://i.pravatar.cc/150?u=gabriel' },
-  { username: 'reactjs', live: false, seen: true, imageUrl: 'https://i.pravatar.cc/150?u=react' },
-  { username: 'tailwindcss', live: false, seen: true, imageUrl: 'https://i.pravatar.cc/150?u=tailwind' },
 ];
 
 const InstagramHeader: React.FC = () => (
@@ -126,7 +117,12 @@ const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
   );
 };
 
-const InstagramFeedContent: React.FC<{ profileData: ProfileData }> = ({ profileData }) => {
+interface InstagramFeedContentProps {
+  profileData: ProfileData;
+  suggestedProfiles: SuggestedProfile[];
+}
+
+const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles }) => {
   return (
     <>
       <InstagramHeader />
@@ -149,23 +145,16 @@ const InstagramFeedContent: React.FC<{ profileData: ProfileData }> = ({ profileD
             <span className="text-xs text-gray-400">Seu story</span>
           </div>
 
-          {/* Other Stories */}
-          {mockStories.map((story, index) => {
-            const ringClass = story.live 
-              ? 'bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600' 
-              : story.seen 
-                ? 'bg-gray-700' 
-                : 'bg-green-500';
+          {/* Other Stories from API */}
+          {suggestedProfiles.map((story, index) => {
+            const ringClass = 'bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600';
             return (
               <div key={index} className="flex flex-col items-center flex-shrink-0 space-y-1 text-center relative">
                 <div className={`w-[70px] h-[70px] rounded-full flex items-center justify-center p-0.5 ${ringClass}`}>
                   <div className="bg-black p-1 rounded-full">
-                    <img src={story.imageUrl} alt={story.username} className="w-full h-full rounded-full object-cover" />
+                    <img src={story.profile_pic_url} alt={story.username} className="w-full h-full rounded-full object-cover" />
                   </div>
                 </div>
-                {story.live && (
-                  <span className="absolute bottom-6 text-[10px] bg-red-500 text-white font-bold px-1.5 py-0.5 rounded-md border-2 border-black uppercase">Ao vivo</span>
-                )}
                 <span className="text-xs text-white mt-1 truncate w-16">{story.username}</span>
               </div>
             )
