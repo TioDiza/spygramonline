@@ -139,13 +139,20 @@ const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData
               <div className="absolute bottom-0 right-0 w-6 h-6 bg-blue-500 rounded-full border-2 border-black flex items-center justify-center"><Plus className="w-4 h-4 text-white" /></div>
             </div><span className="text-xs text-gray-400">Seu story</span>
           </div>
-          {suggestedProfiles.map((story, index) => (
-            <div key={index} onClick={() => onLockedFeatureClick(`ver os stories de @${story.username}`)} className="flex flex-col items-center flex-shrink-0 space-y-1 text-center relative cursor-pointer">
-              <div className="w-[70px] h-[70px] rounded-full flex items-center justify-center p-0.5 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
-                <div className="bg-black p-1 rounded-full"><img src={story.profile_pic_url} alt={story.username} className="w-full h-full rounded-full object-cover" /></div>
-              </div><span className="text-xs text-white mt-1 truncate w-16">{maskUsername(story.username)}</span>
-            </div>
-          ))}
+          {suggestedProfiles.map((story, index) => {
+            const isCloseFriend = index < 3;
+            const ringClasses = isCloseFriend
+              ? 'bg-green-500'
+              : 'bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600';
+
+            return (
+              <div key={index} onClick={() => onLockedFeatureClick(`ver os stories de @${story.username}`)} className="flex flex-col items-center flex-shrink-0 space-y-1 text-center relative cursor-pointer">
+                <div className={`w-[70px] h-[70px] rounded-full flex items-center justify-center p-0.5 ${ringClasses}`}>
+                  <div className="bg-black p-1 rounded-full"><img src={story.profile_pic_url} alt={story.username} className="w-full h-full rounded-full object-cover" /></div>
+                </div><span className="text-xs text-white mt-1 truncate w-16">{maskUsername(story.username)}</span>
+              </div>
+            );
+          })}
         </div>
         
         {hasRealPosts ? posts.map((post, index) => (
