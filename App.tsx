@@ -74,11 +74,7 @@ const MainAppContent: React.FC = () => {
       ]);
       setConfirmedProfileData(fetchedProfileData);
     } catch (err) {
-      if (err instanceof Error) {
-        setError(`Erro ao buscar perfil: ${err.message}`);
-      } else {
-        setError('Ocorreu um erro inesperado ao buscar o perfil.');
-      }
+      setError("O servidor está com alta demanda no momento, tente novamente mais tarde");
       console.error('Error during search process:', err);
     } finally {
       setIsLoading(false);

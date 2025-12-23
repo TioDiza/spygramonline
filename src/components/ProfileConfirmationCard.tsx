@@ -10,8 +10,6 @@ interface ProfileConfirmationCardProps {
 }
 
 const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profileData, onConfirm, onCorrect }) => {
-  const isMockData = profileData.username === 'usuario_mockado';
-
   const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
@@ -34,12 +32,6 @@ const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profi
         </p>
       </div>
       
-      {isMockData && (
-        <div className="mb-4 p-3 bg-yellow-900/50 border border-yellow-500 text-yellow-300 rounded-lg text-sm text-center">
-          Aviso: Dados de exemplo. A invasão real pode falhar se o perfil não for encontrado.
-        </div>
-      )}
-
       {/* Profile Details Section */}
       <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 space-y-4">
         {/* Header: Pic, Username, Fullname */}

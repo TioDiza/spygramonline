@@ -5,7 +5,6 @@ import InstagramLoginSimulator from '../components/InstagramLoginSimulator';
 import InvasionSuccessCard from '../components/InvasionSuccessCard';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
-import { mockProfileData } from '../services/profileService';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import InstagramFeedMockup from '../components/InstagramFeedMockup';
@@ -23,8 +22,6 @@ const InvasionSimulationPage: React.FC = () => {
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const isMockData = profileData?.username === mockProfileData.username;
-
   useEffect(() => {
     if (!profileData) {
       setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
@@ -34,17 +31,12 @@ const InvasionSimulationPage: React.FC = () => {
       return;
     }
 
-    if (isMockData) {
-      setErrorMessage('Aviso: Não foi possível obter dados reais. Exibindo simulação com dados de exemplo.');
-      toast.error('Aviso: Não foi possível obter dados reais. Exibindo simulação com dados de exemplo.');
-    }
-
     const timeout = setTimeout(() => {
       setStage('login_attempt');
     }, 1000);
 
     return () => clearTimeout(timeout);
-  }, [profileData, navigate, isMockData]);
+  }, [profileData, navigate]);
 
   const handleLoginSuccess = () => {
     setStage('success_card');
@@ -64,15 +56,6 @@ const InvasionSimulationPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black md:bg-[#121212] text-white font-sans w-full">
-      <div className="w-full max-w-md mx-auto">
-        {errorMessage && stage !== 'feed_locked' && (
-          <div className="mt-4 mb-8 bg-yellow-900/50 border border-yellow-500 text-yellow-300 px-4 py-3 rounded-lg text-center" role="alert">
-            <p className="font-bold">Aviso</p>
-            <p className="text-sm">{errorMessage}</p>
-          </div>
-        )}
-      </div>
-
       <AnimatePresence mode="wait">
         {stage !== 'feed_locked' && (
           <div className="flex items-center justify-center min-h-screen">

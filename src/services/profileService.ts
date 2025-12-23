@@ -1,23 +1,9 @@
 import { BACKEND_API_BASE_URL } from '../../constants';
 import type { ProfileData } from '../../types';
 
-// Dados mockados para usar como fallback
-export const mockProfileData: ProfileData = {
-  username: "usuario_mockado",
-  fullName: "Usuário de Teste Mockado",
-  profilePicUrl: "https://picsum.photos/id/1005/200/200",
-  biography: "Esta é uma biografia de teste para um perfil mockado.",
-  followers: 12345,
-  following: 678,
-  postsCount: 123,
-  isVerified: false,
-  isPrivate: true,
-};
-
 export const fetchProfileData = async (username: string): Promise<ProfileData> => {
   if (!username) {
-    console.warn('[profileService] Username cannot be empty. Returning mock data.');
-    return mockProfileData;
+    throw new Error('Username cannot be empty.');
   }
 
   const url = `${BACKEND_API_BASE_URL}/perfil/${username}`;
@@ -44,8 +30,8 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
       } catch (e) {
         // Se não for JSON, mantém a mensagem original
       }
-      console.error(`[profileService] ${errorMessage}. Returning mock data.`);
-      return mockProfileData;
+      console.error(`[profileService] ${errorMessage}.`);
+      throw new Error(errorMessage);
     }
 
     const apiData = await response.json();
@@ -66,8 +52,8 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
 
     // Validação básica para campos essenciais
     if (!profile.username || !profile.fullName || !profile.profilePicUrl) {
-      console.error('[profileService] Failed to fetch profile data: Invalid or incomplete response structure from backend proxy. Returning mock data.');
-      return mockProfileData;
+      console.error('[profileService] Failed to fetch profile data: Invalid or incomplete response structure from backend proxy.');
+      throw new Error('Invalid or incomplete profile data from backend.');
     }
 
     // --- NOVA LÓGICA PARA PROXY DE IMAGEM ---
@@ -84,14 +70,15 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     clearTimeout(timeoutId); // Garante que o timeout seja limpo mesmo em caso de erro
     if (error instanceof Error) {
       if (error.name === 'AbortError') {
-        console.error(`[profileService] Fetch for ${username} timed out after 15 seconds. Returning mock data.`);
-        // Você pode querer lançar um erro específico aqui para o frontend exibir "Requisição demorou demais"
+        console.error(`[profileService] Fetch for ${username} timed out after 15 seconds.`);
+        throw new Error(`Fetch for ${username} timed out after 15 seconds.`);
       } else {
-        console.error(`[profileService] An error occurred during backend proxy fetch for ${username}: ${error.message}. Returning mock data.`);
+        console.error(`[profileService] An error occurred during backend proxy fetch for ${username}: ${error.message}.`);
+        throw error;
       }
     } else {
-      console.error('[profileService] An unknown error occurred while fetching data from backend proxy. Returning mock data.');
+      console.error('[profileService] An unknown error occurred while fetching data from backend proxy.');
+      throw new Error('An unknown error occurred while fetching data from backend proxy.');
     }
-    return mockProfileData;
   }
 };
