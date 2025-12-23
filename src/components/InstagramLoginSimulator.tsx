@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
+import { RotateCw, Facebook } from 'lucide-react';
 import { ProfileData } from '../../types';
 
 interface InstagramLoginSimulatorProps {
@@ -10,6 +9,7 @@ interface InstagramLoginSimulatorProps {
 
 type AttemptStage = 'typing' | 'attempting' | 'error' | 'success_typing' | 'success';
 
+// Função para gerar senhas aleatórias para as tentativas falhas
 const generateRandomPassword = () => {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
   let password = '';
@@ -20,6 +20,7 @@ const generateRandomPassword = () => {
   return password;
 };
 
+// A senha "correta" que a simulação irá "encontrar"
 const correctPassword = 'biel_2805@';
 
 const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profileData, onSuccess }) => {
@@ -30,7 +31,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
   
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Effect to handle the animation state machine
+  // Efeito que gerencia a máquina de estados da animação
   useEffect(() => {
     const runAnimationCycle = () => {
       if (stage === 'typing') {
@@ -43,8 +44,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
         }
       } else if (stage === 'attempting') {
         timeoutRef.current = setTimeout(() => {
-          // Decide if we should fail or succeed
-          if (attemptCount >= 4) { // Succeed after 4 attempts
+          if (attemptCount >= 4) { // Sucesso após 4 tentativas
             setDisplayedPassword('');
             setStage('success_typing');
           } else {
@@ -57,7 +57,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
           setCurrentPassword(generateRandomPassword());
           setDisplayedPassword('');
           setStage('typing');
-        }, 700);
+        }, 1200); // Atraso maior no erro para dar tempo de ler a mensagem
       } else if (stage === 'success_typing') {
         if (displayedPassword.length < correctPassword.length) {
           timeoutRef.current = setTimeout(() => {
@@ -67,7 +67,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
           setStage('success');
         }
       } else if (stage === 'success') {
-        timeoutRef.current = setTimeout(onSuccess, 1000);
+        timeoutRef.current = setTimeout(onSuccess, 1500);
       }
     };
 
@@ -78,7 +78,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
     };
   }, [stage, displayedPassword, currentPassword, onSuccess, attemptCount]);
 
-  // Effect to initialize the first password
+  // Efeito para inicializar a primeira senha
   useEffect(() => {
     setCurrentPassword(generateRandomPassword());
   }, []);
@@ -91,84 +91,89 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-black text-white flex flex-col items-center justify-center min-h-[600px]">
-      <div className="w-full text-center">
+    <div className="w-full max-w-sm mx-auto p-6 bg-black text-white flex flex-col items-center justify-center min-h-screen font-sans">
+      <div className="w-full text-center flex flex-col items-center">
+        
         <img
-          src="/spygram_transparentebranco.png"
+          src="/instagram-logo.png"
           alt="Instagram Logo"
-          className="h-12 mx-auto mb-8"
+          className="h-16 mx-auto mb-10"
           style={{ filter: 'invert(1)' }}
         />
         
-        <div className="mb-6">
-          <img
-            src={profileData.profilePicUrl}
-            alt={profileData.username}
-            className="w-20 h-20 rounded-full mx-auto mb-2 border-2 border-gray-700"
-          />
-          <p className="text-lg font-semibold text-gray-300">@{profileData.username}</p>
-        </div>
-
-        <div className="w-full mb-4">
+        <form className="w-full flex flex-col gap-2">
           <input
             type="text"
             value={profileData.username}
             readOnly
-            className="w-full bg-gray-800 text-gray-400 px-4 py-3 rounded-lg border border-gray-700 text-sm mb-3"
+            className="w-full bg-[#1e1e1e] text-gray-300 px-3 py-2.5 rounded-md border border-gray-700 text-sm"
           />
-          <div className={`relative w-full transition-all duration-300 ${stage === 'error' ? 'animate-shake' : ''}`}>
+          <div className="relative w-full">
             <input
               type="password"
               value={getPasswordDisplay()}
               readOnly
-              placeholder="Senha"
-              className={`w-full px-4 py-3 rounded-lg text-sm font-mono
-                ${stage === 'error' ? 'bg-red-900/50 border-red-500 text-red-300' : ''}
-                ${stage === 'success' || stage === 'success_typing' ? 'bg-green-900/50 border-green-500 text-green-300' : ''}
-                ${stage !== 'error' && stage !== 'success' && stage !== 'success_typing' ? 'bg-gray-800 border-gray-700 text-white' : ''}
-                border focus:outline-none`}
+              className={`w-full px-3 py-2.5 rounded-md text-sm font-mono
+                bg-[#1e1e1e] border
+                ${stage === 'error' ? 'border-red-500 text-red-300' : 'border-gray-700 text-white'}
+                focus:outline-none`}
             />
             {(stage === 'typing' || stage === 'success_typing') && (
-              <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white animate-pulse">|</span>
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white animate-pulse">|</span>
             )}
           </div>
+
+          {stage === 'error' && (
+            <p className="text-red-500 text-xs text-center mt-2">
+              A senha que você inseriu está incorreta.
+            </p>
+          )}
+
+          {stage !== 'success' && (
+            <div className="mt-4 flex items-center gap-3 bg-[#1e1e1e] border border-gray-700 rounded-lg p-3 text-left">
+              <RotateCw className="w-6 h-6 text-purple-400 animate-spin" />
+              <div>
+                <p className="text-sm font-semibold text-white">Quebrando criptografia da conta</p>
+                <p className="text-xs text-gray-400">Testando combinações de senha...</p>
+              </div>
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="w-full mt-4 py-2 rounded-lg font-semibold text-white text-sm bg-[#0095f6] opacity-70 cursor-not-allowed"
+            disabled={true}
+          >
+            Entrar
+          </button>
+        </form>
+
+        <div className="mt-4 text-center">
+          <a href="#" className="text-xs text-[#0095f6] no-underline">
+            Esqueceu a senha?
+          </a>
         </div>
 
-        <motion.button
-          className={`w-full py-3 rounded-lg font-bold text-white text-sm flex items-center justify-center gap-2
-            ${stage === 'error' ? 'bg-red-500' : ''}
-            ${stage === 'success' || stage === 'success_typing' ? 'bg-green-500' : ''}
-            ${stage !== 'error' && stage !== 'success' && stage !== 'success_typing' ? 'bg-blue-500' : ''}
-            transition-colors`}
-          disabled={true}
-        >
-          {(stage === 'typing' || stage === 'success_typing') && <><Loader2 className="w-4 h-4 animate-spin" /> Digitando...</>}
-          {stage === 'attempting' && <><Loader2 className="w-4 h-4 animate-spin" /> Verificando...</>}
-          {stage === 'error' && `Falha na Tentativa ${attemptCount}`}
-          {stage === 'success' && `Senha Encontrada!`}
-        </motion.button>
+        <div className="flex items-center w-full my-6">
+          <div className="flex-grow border-t border-gray-700"></div>
+          <span className="px-4 text-xs font-semibold text-gray-500">OU</span>
+          <div className="flex-grow border-t border-gray-700"></div>
+        </div>
 
-        <p className="mt-4 text-xs text-gray-500">
-          Tentativa {attemptCount}
-        </p>
-        
-        {stage === 'error' && (
-          <p className="text-red-400 text-xs mt-2">
-            Senha incorreta. Tente novamente.
-          </p>
-        )}
-        
-        <style>{`
-          @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
-          }
-          .animate-shake {
-            animation: shake 0.3s ease-in-out;
-          }
-        `}</style>
+        <button className="flex items-center justify-center gap-2 text-sm font-semibold text-[#0095f6]">
+          <Facebook className="w-5 h-5" />
+          <span>Entrar com o Facebook</span>
+        </button>
+
       </div>
+      <footer className="absolute bottom-4 text-center text-xs">
+        <p className="text-gray-500">
+          Não tem uma conta?{' '}
+          <a href="#" className="font-semibold text-[#0095f6] no-underline">
+            Cadastre-se.
+          </a>
+        </p>
+      </footer>
     </div>
   );
 };
