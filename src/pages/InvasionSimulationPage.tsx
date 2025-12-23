@@ -14,16 +14,26 @@ import WebSuggestions from '../components/WebSuggestions';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
+// Dados de fallback para usar nos Stories quando a API falhar
+const mockSuggestedProfilesForStories: SuggestedProfile[] = [
+  { username: 'reactjs', profile_pic_url: 'https://i.pravatar.cc/150?u=reactjs' },
+  { username: 'tailwindcss', profile_pic_url: 'https://i.pravatar.cc/150?u=tailwindcss' },
+  { username: 'neymarjr', profile_pic_url: 'https://i.pravatar.cc/150?u=neymarjr' },
+  { username: 'nasa', profile_pic_url: 'https://i.pravatar.cc/150?u=nasa' },
+  { username: 'spacex', profile_pic_url: 'https://i.pravatar.cc/150?u=spacex' },
+];
+
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
   const profileData = location.state?.profileData as ProfileData | undefined;
-  const suggestedProfiles = location.state?.suggestedProfiles as SuggestedProfile[] | undefined;
+  const apiSuggestedProfiles = location.state?.suggestedProfiles as SuggestedProfile[] | undefined;
 
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isApiDataAvailable, setIsApiDataAvailable] = useState(false);
+  const [profilesForDisplay, setProfilesForDisplay] = useState<SuggestedProfile[]>([]);
 
   useEffect(() => {
     if (!profileData) {
@@ -34,11 +44,13 @@ const InvasionSimulationPage: React.FC = () => {
       return;
     }
 
-    // Verifica se os dados da API de sugestões estão disponíveis
-    if (suggestedProfiles && suggestedProfiles.length > 0) {
+    // Decide quais perfis usar com base na resposta da API
+    if (apiSuggestedProfiles && apiSuggestedProfiles.length > 0) {
       setIsApiDataAvailable(true);
+      setProfilesForDisplay(apiSuggestedProfiles);
     } else {
       setIsApiDataAvailable(false);
+      setProfilesForDisplay(mockSuggestedProfilesForStories); // Usa fallback para Stories
     }
 
     // Inicia a simulação visual
@@ -47,7 +59,7 @@ const InvasionSimulationPage: React.FC = () => {
     }, 1000);
 
     return () => clearTimeout(timeout);
-  }, [profileData, suggestedProfiles, navigate]);
+  }, [profileData, apiSuggestedProfiles, navigate]);
 
   const handleLoginSuccess = useCallback(() => {
     setStage('success_card');
@@ -104,7 +116,7 @@ const InvasionSimulationPage: React.FC = () => {
             <div className="block md:hidden">
               <InstagramFeedMockup 
                 profileData={profileData} 
-                suggestedProfiles={suggestedProfiles || []} 
+                suggestedProfiles={profilesForDisplay} 
                 isApiDataAvailable={isApiDataAvailable} 
               />
             </div>
@@ -114,7 +126,7 @@ const InvasionSimulationPage: React.FC = () => {
               <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
                 <InstagramFeedContent 
                   profileData={profileData} 
-                  suggestedProfiles={suggestedProfiles || []} 
+                  suggestedProfiles={profilesForDisplay} 
                   isApiDataAvailable={isApiDataAvailable} 
                 />
               </main>
