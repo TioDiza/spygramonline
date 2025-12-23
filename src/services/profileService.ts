@@ -22,35 +22,27 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     clearTimeout(timeoutId);
     console.log(`[profileService] Fetch response received for ${username}. Status: ${response.status}`);
 
+    const apiData = await response.json();
+    console.log(`[profileService] Raw data received from backend for ${username}:`, apiData);
+
     if (!response.ok) {
-      const errorText = await response.text();
-      let errorMessage = `Backend API Error (${response.status}): ${errorText || 'Unknown error'}`;
-      try {
-        const errorData = JSON.parse(errorText);
-        errorMessage = errorData.erro || errorData.message || errorMessage;
-      } catch (e) {
-        // Not JSON, use original message
-      }
+      const errorMessage = apiData.error || apiData.message || `Backend API Error (${response.status}): Unknown error`;
       console.error(`[profileService] ${errorMessage}.`);
       throw new Error(errorMessage);
     }
 
-    const apiData = await response.json();
-    console.log(`[profileService] Raw data received from backend for ${username}:`, apiData);
-
-    const profileDataFromApi = apiData.data;
-    if (profileDataFromApi && typeof profileDataFromApi === 'object' && Object.keys(profileDataFromApi).length > 0) {
-      
+    // A API agora retorna os dados na raiz, não mais em um objeto 'data'.
+    if (apiData && !apiData.error) {
       const profile: ProfileData = {
-        username: profileDataFromApi.username,
-        fullName: profileDataFromApi.full_name,
-        profilePicUrl: profileDataFromApi.profile_pic_url,
-        biography: profileDataFromApi.biography,
-        followers: profileDataFromApi.follower_count,
-        following: profileDataFromApi.following_count,
-        postsCount: profileDataFromApi.media_count,
-        isVerified: profileDataFromApi.is_verified,
-        isPrivate: profileDataFromApi.is_private,
+        username: apiData.username,
+        fullName: apiData.full_name,
+        profilePicUrl: apiData.profile_pic_url || apiData.profile_pic_url_hd,
+        biography: apiData.biography,
+        followers: apiData.follower_count || (apiData.edge_followed_by ? apiData.edge_followed_by.count : 0),
+        following: apiData.following_count || (apiData.edge_follow ? apiData.edge_follow.count : 0),
+        postsCount: apiData.media_count || (apiData.edge_owner_to_timeline_media ? apiData.edge_owner_to_timeline_media.count : 0),
+        isVerified: apiData.is_verified,
+        isPrivate: apiData.is_private,
       };
 
       if (!profile.username) {
@@ -62,8 +54,9 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
       return profile;
 
     } else {
-      console.error('[profileService] Failed to fetch profile data: The "data" field is empty or invalid in the API response.');
-      throw new Error('Nenhum perfil encontrado na resposta da API.');
+      const errorMessage = apiData.error || apiData.message || 'Perfil não encontrado ou não acessível.';
+      console.error(`[profileService] API returned an error: ${errorMessage}`);
+      throw new Error(errorMessage);
     }
   } catch (error) {
     clearTimeout(timeoutId);
