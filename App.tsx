@@ -10,10 +10,12 @@ import ServersPage from '@/src/pages/ServersPage';
 import CreditsPage from '@/src/pages/CreditsPage';
 import ProgressBar from '@/src/components/ProgressBar';
 import InvasionSimulationPage from '@/src/pages/InvasionSimulationPage';
+import ProfileConfirmationCard from '@/src/components/ProfileConfirmationCard'; // Importar novo componente
 import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
+import { ProfileData } from './types'; // Importar ProfileData
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -22,6 +24,7 @@ const MainAppContent: React.FC = () => {
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
+  const [confirmedProfileData, setConfirmedProfileData] = useState<ProfileData | null>(null); // Novo estado para dados confirmados
   const navigate = useNavigate();
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
@@ -62,6 +65,7 @@ const MainAppContent: React.FC = () => {
     setIsLoading(true);
     setError(null);
     setProgressBarProgress(0);
+    setConfirmedProfileData(null); // Limpa qualquer confirmação anterior
 
     try {
       // 1. Inicia a busca de dados da API imediatamente
@@ -76,23 +80,51 @@ const MainAppContent: React.FC = () => {
         minimumDurationPromise,
       ]);
 
-      // Navega imediatamente para a simulação. O loader inicial será exibido lá.
-      navigate('/invasion-simulation', { state: { profileData: fetchedProfileData } });
+      // Em vez de navegar, armazena os dados para confirmação
+      setConfirmedProfileData(fetchedProfileData);
 
     } catch (err) {
       if (err instanceof Error) {
-        setError(`Erro ao invadir perfil: ${err.message}`);
+        setError(`Erro ao buscar perfil: ${err.message}`);
       } else {
-        setError('Ocorreu um erro inesperado ao invadir o perfil.');
+        setError('Ocorreu um erro inesperado ao buscar o perfil.');
       }
       console.error('Error during search process:', err); // Log de erro detalhado
     } finally {
-      // O estado de loading é resetado após a navegação ou em caso de erro
+      // O estado de loading é resetado
       setIsLoading(false);
       setProgressBarProgress(100);
     }
-  }, [searchQuery, hasConsented, navigate]);
+  }, [searchQuery, hasConsented]);
 
+  const handleConfirmInvasion = useCallback(() => {
+    if (confirmedProfileData) {
+      // Navega para a simulação com os dados confirmados
+      navigate('/invasion-simulation', { state: { profileData: confirmedProfileData } });
+    }
+  }, [confirmedProfileData, navigate]);
+
+  const handleCorrectUsername = useCallback(() => {
+    // Limpa os dados de confirmação e o erro, permitindo nova busca
+    setConfirmedProfileData(null);
+    setSearchQuery('');
+    setError(null);
+  }, []);
+
+  // Se houver dados para confirmar, renderiza o card de confirmação
+  if (confirmedProfileData) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
+        <ProfileConfirmationCard
+          profileData={confirmedProfileData}
+          onConfirm={handleConfirmInvasion}
+          onCorrect={handleCorrectUsername}
+        />
+      </div>
+    );
+  }
+
+  // Se não houver dados para confirmar, renderiza a tela de busca principal
   return (
     <div className="min-h-screen">
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
@@ -191,7 +223,7 @@ const MainAppContent: React.FC = () => {
           </div>
           <div className="mt-6">
             <SparkleButton onClick={handleSearch} disabled={isLoading || !hasConsented}>
-              {isLoading ? 'Preparando Invasão...' : 'Invadir Conta'}
+              {isLoading ? 'Buscando Perfil...' : 'Invadir Conta'}
             </SparkleButton>
           </div>
           <div className="w-full mt-4">

@@ -36,8 +36,9 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
       // Phase 1: Typing
       if (currentPassword.length < currentAttempt.length) {
         timer = setTimeout(() => {
-          setCurrentPassword(currentAttempt.substring(0, currentPassword.length + 1));
-        }, 30); // Velocidade de digitação rápida (30ms)
+          // Use functional update for safety
+          setCurrentPassword(prev => currentAttempt.substring(0, prev.length + 1));
+        }, 50); // Velocidade de digitação ajustada para 50ms
       } else {
         // Typing finished, transition to login attempt phase
         setIsTyping(false);
@@ -61,9 +62,9 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
               setAttemptIndex(prev => prev + 1);
               setIsTyping(true);
               setIsError(false);
-            }, 1000); // Aumentado para 1000ms (1 segundo) para estabilidade
+            }, 1500); // Aumentado para 1500ms (1.5 segundos) para melhor visualização do erro
           }
-        }, 400); // Tempo de espera da tentativa de login (400ms)
+        }, 600); // Tempo de espera da tentativa de login (600ms)
       }
     }
     
@@ -81,7 +82,8 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
       return currentPassword;
     }
     // Show dots during login attempt or error display
-    return '•'.repeat(currentPassword.length);
+    // We use the length of the current attempt to determine the number of dots
+    return '•'.repeat(currentAttempt.length);
   };
 
   return (
@@ -132,7 +134,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
           transition={{ duration: 0.2 }}
           className={`w-full py-3 rounded-lg font-bold text-white text-sm flex items-center justify-center gap-2
             ${isTyping ? 'bg-blue-900/50 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 transition-colors'}`}
-          disabled={isTyping}
+          disabled={isTyping || isError} // Disable button during typing and error display
         >
           {isTyping ? (
             <>
