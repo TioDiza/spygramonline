@@ -11,32 +11,20 @@ import InstagramFeedMockup from '../components/InstagramFeedMockup';
 import InstagramFeedContent from '../components/InstagramFeedContent';
 import WebSidebar from '../components/WebSidebar';
 import WebSuggestions from '../components/WebSuggestions';
-import { fetchSuggestedProfiles } from '../services/profileService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
-
-// Dados de fallback para usar quando a API falhar
-const mockSuggestedProfiles: SuggestedProfile[] = [
-  { username: 'reactjs', profile_pic_url: 'https://i.pravatar.cc/150?u=reactjs' },
-  { username: 'tailwindcss', profile_pic_url: 'https://i.pravatar.cc/150?u=tailwindcss' },
-  { username: 'neymarjr', profile_pic_url: 'https://i.pravatar.cc/150?u=neymarjr' },
-  { username: 'nasa', profile_pic_url: 'https://i.pravatar.cc/150?u=nasa' },
-  { username: 'spacex', profile_pic_url: 'https://i.pravatar.cc/150?u=spacex' },
-  { username: 'microsoft', profile_pic_url: 'https://i.pravatar.cc/150?u=microsoft' },
-];
 
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const profileData = location.state?.profileData as ProfileData | undefined;
   
+  const profileData = location.state?.profileData as ProfileData | undefined;
+  const suggestedProfiles = location.state?.suggestedProfiles as SuggestedProfile[] | undefined;
+
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
-  const [isApiDataAvailable, setIsApiDataAvailable] = useState(false); // Novo estado
-  const [isHacking, setIsHacking] = useState(true);
+  const [isApiDataAvailable, setIsApiDataAvailable] = useState(false);
 
-  // Efeito para iniciar o processo
   useEffect(() => {
     if (!profileData) {
       setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
@@ -46,24 +34,12 @@ const InvasionSimulationPage: React.FC = () => {
       return;
     }
 
-    // Inicia a busca pelos perfis sugeridos em segundo plano
-    const getSuggestions = async () => {
-      let suggestions = await fetchSuggestedProfiles(profileData.username);
-      
-      if (suggestions.length > 0) {
-        setIsApiDataAvailable(true); // API retornou dados com sucesso
-      } else {
-        // Se a API falhar ou retornar uma lista vazia, usa os dados de fallback
-        console.warn('[InvasionSimulationPage] API de sugestões falhou. Usando dados de fallback.');
-        suggestions = mockSuggestedProfiles;
-        setIsApiDataAvailable(false); // Marca que estamos usando dados de fallback
-      }
-
-      setSuggestedProfiles(suggestions);
-      // Quando a busca (bem-sucedida ou não) terminar, sinaliza para o simulador parar
-      setIsHacking(false);
-    };
-    getSuggestions();
+    // Verifica se os dados da API de sugestões estão disponíveis
+    if (suggestedProfiles && suggestedProfiles.length > 0) {
+      setIsApiDataAvailable(true);
+    } else {
+      setIsApiDataAvailable(false);
+    }
 
     // Inicia a simulação visual
     const timeout = setTimeout(() => {
@@ -71,17 +47,15 @@ const InvasionSimulationPage: React.FC = () => {
     }, 1000);
 
     return () => clearTimeout(timeout);
-  }, [profileData, navigate]);
+  }, [profileData, suggestedProfiles, navigate]);
 
-  // Callback do simulador quando a animação de sucesso termina
   const handleLoginSuccess = useCallback(() => {
     setStage('success_card');
     toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
     
-    // Em seguida, avança para o feed
     setTimeout(() => {
       setStage('feed_locked');
-    }, 2000); // 2 segundos na tela de sucesso
+    }, 2000);
   }, [profileData?.username]);
 
   if (!profileData) {
@@ -108,7 +82,6 @@ const InvasionSimulationPage: React.FC = () => {
                 <InstagramLoginSimulator 
                   profileData={profileData} 
                   onSuccess={handleLoginSuccess}
-                  isHacking={isHacking}
                 />
               </motion.div>
             )}
@@ -128,22 +101,20 @@ const InvasionSimulationPage: React.FC = () => {
             transition={{ duration: 0.5 }}
             className="w-full"
           >
-            {/* Mobile View */}
             <div className="block md:hidden">
               <InstagramFeedMockup 
                 profileData={profileData} 
-                suggestedProfiles={suggestedProfiles} 
+                suggestedProfiles={suggestedProfiles || []} 
                 isApiDataAvailable={isApiDataAvailable} 
               />
             </div>
 
-            {/* Desktop View */}
             <div className="hidden md:flex w-full justify-center">
               <WebSidebar profileData={profileData} />
               <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
                 <InstagramFeedContent 
                   profileData={profileData} 
-                  suggestedProfiles={suggestedProfiles} 
+                  suggestedProfiles={suggestedProfiles || []} 
                   isApiDataAvailable={isApiDataAvailable} 
                 />
               </main>

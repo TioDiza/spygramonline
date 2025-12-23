@@ -6,7 +6,6 @@ import { ProfileData } from '../../types';
 interface InstagramLoginSimulatorProps {
   profileData: ProfileData;
   onSuccess: () => void;
-  isHacking: boolean;
 }
 
 type AttemptStage = 'typing' | 'attempting' | 'error' | 'success_typing' | 'success';
@@ -23,7 +22,7 @@ const generateRandomPassword = () => {
 
 const correctPassword = 'biel_2805@';
 
-const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profileData, onSuccess, isHacking }) => {
+const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profileData, onSuccess }) => {
   const [attemptCount, setAttemptCount] = useState(1);
   const [currentPassword, setCurrentPassword] = useState('');
   const [displayedPassword, setDisplayedPassword] = useState('');
@@ -44,7 +43,13 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
         }
       } else if (stage === 'attempting') {
         timeoutRef.current = setTimeout(() => {
-          setStage('error');
+          // Decide if we should fail or succeed
+          if (attemptCount >= 4) { // Succeed after 4 attempts
+            setDisplayedPassword('');
+            setStage('success_typing');
+          } else {
+            setStage('error');
+          }
         }, 500);
       } else if (stage === 'error') {
         timeoutRef.current = setTimeout(() => {
@@ -71,16 +76,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [stage, displayedPassword, currentPassword, onSuccess]);
-
-  // Effect to listen for the signal to stop hacking and start the success sequence
-  useEffect(() => {
-    if (!isHacking) {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      setDisplayedPassword('');
-      setStage('success_typing');
-    }
-  }, [isHacking]);
+  }, [stage, displayedPassword, currentPassword, onSuccess, attemptCount]);
 
   // Effect to initialize the first password
   useEffect(() => {

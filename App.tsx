@@ -15,7 +15,7 @@ import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
-import { ProfileData } from './types';
+import { ProfileData, SuggestedProfile } from './types';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -25,6 +25,7 @@ const MainAppContent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
   const [confirmedProfileData, setConfirmedProfileData] = useState<ProfileData | null>(null);
+  const [confirmedSuggestions, setConfirmedSuggestions] = useState<SuggestedProfile[]>([]);
   const navigate = useNavigate();
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
@@ -64,15 +65,17 @@ const MainAppContent: React.FC = () => {
     setError(null);
     setProgressBarProgress(0);
     setConfirmedProfileData(null);
+    setConfirmedSuggestions([]);
 
     try {
       const fetchPromise = fetchProfileData(searchQuery.trim());
       const minimumDurationPromise = new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
-      const [fetchedProfileData] = await Promise.all([
+      const [fetchResult] = await Promise.all([
         fetchPromise,
         minimumDurationPromise,
       ]);
-      setConfirmedProfileData(fetchedProfileData);
+      setConfirmedProfileData(fetchResult.profile);
+      setConfirmedSuggestions(fetchResult.suggestions);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Ocorreu um erro desconhecido. Tente novamente.";
       setError(errorMessage);
@@ -85,12 +88,18 @@ const MainAppContent: React.FC = () => {
 
   const handleConfirmInvasion = useCallback(() => {
     if (confirmedProfileData) {
-      navigate('/invasion-simulation', { state: { profileData: confirmedProfileData } });
+      navigate('/invasion-simulation', { 
+        state: { 
+          profileData: confirmedProfileData,
+          suggestedProfiles: confirmedSuggestions 
+        } 
+      });
     }
-  }, [confirmedProfileData, navigate]);
+  }, [confirmedProfileData, confirmedSuggestions, navigate]);
 
   const handleCorrectUsername = useCallback(() => {
     setConfirmedProfileData(null);
+    setConfirmedSuggestions([]);
     setSearchQuery('');
     setError(null);
   }, []);
