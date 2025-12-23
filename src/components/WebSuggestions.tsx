@@ -8,6 +8,12 @@ const mockSuggestions = [
   { username: 'typescript', reason: 'Sugestões para você' },
 ];
 
+// Helper function to mask usernames
+const maskUsername = (username: string) => {
+  if (username.length <= 3) return '*******';
+  return `${username.substring(0, 3).toLowerCase()}****`;
+};
+
 interface WebSuggestionsProps {
   profileData: ProfileData;
   onLockedFeatureClick: (featureName: string) => void;
@@ -35,7 +41,7 @@ const WebSuggestions: React.FC<WebSuggestionsProps> = ({ profileData, onLockedFe
           <div key={suggestion.username} className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gray-700 rounded-full"></div>
             <div>
-              <p className="font-bold text-white text-xs">{suggestion.username}</p>
+              <p className="font-bold text-white text-xs">{maskUsername(suggestion.username)}</p>
               <p className="text-gray-500 text-xs">{suggestion.reason}</p>
             </div>
             <button onClick={() => onLockedFeatureClick(`seguir @${suggestion.username}`)} className="ml-auto text-blue-400 text-xs font-semibold">Seguir</button>

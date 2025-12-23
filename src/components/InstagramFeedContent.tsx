@@ -11,6 +11,12 @@ const mockPosts = [
   { id: 3, imageUrl: 'https://picsum.photos/id/1033/600/600', caption: 'Melhor café da cidade! ☕', likes: 2100, comments: 78 },
 ];
 
+// Helper function to mask usernames
+const maskUsername = (username: string) => {
+  if (username.length <= 3) return '*******';
+  return `${username.substring(0, 3).toLowerCase()}****`;
+};
+
 interface ClickableProps {
   onLockedFeatureClick: (featureName: string) => void;
 }
@@ -45,6 +51,7 @@ const RealPost: React.FC<{ profile: SuggestedProfile; location?: string } & Clic
   const likes = useMemo(() => Math.floor(Math.random() * 5000) + 100, []);
   const comments = useMemo(() => Math.floor(Math.random() * 200) + 5, []);
   const caption = useMemo(() => ["Vivendo o momento!", "Ótimas vibrações.", "Lembranças.", "Aproveitando o dia."][Math.floor(Math.random() * 4)], []);
+  const maskedUsername = maskUsername(profile.username);
 
   return (
     <div className="border-b border-gray-800 mb-4">
@@ -52,7 +59,7 @@ const RealPost: React.FC<{ profile: SuggestedProfile; location?: string } & Clic
         <div onClick={() => onLockedFeatureClick(`ver o perfil de @${profile.username}`)} className="flex items-center space-x-3 cursor-pointer">
           <img src={profile.profile_pic_url} alt={profile.username} className="w-8 h-8 rounded-full object-cover" />
           <div>
-            <p className="text-sm font-semibold text-white">{profile.username}</p>
+            <p className="text-sm font-semibold text-white">{maskedUsername}</p>
             {location && <p className="text-xs text-gray-400">{location}</p>}
           </div>
         </div>
@@ -69,7 +76,7 @@ const RealPost: React.FC<{ profile: SuggestedProfile; location?: string } & Clic
       </div>
       <div className="px-3 pb-3 text-xs">
         <p onClick={() => onLockedFeatureClick('ver as curtidas')} className="font-semibold text-white mb-1 cursor-pointer">{new Intl.NumberFormat().format(likes)} curtidas</p>
-        <p className="text-white"><span className="font-semibold mr-1">{profile.username}</span><span>{caption}</span></p>
+        <p className="text-white"><span className="font-semibold mr-1">{maskedUsername}</span><span>{caption}</span></p>
         <p onClick={() => onLockedFeatureClick('ver os comentários')} className="text-gray-500 mt-1 cursor-pointer">Ver todos os {comments} comentários</p>
       </div>
     </div>
@@ -134,7 +141,7 @@ const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData
             <div key={index} onClick={() => onLockedFeatureClick(`ver os stories de @${story.username}`)} className="flex flex-col items-center flex-shrink-0 space-y-1 text-center relative cursor-pointer">
               <div className="w-[70px] h-[70px] rounded-full flex items-center justify-center p-0.5 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
                 <div className="bg-black p-1 rounded-full"><img src={story.profile_pic_url} alt={story.username} className="w-full h-full rounded-full object-cover" /></div>
-              </div><span className="text-xs text-white mt-1 truncate w-16">{story.username}</span>
+              </div><span className="text-xs text-white mt-1 truncate w-16">{maskUsername(story.username)}</span>
             </div>
           )) : RANDOM_USER_NAMES.slice(0, 5).map(name => <div key={name} onClick={() => onLockedFeatureClick('ver os stories')} className="cursor-pointer"><LockedStory name={name} /></div>)}
         </div>
