@@ -1,15 +1,10 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, Home, Plus, ChevronDown, Search, Clapperboard } from 'lucide-react';
-import { ProfileData, SuggestedProfile } from '../../types';
+import { ProfileData, SuggestedProfile, FeedPost } from '../../types';
 import LockedStory from './LockedStory';
 import toast from 'react-hot-toast';
 
 const RANDOM_USER_NAMES = ['Bruna', 'Carlos', 'Pedro', 'Sofia', 'Lucas', 'Julia', 'Maria', 'Joao', 'Ana', 'Matheus'];
-const mockPosts = [
-  { id: 1, imageUrl: 'https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6', caption: 'HOJE - VIRADA DE LOTE', likes: 1245, comments: 45, sponsored: true, sponsorName: 'reveillonfestival', sponsorPic: 'https://i.pravatar.cc/150?u=reveillon' },
-  { id: 2, imageUrl: 'https://picsum.photos/id/1025/600/600', caption: 'Novo look para o inverno. O que acharam? 🧥', likes: 890, comments: 22 },
-  { id: 3, imageUrl: 'https://picsum.photos/id/1033/600/600', caption: 'Melhor café da cidade! ☕', likes: 2100, comments: 78 },
-];
 
 // Helper function to mask usernames
 const maskUsername = (username: string) => {
@@ -47,17 +42,15 @@ const InstagramFooter: React.FC<{ profileData: ProfileData } & ClickableProps> =
   </footer>
 );
 
-const RealPost: React.FC<{ profile: SuggestedProfile; location?: string } & ClickableProps> = ({ profile, location, onLockedFeatureClick }) => {
-  const likes = useMemo(() => Math.floor(Math.random() * 5000) + 100, []);
-  const comments = useMemo(() => Math.floor(Math.random() * 200) + 5, []);
-  const caption = useMemo(() => ["Vivendo o momento!", "Ótimas vibrações.", "Lembranças.", "Aproveitando o dia."][Math.floor(Math.random() * 4)], []);
-  const maskedUsername = maskUsername(profile.username);
+const RealPost: React.FC<{ postData: FeedPost; location?: string } & ClickableProps> = ({ postData, location, onLockedFeatureClick }) => {
+  const { de_usuario, post } = postData;
+  const maskedUsername = maskUsername(de_usuario.username);
 
   return (
     <div className="border-b border-gray-800 mb-4">
       <div className="flex items-center justify-between p-3">
-        <div onClick={() => onLockedFeatureClick(`ver o perfil de @${profile.username}`)} className="flex items-center space-x-3 cursor-pointer">
-          <img src={profile.profile_pic_url} alt={profile.username} className="w-8 h-8 rounded-full object-cover" />
+        <div onClick={() => onLockedFeatureClick(`ver o perfil de @${de_usuario.username}`)} className="flex items-center space-x-3 cursor-pointer">
+          <img src={de_usuario.profile_pic_url} alt={de_usuario.username} className="w-8 h-8 rounded-full object-cover" />
           <div>
             <p className="text-sm font-semibold text-white">{maskedUsername}</p>
             {location && <p className="text-xs text-gray-400">{location}</p>}
@@ -65,7 +58,13 @@ const RealPost: React.FC<{ profile: SuggestedProfile; location?: string } & Clic
         </div>
         <button onClick={() => onLockedFeatureClick('ver as opções da publicação')}><MoreHorizontal className="w-5 h-5 text-white" /></button>
       </div>
-      <img src={profile.profile_pic_url} alt="Post" className="w-full h-auto object-contain" />
+      
+      {post.is_video && post.video_url ? (
+        <video src={post.video_url} controls className="w-full h-auto object-contain bg-black"></video>
+      ) : (
+        <img src={post.image_url} alt="Post" className="w-full h-auto object-contain" />
+      )}
+
       <div className="flex justify-between items-center p-3">
         <div className="flex space-x-4">
           <button onClick={() => onLockedFeatureClick('curtir publicações')}><Heart className="w-6 h-6 text-white" /></button>
@@ -75,45 +74,44 @@ const RealPost: React.FC<{ profile: SuggestedProfile; location?: string } & Clic
         <button onClick={() => onLockedFeatureClick('salvar publicações')}><Bookmark className="w-6 h-6 text-white" /></button>
       </div>
       <div className="px-3 pb-3 text-xs">
-        <p onClick={() => onLockedFeatureClick('ver as curtidas')} className="font-semibold text-white mb-1 cursor-pointer">{new Intl.NumberFormat().format(likes)} curtidas</p>
-        <p className="text-white"><span className="font-semibold mr-1">{maskedUsername}</span><span>{caption}</span></p>
-        <p onClick={() => onLockedFeatureClick('ver os comentários')} className="text-gray-500 mt-1 cursor-pointer">Ver todos os {comments} comentários</p>
+        <p onClick={() => onLockedFeatureClick('ver as curtidas')} className="font-semibold text-white mb-1 cursor-pointer">{new Intl.NumberFormat().format(post.like_count)} curtidas</p>
+        {post.caption && (
+          <p className="text-white"><span className="font-semibold mr-1">{maskedUsername}</span><span>{post.caption}</span></p>
+        )}
+        <p onClick={() => onLockedFeatureClick('ver os comentários')} className="text-gray-500 mt-1 cursor-pointer">Ver todos os {post.comment_count} comentários</p>
       </div>
     </div>
   );
 };
 
-const LockedPost: React.FC<{ post: typeof mockPosts[0]; location?: string }> = ({ post, location }) => {
-  const randomUser = useMemo(() => {
-    const name = RANDOM_USER_NAMES[Math.floor(Math.random() * RANDOM_USER_NAMES.length)];
-    return { username: `${name.substring(0, 3).toLowerCase()}*****`, profilePicUrl: `https://i.pravatar.cc/150?u=${name}${post.id}` };
-  }, [post.id]);
-  const postUser = post.sponsored ? { username: post.sponsorName, profilePicUrl: post.sponsorPic } : randomUser;
+const LockedPost: React.FC<{ location?: string }> = ({ location }) => {
   return (
     <div className="border-b border-gray-800 mb-4">
       <div className="flex items-center justify-between p-3">
-        <div className="flex items-center space-x-3"><img src={postUser.profilePicUrl} alt={postUser.username} className="w-8 h-8 rounded-full object-cover" />
-          <div><p className="text-sm font-semibold text-white">{postUser.username}</p>
-            {location && !post.sponsored && <p className="text-xs text-gray-400">{location}</p>}
-            {post.sponsored && <p className="text-xs text-gray-400">Patrocinado</p>}
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 rounded-full bg-gray-700"></div>
+          <div>
+            <p className="text-sm font-semibold text-white bg-gray-700 rounded w-20 h-4"></p>
+            {location && <p className="text-xs text-gray-400 mt-1">{location}</p>}
           </div>
-        </div><MoreHorizontal className="w-5 h-5 text-white" />
+        </div>
+        <MoreHorizontal className="w-5 h-5 text-white" />
       </div>
-      <div className="relative w-full bg-gray-900 flex items-center justify-center">
-        <img src={post.imageUrl} alt="Post" className="w-full h-auto object-contain blur-md" />
+      <div className="relative w-full bg-gray-900 flex items-center justify-center aspect-square">
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
-          <Lock className="w-16 h-16 text-red-500 mb-4 animate-pulse" /><p className="text-xl font-bold text-white">CONTEÚDO BLOQUEADO</p>
+          <Lock className="w-16 h-16 text-red-500 mb-4 animate-pulse" />
+          <p className="text-xl font-bold text-white">CONTEÚDO BLOQUEADO</p>
           <p className="text-sm text-gray-400 mt-1">Acesso Premium Requerido</p>
         </div>
       </div>
       <div className="flex justify-between items-center p-3">
-        <div className="flex space-x-4"><Heart className="w-6 h-6 text-red-500" fill="currentColor" /><MessageCircle className="w-6 h-6 text-white" /><Send className="w-6 h-6 text-white" /></div>
+        <div className="flex space-x-4"><Heart className="w-6 h-6 text-white" /><MessageCircle className="w-6 h-6 text-white" /><Send className="w-6 h-6 text-white" /></div>
         <Bookmark className="w-6 h-6 text-white" />
       </div>
-      <div className="px-3 pb-3 text-xs">
-        <p className="font-semibold text-white mb-1">{new Intl.NumberFormat().format(post.likes)} curtidas</p>
-        <p className="text-white"><span className="font-semibold mr-1">{postUser.username}</span><span>{post.caption}</span></p>
-        <p className="text-gray-500 mt-1">Ver todos os {post.comments} comentários</p>
+      <div className="px-3 pb-3 text-xs space-y-2">
+        <div className="font-semibold text-white bg-gray-700 rounded w-24 h-4"></div>
+        <div className="text-white bg-gray-700 rounded w-48 h-4"></div>
+        <div className="text-gray-500 bg-gray-700 rounded w-32 h-4"></div>
       </div>
     </div>
   );
@@ -122,11 +120,14 @@ const LockedPost: React.FC<{ post: typeof mockPosts[0]; location?: string }> = (
 interface InstagramFeedContentProps extends ClickableProps {
   profileData: ProfileData;
   suggestedProfiles: SuggestedProfile[];
+  posts: FeedPost[];
   isApiDataAvailable: boolean;
   locations: string[];
 }
 
-const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles, isApiDataAvailable, locations, onLockedFeatureClick }) => {
+const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles, posts, isApiDataAvailable, locations, onLockedFeatureClick }) => {
+  const hasRealPosts = posts && posts.length > 0;
+
   return (
     <>
       <InstagramHeader onLockedFeatureClick={onLockedFeatureClick} />
@@ -145,11 +146,13 @@ const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData
             </div>
           )) : RANDOM_USER_NAMES.slice(0, 5).map(name => <div key={name} onClick={() => onLockedFeatureClick('ver os stories')} className="cursor-pointer"><LockedStory name={name} /></div>)}
         </div>
-        {isApiDataAvailable ? suggestedProfiles.slice(0, 5).map((profile, index) => (
-          <RealPost key={profile.username} profile={profile} location={locations.length > 0 ? locations[index % locations.length] : undefined} onLockedFeatureClick={onLockedFeatureClick} />
-        )) : mockPosts.map((post, index) => (
-          <LockedPost key={post.id} post={post} location={locations.length > 0 ? locations[index % locations.length] : undefined} />
+        
+        {hasRealPosts ? posts.map((post, index) => (
+          <RealPost key={post.post.id || index} postData={post} location={locations.length > 0 ? locations[index % locations.length] : undefined} onLockedFeatureClick={onLockedFeatureClick} />
+        )) : [1, 2, 3].map((item, index) => (
+          <LockedPost key={item} location={locations.length > 0 ? locations[index % locations.length] : undefined} />
         ))}
+
         <div className="text-center p-4 text-gray-500 text-sm">Fim do feed por enquanto.</div>
       </div>
       <InstagramFooter profileData={profileData} onLockedFeatureClick={onLockedFeatureClick} />

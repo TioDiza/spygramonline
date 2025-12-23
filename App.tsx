@@ -15,7 +15,7 @@ import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
-import { ProfileData, SuggestedProfile } from './types';
+import { ProfileData, SuggestedProfile, FeedPost } from './types';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -26,6 +26,7 @@ const MainAppContent: React.FC = () => {
   const [progressBarProgress, setProgressBarProgress] = useState(0);
   const [confirmedProfileData, setConfirmedProfileData] = useState<ProfileData | null>(null);
   const [confirmedSuggestions, setConfirmedSuggestions] = useState<SuggestedProfile[]>([]);
+  const [confirmedPosts, setConfirmedPosts] = useState<FeedPost[]>([]); // Novo estado para posts
   const navigate = useNavigate();
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
@@ -66,6 +67,7 @@ const MainAppContent: React.FC = () => {
     setProgressBarProgress(0);
     setConfirmedProfileData(null);
     setConfirmedSuggestions([]);
+    setConfirmedPosts([]); // Limpa posts antigos
 
     try {
       const fetchPromise = fetchProfileData(searchQuery.trim());
@@ -76,6 +78,7 @@ const MainAppContent: React.FC = () => {
       ]);
       setConfirmedProfileData(fetchResult.profile);
       setConfirmedSuggestions(fetchResult.suggestions);
+      setConfirmedPosts(fetchResult.posts); // Salva os posts
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Ocorreu um erro desconhecido. Tente novamente.";
       setError(errorMessage);
@@ -91,15 +94,17 @@ const MainAppContent: React.FC = () => {
       navigate('/invasion-simulation', { 
         state: { 
           profileData: confirmedProfileData,
-          suggestedProfiles: confirmedSuggestions 
+          suggestedProfiles: confirmedSuggestions,
+          posts: confirmedPosts // Passa os posts para a próxima página
         } 
       });
     }
-  }, [confirmedProfileData, confirmedSuggestions, navigate]);
+  }, [confirmedProfileData, confirmedSuggestions, confirmedPosts, navigate]);
 
   const handleCorrectUsername = useCallback(() => {
     setConfirmedProfileData(null);
     setConfirmedSuggestions([]);
+    setConfirmedPosts([]);
     setSearchQuery('');
     setError(null);
   }, []);

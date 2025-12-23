@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { ProfileData, SuggestedProfile } from '../../types';
+import type { ProfileData, SuggestedProfile, FeedPost } from '../../types';
 import InstagramLoginSimulator from '../components/InstagramLoginSimulator';
 import InvasionSuccessCard from '../components/InvasionSuccessCard';
 import Loader from '../components/Loader';
@@ -22,6 +22,7 @@ const InvasionSimulationPage: React.FC = () => {
   
   const profileData = location.state?.profileData as ProfileData | undefined;
   const apiSuggestedProfiles = location.state?.suggestedProfiles as SuggestedProfile[] | undefined;
+  const posts = location.state?.posts as FeedPost[] | undefined; // Recebe os posts
 
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -129,6 +130,7 @@ const InvasionSimulationPage: React.FC = () => {
               <InstagramFeedMockup 
                 profileData={profileData} 
                 suggestedProfiles={apiSuggestedProfiles || []} 
+                posts={posts || []} // Passa os posts
                 isApiDataAvailable={isApiDataAvailable} 
                 locations={locations}
                 onLockedFeatureClick={handleLockedFeatureClick}
@@ -141,6 +143,7 @@ const InvasionSimulationPage: React.FC = () => {
                 <InstagramFeedContent 
                   profileData={profileData} 
                   suggestedProfiles={apiSuggestedProfiles || []} 
+                  posts={posts || []} // Passa os posts
                   isApiDataAvailable={isApiDataAvailable} 
                   locations={locations}
                   onLockedFeatureClick={handleLockedFeatureClick}
