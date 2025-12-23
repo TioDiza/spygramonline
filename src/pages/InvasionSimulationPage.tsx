@@ -113,8 +113,36 @@ const InvasionSimulationPage: React.FC = () => {
         onClose={closeModal}
         featureName={modalFeatureName}
       />
-      <AnimatePresence mode="wait">
-        {stage !== 'feed_locked' && (
+      
+      {stage === 'feed_locked' ? (
+        <div className="w-full">
+          <div className="block md:hidden">
+            <InstagramFeedMockup 
+              profileData={profileData} 
+              suggestedProfiles={apiSuggestedProfiles || []} 
+              posts={posts || []}
+              isApiDataAvailable={isApiDataAvailable} 
+              locations={locations}
+              onLockedFeatureClick={handleLockedFeatureClick}
+            />
+          </div>
+          <div className="hidden md:flex w-full justify-center">
+            <WebSidebar profileData={profileData} onLockedFeatureClick={handleLockedFeatureClick} />
+            <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
+              <InstagramFeedContent 
+                profileData={profileData} 
+                suggestedProfiles={apiSuggestedProfiles || []} 
+                posts={posts || []}
+                isApiDataAvailable={isApiDataAvailable} 
+                locations={locations}
+                onLockedFeatureClick={handleLockedFeatureClick}
+              />
+            </main>
+            <WebSuggestions profileData={profileData} onLockedFeatureClick={handleLockedFeatureClick} />
+          </div>
+        </div>
+      ) : (
+        <AnimatePresence mode="wait">
           <div className="flex items-center justify-center min-h-screen">
             {stage === 'loading' && (
               <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -136,41 +164,8 @@ const InvasionSimulationPage: React.FC = () => {
               </motion.div>
             )}
           </div>
-        )}
-
-        {stage === 'feed_locked' && (
-          <motion.div
-            key="feed"
-            className="w-full"
-          >
-            <div className="block md:hidden">
-              <InstagramFeedMockup 
-                profileData={profileData} 
-                suggestedProfiles={apiSuggestedProfiles || []} 
-                posts={posts || []}
-                isApiDataAvailable={isApiDataAvailable} 
-                locations={locations}
-                onLockedFeatureClick={handleLockedFeatureClick}
-              />
-            </div>
-
-            <div className="hidden md:flex w-full justify-center">
-              <WebSidebar profileData={profileData} onLockedFeatureClick={handleLockedFeatureClick} />
-              <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
-                <InstagramFeedContent 
-                  profileData={profileData} 
-                  suggestedProfiles={apiSuggestedProfiles || []} 
-                  posts={posts || []}
-                  isApiDataAvailable={isApiDataAvailable} 
-                  locations={locations}
-                  onLockedFeatureClick={handleLockedFeatureClick}
-                />
-              </main>
-              <WebSuggestions profileData={profileData} onLockedFeatureClick={handleLockedFeatureClick} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      )}
     </div>
   );
 };
