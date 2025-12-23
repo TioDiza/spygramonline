@@ -1,5 +1,7 @@
 import type { ProfileData, SuggestedProfile } from '../../types';
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export const fetchProfileData = async (username: string): Promise<ProfileData> => {
   if (!username) {
     throw new Error('Username cannot be empty.');
@@ -87,26 +89,37 @@ export const fetchSuggestedProfiles = async (username: string): Promise<Suggeste
   }
 
   const url = `https://api-instagram-ofc.vercel.app/api/first?tipo=sugestoes&username=${encodeURIComponent(username)}`;
-  console.log(`[profileService] Attempting to fetch suggested profiles from: ${url}`);
+  const maxRetries = 2;
+  const retryDelay = 4000; // 4 segundos
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      console.error(`[profileService] Failed to fetch suggestions: ${response.status} ${response.statusText}`);
-      return []; // Don't break the app, just return empty
-    }
-    const apiData = await response.json();
-    console.log(`[profileService] Raw suggested profiles data received for ${username}:`, apiData);
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[profileService] Attempting to fetch suggested profiles (Attempt ${attempt}/${maxRetries})...`);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`API returned status ${response.status}`);
+      }
+      const apiData = await response.json();
+      console.log(`[profileService] Raw suggested profiles data received for ${username}:`, apiData);
 
-    if (apiData.data && Array.isArray(apiData.data)) {
-      console.log(`[profileService] Successfully fetched ${apiData.data.length} suggestions.`);
-      return apiData.data;
-    } else {
-      console.warn('[profileService] No suggested profiles found or API response format is invalid.');
-      return [];
+      if (apiData.data && Array.isArray(apiData.data) && apiData.data.length > 0) {
+        console.log(`[profileService] Successfully fetched ${apiData.data.length} suggestions on attempt ${attempt}.`);
+        return apiData.data;
+      } else {
+         console.warn(`[profileService] No suggested profiles found on attempt ${attempt}.`);
+         // Se não houver dados, trata como uma falha para tentar novamente
+         if (attempt < maxRetries) await delay(retryDelay);
+         else return []; // Retorna vazio na última tentativa se não houver dados
+      }
+    } catch (error) {
+      console.error(`[profileService] Attempt ${attempt} failed:`, error);
+      if (attempt < maxRetries) {
+        console.log(`[profileService] Waiting ${retryDelay}ms before next attempt.`);
+        await delay(retryDelay);
+      }
     }
-  } catch (error) {
-    console.error(`[profileService] An error occurred while fetching suggestions for ${username}:`, error);
-    return [];
   }
+
+  console.error('[profileService] All attempts to fetch suggestions failed.');
+  return [];
 };

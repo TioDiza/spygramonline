@@ -23,10 +23,7 @@ const InvasionSimulationPage: React.FC = () => {
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
-
-  // Estados para sincronizar a animação e a chamada da API
-  const [suggestionsLoaded, setSuggestionsLoaded] = useState(false);
-  const [passwordSimulationComplete, setPasswordSimulationComplete] = useState(false);
+  const [isHacking, setIsHacking] = useState(true);
 
   // Efeito para iniciar o processo
   useEffect(() => {
@@ -38,20 +35,16 @@ const InvasionSimulationPage: React.FC = () => {
       return;
     }
 
-    // Inicia a busca pelos perfis sugeridos imediatamente
+    // Inicia a busca pelos perfis sugeridos em segundo plano
     const getSuggestions = async () => {
-      try {
-        const suggestions = await fetchSuggestedProfiles(profileData.username);
-        setSuggestedProfiles(suggestions);
-      } catch (error) {
-        console.error("Falha ao buscar sugestões, continuando sem elas.", error);
-      } finally {
-        setSuggestionsLoaded(true);
-      }
+      const suggestions = await fetchSuggestedProfiles(profileData.username);
+      setSuggestedProfiles(suggestions);
+      // Quando a API terminar, sinaliza para o simulador parar
+      setIsHacking(false);
     };
     getSuggestions();
 
-    // Inicia a simulação visual após um breve atraso
+    // Inicia a simulação visual
     const timeout = setTimeout(() => {
       setStage('login_attempt');
     }, 1000);
@@ -59,24 +52,16 @@ const InvasionSimulationPage: React.FC = () => {
     return () => clearTimeout(timeout);
   }, [profileData, navigate]);
 
-  // Função chamada pelo simulador quando sua animação termina
-  const handlePasswordSimulationSuccess = useCallback(() => {
-    setPasswordSimulationComplete(true);
-  }, []);
-
-  // Efeito que aguarda as duas condições serem verdadeiras
-  useEffect(() => {
-    if (suggestionsLoaded && passwordSimulationComplete) {
-      // Ambos terminaram, avança para a tela de sucesso
-      setStage('success_card');
-      toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
-      
-      // Em seguida, avança para o feed
-      setTimeout(() => {
-        setStage('feed_locked');
-      }, 2000); // 2 segundos na tela de sucesso
-    }
-  }, [suggestionsLoaded, passwordSimulationComplete, profileData?.username, navigate]);
+  // Callback do simulador quando a animação de sucesso termina
+  const handleLoginSuccess = useCallback(() => {
+    setStage('success_card');
+    toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
+    
+    // Em seguida, avança para o feed
+    setTimeout(() => {
+      setStage('feed_locked');
+    }, 2000); // 2 segundos na tela de sucesso
+  }, [profileData?.username, navigate]);
 
   if (!profileData) {
     return (
@@ -99,7 +84,11 @@ const InvasionSimulationPage: React.FC = () => {
             )}
             {stage === 'login_attempt' && (
               <motion.div key="login" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-md">
-                <InstagramLoginSimulator profileData={profileData} onSuccess={handlePasswordSimulationSuccess} />
+                <InstagramLoginSimulator 
+                  profileData={profileData} 
+                  onSuccess={handleLoginSuccess}
+                  isHacking={isHacking}
+                />
               </motion.div>
             )}
             {stage === 'success_card' && (

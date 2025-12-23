@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { ProfileData } from '../../types';
@@ -6,68 +6,85 @@ import { ProfileData } from '../../types';
 interface InstagramLoginSimulatorProps {
   profileData: ProfileData;
   onSuccess: () => void;
+  isHacking: boolean;
 }
 
-// Reduced password list for a faster simulation
-const passwords = [
-  '123456',
-  'password123',
-  'iloveyou',
-  'segredinho',
-  'senhacerta' // The successful one
-];
+type AttemptStage = 'typing' | 'attempting' | 'error' | 'success';
 
-type AttemptStage = 'typing' | 'attempting' | 'error';
+const generateRandomPassword = () => {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+  let password = '';
+  const length = Math.floor(Math.random() * 5) + 8; // 8 a 12 caracteres
+  for (let i = 0; i < length; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return password;
+};
 
-const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profileData, onSuccess }) => {
-  const [attemptIndex, setAttemptIndex] = useState(0);
+const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profileData, onSuccess, isHacking }) => {
+  const [attemptCount, setAttemptCount] = useState(1);
   const [currentPassword, setCurrentPassword] = useState('');
+  const [displayedPassword, setDisplayedPassword] = useState('');
   const [stage, setStage] = useState<AttemptStage>('typing');
+  
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const currentAttempt = passwords[attemptIndex];
-  const totalAttempts = passwords.length;
-
+  // Efeito principal que controla o ciclo de tentativas
   useEffect(() => {
-    if (attemptIndex >= totalAttempts) return;
+    // Se não estiver mais "hackeando", interrompe o ciclo.
+    if (!isHacking) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      
+      // Inicia a sequência de sucesso
+      setStage('typing');
+      setCurrentPassword('biel_2805@'); // A senha "correta"
+      setDisplayedPassword('');
+      return;
+    }
 
-    let timer: NodeJS.Timeout | undefined;
-
+    // Lógica do ciclo de tentativas
     if (stage === 'typing') {
-      if (currentPassword.length < currentAttempt.length) {
-        timer = setTimeout(() => {
-          setCurrentPassword(prev => currentAttempt.substring(0, prev.length + 1));
-        }, 40); // Typing speed increased (40ms)
+      if (displayedPassword.length < currentPassword.length) {
+        timeoutRef.current = setTimeout(() => {
+          setDisplayedPassword(prev => currentPassword.substring(0, prev.length + 1));
+        }, 40);
       } else {
-        // Finished typing, move to attempting stage
         setStage('attempting');
       }
     } else if (stage === 'attempting') {
-      // Simulate login attempt delay
-      timer = setTimeout(() => {
-        if (attemptIndex === totalAttempts - 1) {
-          onSuccess();
+      timeoutRef.current = setTimeout(() => {
+        // Se não estiver mais hackeando, a tentativa é um sucesso
+        if (!isHacking) {
+          setStage('success');
         } else {
           setStage('error');
         }
-      }, 500); // "Verifying" delay reduced (500ms)
+      }, 500);
     } else if (stage === 'error') {
-      // Show error for a moment, then move to the next attempt
-      timer = setTimeout(() => {
-        setAttemptIndex(prev => prev + 1);
-        setCurrentPassword('');
+      timeoutRef.current = setTimeout(() => {
+        setAttemptCount(prev => prev + 1);
+        setCurrentPassword(generateRandomPassword());
+        setDisplayedPassword('');
         setStage('typing');
-      }, 700); // Error display time reduced (700ms)
+      }, 700);
+    } else if (stage === 'success') {
+        // Aguarda um momento na tela de sucesso e então chama o callback
+        timeoutRef.current = setTimeout(onSuccess, 1000);
     }
 
-    return () => clearTimeout(timer);
-  }, [attemptIndex, currentPassword, stage, currentAttempt, totalAttempts, onSuccess]);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [stage, displayedPassword, currentPassword, isHacking, onSuccess]);
+
+  // Efeito para iniciar a primeira tentativa
+  useEffect(() => {
+    setCurrentPassword(generateRandomPassword());
+  }, []);
 
   const getPasswordDisplay = () => {
-    if (stage === 'typing') {
-      return currentPassword;
-    }
-    // Show dots during login attempt or error display
-    return '•'.repeat(currentAttempt.length);
+    if (stage === 'typing') return displayedPassword;
+    return '•'.repeat(currentPassword.length);
   };
 
   return (
@@ -103,7 +120,9 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
               readOnly
               placeholder="Senha"
               className={`w-full px-4 py-3 rounded-lg text-sm font-mono
-                ${stage === 'error' ? 'bg-red-900/50 border-red-500 text-red-300' : 'bg-gray-800 border-gray-700 text-white'}
+                ${stage === 'error' ? 'bg-red-900/50 border-red-500 text-red-300' : ''}
+                ${stage === 'success' ? 'bg-green-900/50 border-green-500 text-green-300' : ''}
+                ${stage !== 'error' && stage !== 'success' ? 'bg-gray-800 border-gray-700 text-white' : ''}
                 border focus:outline-none`}
             />
             {stage === 'typing' && (
@@ -114,16 +133,20 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
 
         <motion.button
           className={`w-full py-3 rounded-lg font-bold text-white text-sm flex items-center justify-center gap-2
-            ${stage === 'error' ? 'bg-red-500' : 'bg-blue-500'} transition-colors`}
+            ${stage === 'error' ? 'bg-red-500' : ''}
+            ${stage === 'success' ? 'bg-green-500' : ''}
+            ${stage !== 'error' && stage !== 'success' ? 'bg-blue-500' : ''}
+            transition-colors`}
           disabled={true}
         >
           {stage === 'typing' && <><Loader2 className="w-4 h-4 animate-spin" /> Digitando...</>}
           {stage === 'attempting' && <><Loader2 className="w-4 h-4 animate-spin" /> Verificando...</>}
-          {stage === 'error' && `Falha na Tentativa ${attemptIndex + 1}/${totalAttempts}`}
+          {stage === 'error' && `Falha na Tentativa ${attemptCount}`}
+          {stage === 'success' && `Senha Encontrada!`}
         </motion.button>
 
         <p className="mt-4 text-xs text-gray-500">
-          Tentativa {attemptIndex + 1} de {totalAttempts}
+          Tentativa {attemptCount}
         </p>
         
         {stage === 'error' && (
