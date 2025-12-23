@@ -14,6 +14,7 @@ import WebSuggestions from '../components/WebSuggestions';
 import { getUserLocation, getCitiesByState } from '../services/geolocationService';
 import LockedFeatureModal from '../components/LockedFeatureModal';
 import { useAuth } from '../context/AuthContext';
+import { MOCK_SUGGESTION_NAMES } from '../../constants';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
@@ -23,7 +24,7 @@ const InvasionSimulationPage: React.FC = () => {
   const { login, isLoggedIn } = useAuth();
 
   const [profileData, setProfileData] = useState<ProfileData | undefined>();
-  const [apiSuggestedProfiles, setApiSuggestedProfiles] = useState<SuggestedProfile[] | undefined>();
+  const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
   const [posts, setPosts] = useState<FeedPost[] | undefined>();
 
   const [stage, setStage] = useState<SimulationStage>(() => {
@@ -34,7 +35,6 @@ const InvasionSimulationPage: React.FC = () => {
     return 'loading';
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isApiDataAvailable, setIsApiDataAvailable] = useState(false);
   const [locations, setLocations] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalFeatureName, setModalFeatureName] = useState('');
@@ -51,8 +51,19 @@ const InvasionSimulationPage: React.FC = () => {
 
     if (data?.profileData) {
       setProfileData(data.profileData);
-      setApiSuggestedProfiles(data.suggestedProfiles);
       setPosts(data.posts);
+
+      if (data.suggestedProfiles && data.suggestedProfiles.length > 0) {
+        setSuggestedProfiles(data.suggestedProfiles);
+      } else {
+        // Gera perfis de fallback se a API não retornar nenhum
+        const shuffledNames = [...MOCK_SUGGESTION_NAMES].sort(() => 0.5 - Math.random());
+        const mockSuggestions: SuggestedProfile[] = shuffledNames.slice(0, 15).map(name => ({
+          username: name,
+          profile_pic_url: '/perfil.jpg',
+        }));
+        setSuggestedProfiles(mockSuggestions);
+      }
     } else {
       setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
       toast.error('Nenhum dado de perfil encontrado. Redirecionando...');
@@ -73,7 +84,6 @@ const InvasionSimulationPage: React.FC = () => {
         const fallbackCities = getCitiesByState('São Paulo', 'São Paulo');
         setLocations(fallbackCities);
       }
-      setIsApiDataAvailable(!!(apiSuggestedProfiles && apiSuggestedProfiles.length > 0));
     };
     setupPage();
 
@@ -87,7 +97,7 @@ const InvasionSimulationPage: React.FC = () => {
         return () => clearTimeout(timeout);
       }
     }
-  }, [profileData, apiSuggestedProfiles, isLoggedIn, stage]);
+  }, [profileData, isLoggedIn, stage]);
 
   const handleLoginSuccess = useCallback(() => {
     login();
@@ -127,9 +137,8 @@ const InvasionSimulationPage: React.FC = () => {
           <div className="block md:hidden">
             <InstagramFeedMockup 
               profileData={profileData} 
-              suggestedProfiles={apiSuggestedProfiles || []} 
+              suggestedProfiles={suggestedProfiles} 
               posts={posts || []}
-              isApiDataAvailable={isApiDataAvailable} 
               locations={locations}
               onLockedFeatureClick={handleLockedFeatureClick}
             />
@@ -139,9 +148,8 @@ const InvasionSimulationPage: React.FC = () => {
             <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
               <InstagramFeedContent 
                 profileData={profileData} 
-                suggestedProfiles={apiSuggestedProfiles || []} 
+                suggestedProfiles={suggestedProfiles} 
                 posts={posts || []}
-                isApiDataAvailable={isApiDataAvailable} 
                 locations={locations}
                 onLockedFeatureClick={handleLockedFeatureClick}
               />

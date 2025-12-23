@@ -7,12 +7,11 @@ interface InstagramFeedMockupProps {
   profileData: ProfileData;
   suggestedProfiles: SuggestedProfile[];
   posts: FeedPost[]; // Adiciona a prop de posts
-  isApiDataAvailable: boolean;
   locations: string[];
   onLockedFeatureClick: (featureName: string) => void;
 }
 
-const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, suggestedProfiles, posts, isApiDataAvailable, locations, onLockedFeatureClick }) => {
+const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, suggestedProfiles, posts, locations, onLockedFeatureClick }) => {
   const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
@@ -38,7 +37,6 @@ const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, 
         profileData={profileData} 
         suggestedProfiles={suggestedProfiles} 
         posts={posts} // Passa os posts para o conteúdo
-        isApiDataAvailable={isApiDataAvailable} 
         locations={locations}
         onLockedFeatureClick={onLockedFeatureClick}
       />
