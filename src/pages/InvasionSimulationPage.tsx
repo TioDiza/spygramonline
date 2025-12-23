@@ -131,56 +131,8 @@ const InvasionSimulationPage: React.FC = () => {
           >
             <InstagramFeedMockup profileData={profileData} />
             
-            {/* CTA Flutuante para Desbloqueio */}
-            <motion.div
-              initial={{ y: '100%', opacity: 0 }}
-              animate={{ y: '0%', opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.5 }}
-              className="fixed bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-black/90 to-transparent z-[100] flex justify-center"
-            >
-              <button
-                onClick={() => window.open("https://go.perfectpay.com.br/PPU38CPUD1S", '_blank')}
-                className="
-                  group relative flex items-center justify-center gap-3 px-8 py-4 
-                  bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 
-                  text-white font-extrabold text-xl rounded-full 
-                  transform transition-all duration-300 ease-in-out 
-                  hover:shadow-2xl hover:shadow-pink-500/50
-                  focus:outline-none focus:ring-4 focus:ring-pink-300
-                  animate-cta-pulse
-                "
-              >
-                <motion.span
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                >
-                  🔓
-                </motion.span>
-                <span>Desbloquear Feed Completo AGORA!</span>
-                <motion.span
-                  animate={{ rotate: [0, -10, 10, 0] }}
-                  transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                >
-                  🔥
-                </motion.span>
-              </button>
-            </motion.div>
+            {/* O CTA Flutuante foi removido daqui */}
             
-            <style>{`
-              @keyframes cta-pulse-animation {
-                0%, 100% {
-                  transform: scale(1);
-                  box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
-                }
-                50% {
-                  transform: scale(1.05);
-                  box-shadow: 0 0 35px rgba(236, 72, 153, 0.7);
-                }
-              }
-              .animate-cta-pulse {
-                animation: cta-pulse-animation 2s infinite ease-in-out;
-              }
-            `}</style>
           </motion.div>
         )}
       </AnimatePresence>
