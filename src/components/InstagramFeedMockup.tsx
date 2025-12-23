@@ -6,10 +6,9 @@ import { InstagramNotification } from './InstagramNotification';
 interface InstagramFeedMockupProps {
   profileData: ProfileData;
   suggestedProfiles: SuggestedProfile[];
-  isLoadingSuggestions: boolean;
 }
 
-const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, suggestedProfiles, isLoadingSuggestions }) => {
+const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, suggestedProfiles }) => {
   const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
@@ -32,11 +31,7 @@ const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, 
           duration={8000} // A notificação some após 8 segundos
         />
       )}
-      <InstagramFeedContent 
-        profileData={profileData} 
-        suggestedProfiles={suggestedProfiles} 
-        isLoadingSuggestions={isLoadingSuggestions} 
-      />
+      <InstagramFeedContent profileData={profileData} suggestedProfiles={suggestedProfiles} />
     </div>
   );
 };

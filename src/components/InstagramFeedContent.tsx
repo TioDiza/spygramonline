@@ -117,20 +117,12 @@ const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
   );
 };
 
-const StorySkeleton: React.FC = () => (
-  <div className="flex flex-col items-center flex-shrink-0 space-y-1">
-    <div className="w-16 h-16 bg-gray-800 rounded-full animate-pulse"></div>
-    <div className="w-12 h-2 bg-gray-800 rounded animate-pulse mt-2"></div>
-  </div>
-);
-
 interface InstagramFeedContentProps {
   profileData: ProfileData;
   suggestedProfiles: SuggestedProfile[];
-  isLoadingSuggestions: boolean;
 }
 
-const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles, isLoadingSuggestions }) => {
+const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles }) => {
   return (
     <>
       <InstagramHeader />
@@ -153,30 +145,20 @@ const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData
             <span className="text-xs text-gray-400">Seu story</span>
           </div>
 
-          {/* Skeletons or Other Stories */}
-          {isLoadingSuggestions ? (
-            <>
-              <StorySkeleton />
-              <StorySkeleton />
-              <StorySkeleton />
-              <StorySkeleton />
-              <StorySkeleton />
-            </>
-          ) : (
-            suggestedProfiles.map((story, index) => {
-              const ringClass = 'bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600';
-              return (
-                <div key={index} className="flex flex-col items-center flex-shrink-0 space-y-1 text-center relative">
-                  <div className={`w-[70px] h-[70px] rounded-full flex items-center justify-center p-0.5 ${ringClass}`}>
-                    <div className="bg-black p-1 rounded-full">
-                      <img src={story.profile_pic_url} alt={story.username} className="w-full h-full rounded-full object-cover" />
-                    </div>
+          {/* Other Stories from API */}
+          {suggestedProfiles.map((story, index) => {
+            const ringClass = 'bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600';
+            return (
+              <div key={index} className="flex flex-col items-center flex-shrink-0 space-y-1 text-center relative">
+                <div className={`w-[70px] h-[70px] rounded-full flex items-center justify-center p-0.5 ${ringClass}`}>
+                  <div className="bg-black p-1 rounded-full">
+                    <img src={story.profile_pic_url} alt={story.username} className="w-full h-full rounded-full object-cover" />
                   </div>
-                  <span className="text-xs text-white mt-1 truncate w-16">{story.username}</span>
                 </div>
-              )
-            })
-          )}
+                <span className="text-xs text-white mt-1 truncate w-16">{story.username}</span>
+              </div>
+            )
+          })}
         </div>
 
         {mockPosts.map((post) => (

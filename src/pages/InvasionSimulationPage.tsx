@@ -23,7 +23,6 @@ const InvasionSimulationPage: React.FC = () => {
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
-  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState<boolean>(true);
 
   useEffect(() => {
     if (!profileData) {
@@ -35,15 +34,8 @@ const InvasionSimulationPage: React.FC = () => {
     }
 
     const getSuggestions = async () => {
-      setIsLoadingSuggestions(true);
-      try {
-        const suggestions = await fetchSuggestedProfiles(profileData.username);
-        setSuggestedProfiles(suggestions);
-      } catch (error) {
-        console.error("Falha ao buscar sugestões:", error);
-      } finally {
-        setIsLoadingSuggestions(false);
-      }
+      const suggestions = await fetchSuggestedProfiles(profileData.username);
+      setSuggestedProfiles(suggestions);
     };
     getSuggestions();
 
@@ -104,22 +96,14 @@ const InvasionSimulationPage: React.FC = () => {
           >
             {/* Mobile View */}
             <div className="block md:hidden">
-              <InstagramFeedMockup 
-                profileData={profileData} 
-                suggestedProfiles={suggestedProfiles} 
-                isLoadingSuggestions={isLoadingSuggestions} 
-              />
+              <InstagramFeedMockup profileData={profileData} suggestedProfiles={suggestedProfiles} />
             </div>
 
             {/* Desktop View */}
             <div className="hidden md:flex w-full justify-center">
               <WebSidebar profileData={profileData} />
               <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
-                <InstagramFeedContent 
-                  profileData={profileData} 
-                  suggestedProfiles={suggestedProfiles} 
-                  isLoadingSuggestions={isLoadingSuggestions} 
-                />
+                <InstagramFeedContent profileData={profileData} suggestedProfiles={suggestedProfiles} />
               </main>
               <WebSuggestions profileData={profileData} />
             </div>
