@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, User, ChevronDown } from 'lucide-react';
+import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, Home } from 'lucide-react';
 import { ProfileData } from '../../types';
 import { cn } from '../lib/utils';
 
@@ -30,12 +30,20 @@ const InstagramHeader: React.FC = () => (
   </header>
 );
 
-const InstagramFooter: React.FC = () => (
+interface InstagramFooterProps {
+  profileData: ProfileData;
+}
+
+const InstagramFooter: React.FC<InstagramFooterProps> = ({ profileData }) => (
   <footer className="flex justify-around items-center p-2 border-t border-gray-800 bg-black sticky bottom-0 z-10">
-    <User className="w-6 h-6 text-white" />
+    <Home className="w-6 h-6 text-white" />
     <Heart className="w-6 h-6 text-gray-500" />
     <MessageCircle className="w-6 h-6 text-gray-500" />
-    <div className="w-6 h-6 bg-gray-500 rounded-full"></div> {/* Placeholder for profile pic */}
+    <img
+      src={profileData.profilePicUrl}
+      alt={profileData.username}
+      className="w-6 h-6 rounded-full object-cover"
+    />
   </footer>
 );
 
@@ -113,13 +121,17 @@ const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData }
     <div className="w-full max-w-md mx-auto bg-black min-h-screen flex flex-col shadow-2xl shadow-purple-500/20">
       <InstagramHeader />
       
-      {/* Stories Placeholder */}
-      <div className="flex p-3 space-x-3 border-b border-gray-800 overflow-x-auto flex-shrink-0">
-        <div className="flex flex-col items-center">
-          <div className="w-14 h-14 rounded-full bg-gray-800 border-2 border-gray-600 flex items-center justify-center">
-            <ChevronDown className="w-4 h-4 text-white rotate-180" />
+      {/* Stories Section */}
+      <div className="flex p-3 space-x-3 border-b border-gray-800 overflow-x-auto flex-shrink-0 scrollbar-hide">
+        <div className="flex flex-col items-center flex-shrink-0">
+          <div className="w-14 h-14 rounded-full bg-gray-800 border-2 border-pink-500 p-0.5">
+            <img
+              src={profileData.profilePicUrl}
+              alt={profileData.username}
+              className="w-full h-full rounded-full object-cover"
+            />
           </div>
-          <span className="text-xs text-white mt-1">Seu story</span>
+          <span className="text-xs text-white mt-1 truncate w-14 text-center">{profileData.username}</span>
         </div>
         {Array(5).fill(0).map((_, index) => (
           <div key={index} className="flex flex-col items-center flex-shrink-0">
@@ -136,7 +148,7 @@ const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData }
       </div>
 
       {/* Feed Posts */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
         {mockPosts.map((post) => (
           <LockedPost key={post.id} post={post} profileData={profileData} />
         ))}
@@ -145,7 +157,7 @@ const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData }
         </div>
       </div>
 
-      <InstagramFooter />
+      <InstagramFooter profileData={profileData} />
     </div>
   );
 };
