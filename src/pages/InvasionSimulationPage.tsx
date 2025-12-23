@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { ProfileData } from '../../types';
 import InstagramLoginSimulator from '../components/InstagramLoginSimulator';
-import InstagramFeedMockup from '../components/InstagramFeedMockup';
-import InvasionSuccessCard from '../components/InvasionSuccessCard'; // New import
+import InvasionSuccessCard from '../components/InvasionSuccessCard';
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
 import { mockProfileData } from '../services/profileService';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import InstagramFeedMockup from '../components/InstagramFeedMockup';
+import InstagramFeedContent from '../components/InstagramFeedContent';
+import WebSidebar from '../components/WebSidebar';
+import WebSuggestions from '../components/WebSuggestions';
 
-// Define os estados da simulação
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
 const InvasionSimulationPage: React.FC = () => {
@@ -21,10 +23,7 @@ const InvasionSimulationPage: React.FC = () => {
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Verifica se os dados do perfil são os dados mockados
-  const isMockData = profileData?.username === mockProfileData.username && 
-                     profileData?.fullName === mockProfileData.fullName &&
-                     profileData?.profilePicUrl === mockProfileData.profilePicUrl;
+  const isMockData = profileData?.username === mockProfileData.username;
 
   useEffect(() => {
     if (!profileData) {
@@ -40,20 +39,16 @@ const InvasionSimulationPage: React.FC = () => {
       toast.error('Aviso: Não foi possível obter dados reais. Exibindo simulação com dados de exemplo.');
     }
 
-    // Inicia a simulação de login após um breve carregamento
     const timeout = setTimeout(() => {
       setStage('login_attempt');
-    }, 1000); // 1 segundo de 'loading' inicial
+    }, 1000);
 
     return () => clearTimeout(timeout);
   }, [profileData, navigate, isMockData]);
 
   const handleLoginSuccess = () => {
-    // 1. Transição para o card de sucesso
     setStage('success_card');
     toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
-
-    // 2. Após 2 segundos, transição para o feed bloqueado
     setTimeout(() => {
       setStage('feed_locked');
     }, 2000);
@@ -68,9 +63,9 @@ const InvasionSimulationPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full">
+    <div className="min-h-screen bg-black md:bg-[#121212] text-white font-sans w-full">
       <div className="w-full max-w-md mx-auto">
-        {errorMessage && (
+        {errorMessage && stage !== 'feed_locked' && (
           <div className="mt-4 mb-8 bg-yellow-900/50 border border-yellow-500 text-yellow-300 px-4 py-3 rounded-lg text-center" role="alert">
             <p className="font-bold">Aviso</p>
             <p className="text-sm">{errorMessage}</p>
@@ -79,60 +74,48 @@ const InvasionSimulationPage: React.FC = () => {
       </div>
 
       <AnimatePresence mode="wait">
-        {stage === 'loading' && (
-          <motion.div
-            key="loading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="w-full max-w-md flex flex-col items-center justify-center min-h-[600px]"
-          >
-            <Loader />
-            <h1 className="text-xl font-bold mt-4">Preparando Invasão...</h1>
-          </motion.div>
-        )}
-
-        {stage === 'login_attempt' && (
-          <motion.div
-            key="login"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-md"
-          >
-            <InstagramLoginSimulator 
-              profileData={profileData} 
-              onSuccess={handleLoginSuccess} 
-            />
-          </motion.div>
-        )}
-        
-        {stage === 'success_card' && (
-          <motion.div
-            key="success"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-md flex flex-col items-center justify-center min-h-[600px]"
-          >
-            <InvasionSuccessCard profileData={profileData} />
-          </motion.div>
+        {stage !== 'feed_locked' && (
+          <div className="flex items-center justify-center min-h-screen">
+            {stage === 'loading' && (
+              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <Loader />
+                <h1 className="text-xl font-bold mt-4 text-center">Preparando Invasão...</h1>
+              </motion.div>
+            )}
+            {stage === 'login_attempt' && (
+              <motion.div key="login" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-md">
+                <InstagramLoginSimulator profileData={profileData} onSuccess={handleLoginSuccess} />
+              </motion.div>
+            )}
+            {stage === 'success_card' && (
+              <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-md">
+                <InvasionSuccessCard profileData={profileData} />
+              </motion.div>
+            )}
+          </div>
         )}
 
         {stage === 'feed_locked' && (
           <motion.div
             key="feed"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-md"
+            className="w-full"
           >
-            <InstagramFeedMockup profileData={profileData} />
-            
-            {/* O CTA Flutuante foi removido daqui */}
-            
+            {/* Mobile View */}
+            <div className="block md:hidden">
+              <InstagramFeedMockup profileData={profileData} />
+            </div>
+
+            {/* Desktop View */}
+            <div className="hidden md:flex w-full justify-center">
+              <WebSidebar profileData={profileData} />
+              <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
+                <InstagramFeedContent profileData={profileData} />
+              </main>
+              <WebSuggestions profileData={profileData} />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
