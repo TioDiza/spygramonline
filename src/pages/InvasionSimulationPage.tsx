@@ -26,7 +26,13 @@ const InvasionSimulationPage: React.FC = () => {
   const [apiSuggestedProfiles, setApiSuggestedProfiles] = useState<SuggestedProfile[] | undefined>();
   const [posts, setPosts] = useState<FeedPost[] | undefined>();
 
-  const [stage, setStage] = useState<SimulationStage>('loading');
+  const [stage, setStage] = useState<SimulationStage>(() => {
+    const storedData = sessionStorage.getItem('invasionData');
+    if (isLoggedIn && storedData) {
+      return 'feed_locked';
+    }
+    return 'loading';
+  });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isApiDataAvailable, setIsApiDataAvailable] = useState(false);
   const [locations, setLocations] = useState<string[]>([]);
@@ -71,15 +77,17 @@ const InvasionSimulationPage: React.FC = () => {
     };
     setupPage();
 
-    if (isLoggedIn) {
-      setStage('feed_locked');
-    } else {
-      const timeout = setTimeout(() => {
-        setStage('login_attempt');
-      }, 1000);
-      return () => clearTimeout(timeout);
+    if (stage !== 'feed_locked') {
+      if (isLoggedIn) {
+        setStage('feed_locked');
+      } else {
+        const timeout = setTimeout(() => {
+          setStage('login_attempt');
+        }, 1000);
+        return () => clearTimeout(timeout);
+      }
     }
-  }, [profileData, apiSuggestedProfiles, isLoggedIn]);
+  }, [profileData, apiSuggestedProfiles, isLoggedIn, stage]);
 
   const handleLoginSuccess = useCallback(() => {
     login();
