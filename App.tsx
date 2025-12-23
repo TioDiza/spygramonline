@@ -1,17 +1,16 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import type { ProfileData, InteractionProfile } from './types';
 import CustomSearchBar from '@/src/components/ui/CustomSearchBar';
 import SparkleButton from '@/src/components/ui/SparkleButton';
 import Loader from '@/src/components/Loader';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import ConsentCheckbox from '@/src/components/ConsentCheckbox';
 import { Lock } from 'lucide-react';
-import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
 import LoginPage from '@/src/pages/LoginPage';
 import ServersPage from '@/src/pages/ServersPage';
-import CreditsPage from '@/src/pages/CreditsPage'; // Importa a nova página de créditos
+import CreditsPage from '@/src/pages/CreditsPage';
 import ProgressBar from '@/src/components/ProgressBar';
+import InvasionSimulationPage from '@/src/pages/InvasionSimulationPage'; // New import
 import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData, mockProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
@@ -129,26 +128,12 @@ const MainAppContent: React.FC = () => {
       if (fetchedProfileData.username === mockProfileData.username &&
           fetchedProfileData.fullName === mockProfileData.fullName &&
           fetchedProfileData.profilePicUrl === mockProfileData.profilePicUrl) {
-        throw new Error('Servidor com alta demanda de pedidos, tente novamente');
+        // Se for mock data, ainda navegamos, mas a página de simulação deve lidar com isso
+        console.warn('Using mock data due to backend failure.');
       }
-
-      // Gera dados mockados para topInteractions, pois a API não os fornece
-      const mockTopInteractions: InteractionProfile[] = [
-        { username: "amigo_secreto", profilePicUrl: "https://picsum.photos/id/1011/100/100", interactionScore: 95 },
-        { username: "contatinho_x", profilePicUrl: "https://picsum.photos/id/1012/100/100", interactionScore: 88 },
-        { username: "ex_namorado", profilePicUrl: "https://picsum.photos/id/1013/100/100", interactionScore: 76 },
-        { username: "rival_da_escola", profilePicUrl: "https://picsum.photos/id/1014/100/100", interactionScore: 65 },
-        { username: "colega_de_trabalho", profilePicUrl: "https://picsum.photos/id/1015/100/100", interactionScore: 50 },
-      ];
-
-      // Combina os dados reais com os mockados para topInteractions
-      const finalProfileData: ProfileData = {
-        ...fetchedProfileData,
-        topInteractions: mockTopInteractions,
-      };
       
-      console.log('Navigating to /invasion-concluded with profileData for:', finalProfileData.username); // Log de navegação
-      navigate('/invasion-concluded', { state: { profileData: finalProfileData } });
+      console.log('Navigating to /invasion-simulation with profileData for:', fetchedProfileData.username);
+      navigate('/invasion-simulation', { state: { profileData: fetchedProfileData } });
 
     } catch (err) {
       if (err instanceof Error) {
@@ -263,7 +248,7 @@ const MainAppContent: React.FC = () => {
         <main className="w-full flex flex-col items-center">
           {isLoading ? (
             <div className="mt-4 w-full max-w-2xl mx-auto bg-black backdrop-blur-sm border border-white rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
-              <Loader /> {/* Reutiliza o Loader existente */}
+              <Loader />
               {loadingStartTime && (
                 <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
               )}
@@ -283,13 +268,13 @@ const MainAppContent: React.FC = () => {
                   );
                 }
 
-                const prefixMatch = text.match(/^(>>[^:]+?:)/); // Captura ">> ... :"
+                const prefixMatch = text.match(/^(>>[^:]+?:)/);
                 if (prefixMatch) {
                   const prefix = prefixMatch[1];
                   const suffix = text.substring(prefix.length);
                   return (
-                    <p key={idx} className="text-base mt-2 animate-fade-in flex items-start"> {/* Adicionado flex e items-start */}
-                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span> {/* Removido inline-block, adicionado flex-shrink-0 */}
+                    <p key={idx} className="text-base mt-2 animate-fade-in flex items-start">
+                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span>
                       <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
                         {prefix}
                       </span>
@@ -298,8 +283,8 @@ const MainAppContent: React.FC = () => {
                   );
                 } else {
                   return (
-                    <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in flex items-start"> {/* Adicionado flex e items-start */}
-                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span> {/* Removido inline-block, adicionado flex-shrink-0 */}
+                    <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in flex items-start">
+                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span>
                       {text}
                     </p>
                   );
@@ -351,15 +336,15 @@ const MainAppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Router>
-      <AuthProvider> {/* Envolve toda a aplicação com AuthProvider */}
+      <AuthProvider>
         <Routes>
           <Route path="/" element={<MainAppContent />} />
-          <Route path="/invasion-concluded" element={<InvasionConcludedPage />} />
+          <Route path="/invasion-simulation" element={<InvasionSimulationPage />} /> {/* New Route */}
           <Route path="/login" element={<LoginPage />} />
           <Route 
             path="/servers" 
             element={
-              <ProtectedRoute> {/* Protege a rota /servers */}
+              <ProtectedRoute>
                 <ServersPage />
               </ProtectedRoute>
             } 
@@ -367,7 +352,7 @@ const App: React.FC = () => {
           <Route 
             path="/credits" 
             element={
-              <ProtectedRoute> {/* Protege a rota /credits */}
+              <ProtectedRoute>
                 <CreditsPage />
               </ProtectedRoute>
             } 

@@ -6,19 +6,12 @@ export const mockProfileData: ProfileData = {
   username: "usuario_mockado",
   fullName: "Usuário de Teste Mockado",
   profilePicUrl: "https://picsum.photos/id/1005/200/200",
-  biography: "Esta é uma biografia de teste para um perfil mockado. O acesso premium revelaria a biografia real e muito mais!",
+  biography: "Esta é uma biografia de teste para um perfil mockado.",
   followers: 12345,
   following: 678,
   postsCount: 123,
   isVerified: false,
   isPrivate: true,
-  topInteractions: [
-    { username: "amigo_secreto", profilePicUrl: "https://picsum.photos/id/1011/100/100", interactionScore: 95 },
-    { username: "contatinho_x", profilePicUrl: "https://picsum.photos/id/1012/100/100", interactionScore: 88 },
-    { username: "ex_namorado", profilePicUrl: "https://picsum.photos/id/1013/100/100", interactionScore: 76 },
-    { username: "rival_da_escola", profilePicUrl: "https://picsum.photos/id/1014/100/100", interactionScore: 65 },
-    { username: "colega_de_trabalho", profilePicUrl: "https://picsum.photos/id/1015/100/100", interactionScore: 50 },
-  ],
 };
 
 export const fetchProfileData = async (username: string): Promise<ProfileData> => {
@@ -69,7 +62,6 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
       postsCount: apiData.postsCount,
       isVerified: apiData.verified,      // Mapeia verified para isVerified
       isPrivate: apiData.private,        // Mapeia private para isPrivate
-      topInteractions: mockProfileData.topInteractions, // Mantém mock para interações, pois a Apify não fornece
     };
 
     // Validação básica para campos essenciais
