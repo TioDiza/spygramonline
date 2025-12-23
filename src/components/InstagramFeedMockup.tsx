@@ -84,7 +84,7 @@ const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
       {/* Post Actions */}
       <div className="flex justify-between items-center p-3">
         <div className="flex space-x-4">
-          <Heart className="w-6 h-6 text-white" />
+          <Heart className="w-6 h-6 text-red-500" fill="currentColor" />
           <MessageCircle className="w-6 h-6 text-white" />
           <Send className="w-6 h-6 text-white" />
         </div>
