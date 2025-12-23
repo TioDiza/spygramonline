@@ -1,8 +1,7 @@
 import React from 'react';
 import { ProfileData } from '../../types';
 import { CheckCircle, XCircle, User, ShieldAlert } from 'lucide-react';
-import SparkleButton from './ui/SparkleButton'; // Corrigido o caminho
-import SecondaryButton from './ui/SecondaryButton'; // Importar SecondaryButton
+import SparkleButton from './ui/SparkleButton';
 import { motion } from 'framer-motion';
 
 interface ProfileConfirmationCardProps {
@@ -51,16 +50,19 @@ const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profi
         </div>
       </div>
 
-      <div className="space-y-3"> {/* Reduced space-y for tighter button layout */}
+      <div className="space-y-4">
         <SparkleButton onClick={onConfirm}>
           <CheckCircle className="w-4 h-4" />
           CONFIRMAR INVASÃO
         </SparkleButton>
         
-        <SecondaryButton onClick={onCorrect}>
+        <button
+          onClick={onCorrect}
+          className="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-gray-400 rounded-full hover:text-white transition-colors"
+        >
           <XCircle className="w-4 h-4" />
           Corrigir Nome de Usuário (@)
-        </SecondaryButton>
+        </button>
       </div>
     </motion.div>
   );
