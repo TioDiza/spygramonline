@@ -117,9 +117,18 @@ const InvasionSimulationPage: React.FC = () => {
   const closeModal = () => setIsModalOpen(false);
 
   if (!profileData) {
+    // Se houver uma mensagem de erro real, exiba-a.
+    if (errorMessage) {
+      return (
+        <div className="min-h-screen bg-black flex items-center justify-center">
+          <ErrorMessage message={errorMessage} />
+        </div>
+      );
+    }
+    // Caso contrário, é apenas um estado de carregamento. Exiba o loader.
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <ErrorMessage message={errorMessage || "Carregando..."} />
+        <Loader />
       </div>
     );
   }
