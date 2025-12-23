@@ -75,7 +75,7 @@ const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profi
 
         {/* Private Status */}
         {profileData.isPrivate && (
-          <div className="flex items-center justify-center gap-2 text-xs text-yellow-400 bg-yellow-900/50 border border-yellow-700 rounded-full px-3 py-1 w-fit mx-auto">
+          <div className="flex items-center justify-center gap-2 text-xs text-red-400 bg-red-900/50 border border-red-700 rounded-full px-3 py-1 w-fit mx-auto">
             <Lock className="w-3 h-3" />
             <span>Este perfil é privado</span>
           </div>
