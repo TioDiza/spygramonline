@@ -33,6 +33,7 @@ const InvasionSimulationPage: React.FC = () => {
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
+  const [isApiDataAvailable, setIsApiDataAvailable] = useState(false); // Novo estado
   const [isHacking, setIsHacking] = useState(true);
 
   // Efeito para iniciar o processo
@@ -49,10 +50,13 @@ const InvasionSimulationPage: React.FC = () => {
     const getSuggestions = async () => {
       let suggestions = await fetchSuggestedProfiles(profileData.username);
       
-      // Se a API falhar ou retornar uma lista vazia, usa os dados de fallback
-      if (suggestions.length === 0) {
+      if (suggestions.length > 0) {
+        setIsApiDataAvailable(true); // API retornou dados com sucesso
+      } else {
+        // Se a API falhar ou retornar uma lista vazia, usa os dados de fallback
         console.warn('[InvasionSimulationPage] API de sugestões falhou. Usando dados de fallback.');
         suggestions = mockSuggestedProfiles;
+        setIsApiDataAvailable(false); // Marca que estamos usando dados de fallback
       }
 
       setSuggestedProfiles(suggestions);
@@ -126,14 +130,22 @@ const InvasionSimulationPage: React.FC = () => {
           >
             {/* Mobile View */}
             <div className="block md:hidden">
-              <InstagramFeedMockup profileData={profileData} suggestedProfiles={suggestedProfiles} />
+              <InstagramFeedMockup 
+                profileData={profileData} 
+                suggestedProfiles={suggestedProfiles} 
+                isApiDataAvailable={isApiDataAvailable} 
+              />
             </div>
 
             {/* Desktop View */}
             <div className="hidden md:flex w-full justify-center">
               <WebSidebar profileData={profileData} />
               <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
-                <InstagramFeedContent profileData={profileData} suggestedProfiles={suggestedProfiles} />
+                <InstagramFeedContent 
+                  profileData={profileData} 
+                  suggestedProfiles={suggestedProfiles} 
+                  isApiDataAvailable={isApiDataAvailable} 
+                />
               </main>
               <WebSuggestions profileData={profileData} />
             </div>

@@ -143,11 +143,10 @@ const LockedPost: React.FC<{ post: typeof mockPosts[0] }> = ({ post }) => {
 interface InstagramFeedContentProps {
   profileData: ProfileData;
   suggestedProfiles: SuggestedProfile[];
+  isApiDataAvailable: boolean; // Nova prop
 }
 
-const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles }) => {
-  const hasRealData = suggestedProfiles.length > 0;
-
+const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles, isApiDataAvailable }) => {
   return (
     <>
       <InstagramHeader />
@@ -176,7 +175,7 @@ const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData
         </div>
 
         {/* Feed Content */}
-        {hasRealData
+        {isApiDataAvailable
           ? suggestedProfiles.map((profile) => <RealPost key={profile.username} profile={profile} />)
           : mockPosts.map((post) => <LockedPost key={post.id} post={post} />)
         }
