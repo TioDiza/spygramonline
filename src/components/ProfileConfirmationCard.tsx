@@ -1,7 +1,6 @@
 import React from 'react';
 import { ProfileData } from '../../types';
-import { CheckCircle, XCircle, User, ShieldAlert } from 'lucide-react';
-import SparkleButton from './ui/SparkleButton';
+import { CheckCircle, XCircle, ShieldAlert, BadgeCheck, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface ProfileConfirmationCardProps {
@@ -11,7 +10,13 @@ interface ProfileConfirmationCardProps {
 }
 
 const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profileData, onConfirm, onCorrect }) => {
-  const isMockData = profileData.username === 'usuario_mockado'; // Check against mock username
+  const isMockData = profileData.username === 'usuario_mockado';
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return num.toString();
+  };
 
   return (
     <motion.div
@@ -19,49 +24,90 @@ const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profi
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.9, opacity: 0 }}
       transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-      className="w-full max-w-md mx-auto p-6 bg-gray-900/80 backdrop-blur-md border border-purple-500 rounded-xl shadow-2xl shadow-purple-500/20 text-center"
+      className="w-full max-w-lg mx-auto p-6 bg-gray-900/80 backdrop-blur-md border border-purple-500 rounded-2xl shadow-2xl shadow-purple-500/20 text-white"
     >
-      <ShieldAlert className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-      <h2 className="text-2xl font-extrabold text-white mb-4">CONFIRMAR ALVO</h2>
-      
-      <p className="text-gray-300 mb-6">
-        Você realmente deseja invadir o perfil abaixo?
-      </p>
+      <div className="text-center mb-6">
+        <ShieldAlert className="w-12 h-12 text-yellow-400 mx-auto mb-3" />
+        <h2 className="text-2xl font-extrabold">CONFIRMAR ALVO</h2>
+        <p className="text-gray-400 text-sm mt-1">
+          Você realmente deseja invadir o perfil abaixo?
+        </p>
+      </div>
       
       {isMockData && (
-        <div className="mb-4 p-3 bg-yellow-900/50 border border-yellow-500 text-yellow-300 rounded-lg text-sm">
+        <div className="mb-4 p-3 bg-yellow-900/50 border border-yellow-500 text-yellow-300 rounded-lg text-sm text-center">
           Aviso: Dados de exemplo. A invasão real pode falhar se o perfil não for encontrado.
         </div>
       )}
 
-      <div className="flex flex-col items-center justify-center gap-4 bg-gray-800 p-4 rounded-lg border border-gray-700 mb-8">
-        <img
-          src={profileData.profilePicUrl}
-          alt={profileData.username}
-          className="w-16 h-16 rounded-full object-cover border-2 border-pink-500"
-        />
-        <div>
-          <p className="text-2xl font-bold text-white">@{profileData.username}</p>
-          <p className="text-sm text-gray-400">{profileData.fullName}</p>
-          <div className="flex items-center justify-center mt-1 text-xs text-gray-500">
-            <User className="w-3 h-3 mr-1" />
-            <span>{new Intl.NumberFormat().format(profileData.followers)} Seguidores</span>
+      {/* Profile Details Section */}
+      <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 space-y-4">
+        {/* Header: Pic, Username, Fullname */}
+        <div className="flex items-center gap-4">
+          <img
+            src={profileData.profilePicUrl}
+            alt={profileData.username}
+            className="w-20 h-20 rounded-full object-cover border-2 border-pink-500"
+          />
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <p className="text-2xl font-bold">@{profileData.username}</p>
+              {profileData.isVerified && <BadgeCheck className="w-5 h-5 text-blue-400" />}
+            </div>
+            <p className="text-gray-300">{profileData.fullName}</p>
           </div>
         </div>
+
+        {/* Stats: Posts, Followers, Following */}
+        <div className="flex justify-around text-center text-sm border-t border-b border-gray-700 py-3">
+          <div>
+            <p className="font-bold text-lg">{formatNumber(profileData.postsCount)}</p>
+            <p className="text-gray-400 text-xs">Publicações</p>
+          </div>
+          <div>
+            <p className="font-bold text-lg">{formatNumber(profileData.followers)}</p>
+            <p className="text-gray-400 text-xs">Seguidores</p>
+          </div>
+          <div>
+            <p className="font-bold text-lg">{formatNumber(profileData.following)}</p>
+            <p className="text-gray-400 text-xs">Seguindo</p>
+          </div>
+        </div>
+
+        {/* Biography */}
+        {profileData.biography && (
+          <div className="text-sm text-gray-300 text-left">
+            <p className="whitespace-pre-wrap">{profileData.biography}</p>
+          </div>
+        )}
+
+        {/* Private Status */}
+        {profileData.isPrivate && (
+          <div className="flex items-center justify-center gap-2 text-xs text-yellow-400 bg-yellow-900/50 border border-yellow-700 rounded-full px-3 py-1 w-fit mx-auto">
+            <Lock className="w-3 h-3" />
+            <span>Este perfil é privado</span>
+          </div>
+        )}
       </div>
 
-      <div className="space-y-4">
-        <SparkleButton onClick={onConfirm}>
-          <CheckCircle className="w-4 h-4" />
+      {/* Action Buttons */}
+      <div className="mt-6 space-y-3">
+        {/* Confirm Button */}
+        <button
+          onClick={onConfirm}
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 text-base font-bold text-white rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+        >
+          <CheckCircle className="w-5 h-5" />
           CONFIRMAR INVASÃO
-        </SparkleButton>
+        </button>
         
+        {/* Correct Button */}
         <button
           onClick={onCorrect}
-          className="w-full flex items-center justify-center gap-2 py-2 text-sm font-medium text-gray-400 rounded-full hover:text-white transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 text-base font-bold text-red-300 bg-red-900/40 border border-red-700 rounded-lg hover:bg-red-900/70 hover:text-red-200 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-gray-900"
         >
-          <XCircle className="w-4 h-4" />
-          Corrigir Nome de Usuário (@)
+          <XCircle className="w-5 h-5" />
+          Corrigir Nome de Usuário
         </button>
       </div>
     </motion.div>
