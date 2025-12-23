@@ -22,10 +22,10 @@ const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profi
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.9, opacity: 0 }}
       transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-      className="w-full max-w-lg mx-auto p-6 bg-gray-900/80 backdrop-blur-md border border-purple-500 rounded-2xl shadow-2xl shadow-purple-500/20 text-white"
+      className="w-full max-w-lg mx-auto p-6 bg-black/80 backdrop-blur-md border border-purple-500 rounded-2xl shadow-2xl shadow-purple-500/20 text-white"
     >
       <div className="text-center mb-6">
-        <ShieldAlert className="w-12 h-12 text-yellow-400 mx-auto mb-3" />
+        <ShieldAlert className="w-12 h-12 text-red-500 mx-auto mb-3" />
         <h2 className="text-2xl font-extrabold">CONFIRMAR ALVO</h2>
         <p className="text-gray-400 text-sm mt-1">
           Você realmente deseja invadir o perfil abaixo?
@@ -87,7 +87,7 @@ const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profi
         {/* Confirm Button */}
         <button
           onClick={onConfirm}
-          className="w-full flex items-center justify-center gap-2 py-3 px-4 text-base font-bold text-white rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 text-base font-bold text-white rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-black"
         >
           <CheckCircle className="w-5 h-5" />
           CONFIRMAR INVASÃO
