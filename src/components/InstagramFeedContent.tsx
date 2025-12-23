@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, Home, Plus, ChevronDown, Search, Clapperboard } from 'lucide-react';
 import { ProfileData, SuggestedProfile } from '../../types';
-import { cn } from '../lib/utils';
 
-// Mock data for posts, including a sponsored one
+// Lista de nomes reais para randomizar os posts
+const RANDOM_USER_NAMES = [
+  'maria', 'joao', 'ana', 'pedro', 'sofia', 'lucas', 'laura', 'matheus', 'julia', 'gabriel',
+  'beatriz', 'guilherme', 'isabela', 'rafael', 'manuela', 'felipe', 'helena', 'bruno', 'camila', 'diego'
+];
+
+// Mock data for posts, incluindo um patrocinado
 const mockPosts = [
   { id: 1, imageUrl: 'https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6', caption: 'HOJE - VIRADA DE LOTE', likes: 1245, comments: 45, sponsored: true, sponsorName: 'reveillonfestival', sponsorPic: 'https://i.pravatar.cc/150?u=reveillon' },
   { id: 2, imageUrl: 'https://picsum.photos/id/1025/600/600', caption: 'Novo look para o inverno. O que acharam? 🧥', likes: 890, comments: 22 },
@@ -48,15 +53,21 @@ const InstagramFooter: React.FC<InstagramFooterProps> = ({ profileData }) => (
 
 interface PostProps {
   post: typeof mockPosts[0];
-  profileData: ProfileData;
 }
 
-const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
-  const isLocked = true;
-  const blurClass = isLocked ? 'blur-md select-none' : '';
+const LockedPost: React.FC<PostProps> = ({ post }) => {
+  // Gera um usuário aleatório e ofuscado para cada post
+  const randomUser = useMemo(() => {
+    const name = RANDOM_USER_NAMES[Math.floor(Math.random() * RANDOM_USER_NAMES.length)];
+    return {
+      username: `${name.substring(0, 3)}*****`,
+      profilePicUrl: `https://i.pravatar.cc/150?u=${name}${post.id}` // Garante uma imagem diferente por post
+    };
+  }, [post.id]);
+
   const postUser = post.sponsored 
     ? { username: post.sponsorName, profilePicUrl: post.sponsorPic } 
-    : profileData;
+    : randomUser;
 
   return (
     <div className="border-b border-gray-800 mb-4">
@@ -65,13 +76,13 @@ const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
           <img
             src={postUser.profilePicUrl}
             alt={postUser.username}
-            className={cn("w-8 h-8 rounded-full object-cover", blurClass)}
+            className="w-8 h-8 rounded-full object-cover"
           />
           <div>
-            <p className={cn("text-sm font-semibold text-white", blurClass)}>
+            <p className="text-sm font-semibold text-white">
               {postUser.username}
             </p>
-            {post.sponsored && <p className={cn("text-xs text-gray-400", blurClass)}>Patrocinado</p>}
+            {post.sponsored && <p className="text-xs text-gray-400">Patrocinado</p>}
           </div>
         </div>
         <MoreHorizontal className="w-5 h-5 text-white" />
@@ -81,15 +92,13 @@ const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
         <img
           src={post.imageUrl}
           alt="Post"
-          className={cn("w-full h-auto object-contain", blurClass)}
+          className="w-full h-auto object-contain blur-md" // Aplica o desfoque permanente
         />
-        {isLocked && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
-            <Lock className="w-16 h-16 text-red-500 mb-4 animate-pulse" />
-            <p className="text-xl font-bold text-white">CONTEÚDO BLOQUEADO</p>
-            <p className="text-sm text-gray-400 mt-1">Acesso Premium Requerido</p>
-          </div>
-        )}
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
+          <Lock className="w-16 h-16 text-red-500 mb-4 animate-pulse" />
+          <p className="text-xl font-bold text-white">CONTEÚDO BLOQUEADO</p>
+          <p className="text-sm text-gray-400 mt-1">Acesso Premium Requerido</p>
+        </div>
       </div>
 
       <div className="flex justify-between items-center p-3">
@@ -102,15 +111,15 @@ const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
       </div>
 
       <div className="px-3 pb-3 text-xs">
-        <p className={cn("font-semibold text-white mb-1", blurClass)}>
-          {isLocked ? '999.999' : new Intl.NumberFormat().format(post.likes)} curtidas
+        <p className="font-semibold text-white mb-1">
+          {new Intl.NumberFormat().format(post.likes)} curtidas
         </p>
         <p className="text-white">
-          <span className={cn("font-semibold mr-1", blurClass)}>{postUser.username}</span>
-          <span className={blurClass}>{post.caption}</span>
+          <span className="font-semibold mr-1">{postUser.username}</span>
+          <span>{post.caption}</span>
         </p>
         <p className="text-gray-500 mt-1">
-          Ver todos os {isLocked ? '999' : post.comments} comentários
+          Ver todos os {post.comments} comentários
         </p>
       </div>
     </div>
@@ -162,7 +171,7 @@ const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData
         </div>
 
         {mockPosts.map((post) => (
-          <LockedPost key={post.id} post={post} profileData={profileData} />
+          <LockedPost key={post.id} post={post} />
         ))}
         <div className="text-center p-4 text-gray-500 text-sm">
           Fim do feed por enquanto.
