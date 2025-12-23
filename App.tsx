@@ -74,7 +74,8 @@ const MainAppContent: React.FC = () => {
       ]);
       setConfirmedProfileData(fetchedProfileData);
     } catch (err) {
-      setError("O servidor está com alta demanda no momento, tente novamente mais tarde");
+      const errorMessage = err instanceof Error ? err.message : "Ocorreu um erro desconhecido. Tente novamente.";
+      setError(errorMessage);
       console.error('Error during search process:', err);
     } finally {
       setIsLoading(false);
