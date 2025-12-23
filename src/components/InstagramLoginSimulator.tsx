@@ -8,10 +8,13 @@ interface InstagramLoginSimulatorProps {
   onSuccess: () => void;
 }
 
+// Reduced password list for a faster simulation
 const passwords = [
-  '123456', 'senhaforte', 'amordaminhavida', 'dataaniversario', 'password123',
-  'iloveyou', 'meuamor', 'segredinho', 'melhoramigo', 'senhainvalida',
-  'spygram123', 'acessototal', 'verdadeoculta', 'senhacerta' // The successful one
+  '123456',
+  'password123',
+  'iloveyou',
+  'segredinho',
+  'senhacerta' // The successful one
 ];
 
 type AttemptStage = 'typing' | 'attempting' | 'error';
@@ -33,7 +36,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
       if (currentPassword.length < currentAttempt.length) {
         timer = setTimeout(() => {
           setCurrentPassword(prev => currentAttempt.substring(0, prev.length + 1));
-        }, 80); // Typing speed slowed down slightly to 80ms
+        }, 40); // Typing speed increased (40ms)
       } else {
         // Finished typing, move to attempting stage
         setStage('attempting');
@@ -46,14 +49,14 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
         } else {
           setStage('error');
         }
-      }, 1000); // 1 second for "verifying"
+      }, 500); // "Verifying" delay reduced (500ms)
     } else if (stage === 'error') {
       // Show error for a moment, then move to the next attempt
       timer = setTimeout(() => {
         setAttemptIndex(prev => prev + 1);
         setCurrentPassword('');
         setStage('typing');
-      }, 1500); // 1.5 seconds for error display
+      }, 700); // Error display time reduced (700ms)
     }
 
     return () => clearTimeout(timer);
