@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import CustomSearchBar from '@/src/components/ui/CustomSearchBar';
 import SparkleButton from '@/src/components/ui/SparkleButton';
-import Loader from '@/src/components/Loader';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import ConsentCheckbox from '@/src/components/ConsentCheckbox';
 import { Lock } from 'lucide-react';
@@ -59,9 +58,10 @@ const MainAppContent: React.FC = () => {
       return;
     }
 
+    // Inicia o carregamento e a barra de progresso
     setIsLoading(true);
     setError(null);
-    setProgressBarProgress(0); // Garante que a barra comece do zero
+    setProgressBarProgress(0);
 
     try {
       // 1. Inicia a busca de dados da API imediatamente
@@ -76,7 +76,7 @@ const MainAppContent: React.FC = () => {
         minimumDurationPromise,
       ]);
 
-      console.log('Navigating to /invasion-simulation with profileData for:', fetchedProfileData.username);
+      // Navega imediatamente para a simulação. O loader inicial será exibido lá.
       navigate('/invasion-simulation', { state: { profileData: fetchedProfileData } });
 
     } catch (err) {
@@ -87,6 +87,7 @@ const MainAppContent: React.FC = () => {
       }
       console.error('Error during search process:', err); // Log de erro detalhado
     } finally {
+      // O estado de loading é resetado após a navegação ou em caso de erro
       setIsLoading(false);
       setProgressBarProgress(100);
     }
@@ -170,49 +171,32 @@ const MainAppContent: React.FC = () => {
             />
           </div>
 
-          {!isLoading && ( // Oculta este parágrafo quando estiver carregando
-            <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
-              <span className="text-white">ACESSE O </span>
-              <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
-              <span className="text-white"> DE QUALQUER PESSOA, </span>
-              <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
-              <span className="text-white">, APENAS COM O @</span>
-            </p>
-          )}
+          <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
+            <span className="text-white">ACESSE O </span>
+            <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">INSTAGRAM</span>
+            <span className="text-white"> DE QUALQUER PESSOA, </span>
+            <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">SEM SENHA</span>
+            <span className="text-white">, APENAS COM O @</span>
+          </p>
         </header>
         
-        {isLoading && (
-          <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text animate-pulse">
-            Invadindo perfil...
-          </h2>
-        )}
-
         <main className="w-full flex flex-col items-center">
-          {isLoading ? (
-            <div className="mt-4 w-full max-w-2xl mx-auto bg-black backdrop-blur-sm border border-white rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
-              <Loader />
-              <h1 className="text-xl font-bold mt-4 text-gray-400">Buscando dados do perfil...</h1>
-            </div>
-          ) : (
-            <>
-              <CustomSearchBar 
-                query={searchQuery} 
-                setQuery={setSearchQuery} 
-                isLoading={isLoading} 
-              />
-              <div className="mt-6 flex justify-center">
-                <ConsentCheckbox checked={hasConsented} onChange={setHasConsented} />
-              </div>
-              <div className="mt-6">
-                <SparkleButton onClick={handleSearch} disabled={isLoading || !hasConsented}>
-                  Invadir Conta
-                </SparkleButton>
-              </div>
-              <div className="w-full mt-4">
-                {error && <ErrorMessage message={error} />}
-              </div>
-            </>
-          )}
+          <CustomSearchBar 
+            query={searchQuery} 
+            setQuery={setSearchQuery} 
+            isLoading={isLoading} 
+          />
+          <div className="mt-6 flex justify-center">
+            <ConsentCheckbox checked={hasConsented} onChange={setHasConsented} />
+          </div>
+          <div className="mt-6">
+            <SparkleButton onClick={handleSearch} disabled={isLoading || !hasConsented}>
+              {isLoading ? 'Preparando Invasão...' : 'Invadir Conta'}
+            </SparkleButton>
+          </div>
+          <div className="w-full mt-4">
+            {error && <ErrorMessage message={error} />}
+          </div>
         </main>
 
         <footer className="mt-16 text-center text-gray-400 text-sm">
