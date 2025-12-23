@@ -185,7 +185,7 @@ const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData
 
         {/* Feed Content */}
         {isApiDataAvailable
-          ? suggestedProfiles.map((profile, index) => (
+          ? suggestedProfiles.slice(0, 5).map((profile, index) => (
               <RealPost 
                 key={profile.username} 
                 profile={profile} 
