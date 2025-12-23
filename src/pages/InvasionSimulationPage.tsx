@@ -11,6 +11,7 @@ import InstagramFeedMockup from '../components/InstagramFeedMockup';
 import InstagramFeedContent from '../components/InstagramFeedContent';
 import WebSidebar from '../components/WebSidebar';
 import WebSuggestions from '../components/WebSuggestions';
+import { getUserLocation, getNearbyCities } from '../services/geolocationService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
@@ -24,29 +25,43 @@ const InvasionSimulationPage: React.FC = () => {
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isApiDataAvailable, setIsApiDataAvailable] = useState(false);
+  const [locations, setLocations] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!profileData) {
-      setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
-      toast.error('Nenhum dado de perfil encontrado. Redirecionando...');
-      setTimeout(() => navigate('/'), 3000);
-      setStage('error');
-      return;
-    }
+    const startSimulation = async () => {
+      if (!profileData) {
+        setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
+        toast.error('Nenhum dado de perfil encontrado. Redirecionando...');
+        setTimeout(() => navigate('/'), 3000);
+        setStage('error');
+        return;
+      }
 
-    // Apenas verifica se os dados da API de sugestões estão disponíveis
-    if (apiSuggestedProfiles && apiSuggestedProfiles.length > 0) {
-      setIsApiDataAvailable(true);
-    } else {
-      setIsApiDataAvailable(false);
-    }
+      // Busca a localização do usuário em paralelo com a tela de loading
+      try {
+        const locationData = await getUserLocation();
+        const nearbyCities = getNearbyCities(locationData.city);
+        setLocations(nearbyCities);
+      } catch (e) {
+        // Define cidades padrão em caso de falha na API de geolocalização
+        setLocations(getNearbyCities('São Paulo'));
+      }
 
-    // Inicia a simulação visual
-    const timeout = setTimeout(() => {
-      setStage('login_attempt');
-    }, 1000);
+      if (apiSuggestedProfiles && apiSuggestedProfiles.length > 0) {
+        setIsApiDataAvailable(true);
+      } else {
+        setIsApiDataAvailable(false);
+      }
 
-    return () => clearTimeout(timeout);
+      // Inicia a simulação visual
+      const timeout = setTimeout(() => {
+        setStage('login_attempt');
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    };
+
+    startSimulation();
   }, [profileData, apiSuggestedProfiles, navigate]);
 
   const handleLoginSuccess = useCallback(() => {
@@ -106,6 +121,7 @@ const InvasionSimulationPage: React.FC = () => {
                 profileData={profileData} 
                 suggestedProfiles={apiSuggestedProfiles || []} 
                 isApiDataAvailable={isApiDataAvailable} 
+                locations={locations}
               />
             </div>
 
@@ -116,6 +132,7 @@ const InvasionSimulationPage: React.FC = () => {
                   profileData={profileData} 
                   suggestedProfiles={apiSuggestedProfiles || []} 
                   isApiDataAvailable={isApiDataAvailable} 
+                  locations={locations}
                 />
               </main>
               <WebSuggestions profileData={profileData} />

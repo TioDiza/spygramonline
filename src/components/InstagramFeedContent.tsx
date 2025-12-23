@@ -52,7 +52,7 @@ const InstagramFooter: React.FC<InstagramFooterProps> = ({ profileData }) => (
 );
 
 // Componente para post real, sem desfoque
-const RealPost: React.FC<{ profile: SuggestedProfile }> = ({ profile }) => {
+const RealPost: React.FC<{ profile: SuggestedProfile; location?: string }> = ({ profile, location }) => {
   const likes = useMemo(() => Math.floor(Math.random() * 5000) + 100, []);
   const comments = useMemo(() => Math.floor(Math.random() * 200) + 5, []);
   const captions = ["Vivendo o momento!", "Ótimas vibrações.", "Lembranças.", "Aproveitando o dia."];
@@ -63,7 +63,10 @@ const RealPost: React.FC<{ profile: SuggestedProfile }> = ({ profile }) => {
       <div className="flex items-center justify-between p-3">
         <div className="flex items-center space-x-3">
           <img src={profile.profile_pic_url} alt={profile.username} className="w-8 h-8 rounded-full object-cover" />
-          <p className="text-sm font-semibold text-white">{profile.username}</p>
+          <div>
+            <p className="text-sm font-semibold text-white">{profile.username}</p>
+            {location && <p className="text-xs text-gray-400">{location}</p>}
+          </div>
         </div>
         <MoreHorizontal className="w-5 h-5 text-white" />
       </div>
@@ -89,7 +92,7 @@ const RealPost: React.FC<{ profile: SuggestedProfile }> = ({ profile }) => {
 };
 
 // Componente para post bloqueado (fallback)
-const LockedPost: React.FC<{ post: typeof mockPosts[0] }> = ({ post }) => {
+const LockedPost: React.FC<{ post: typeof mockPosts[0]; location?: string }> = ({ post, location }) => {
   const randomUser = useMemo(() => {
     const name = RANDOM_USER_NAMES[Math.floor(Math.random() * RANDOM_USER_NAMES.length)];
     return {
@@ -107,6 +110,7 @@ const LockedPost: React.FC<{ post: typeof mockPosts[0] }> = ({ post }) => {
           <img src={postUser.profilePicUrl} alt={postUser.username} className="w-8 h-8 rounded-full object-cover" />
           <div>
             <p className="text-sm font-semibold text-white">{postUser.username}</p>
+            {location && !post.sponsored && <p className="text-xs text-gray-400">{location}</p>}
             {post.sponsored && <p className="text-xs text-gray-400">Patrocinado</p>}
           </div>
         </div>
@@ -144,9 +148,10 @@ interface InstagramFeedContentProps {
   profileData: ProfileData;
   suggestedProfiles: SuggestedProfile[];
   isApiDataAvailable: boolean;
+  locations: string[];
 }
 
-const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles, isApiDataAvailable }) => {
+const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles, isApiDataAvailable, locations }) => {
   return (
     <>
       <InstagramHeader />
@@ -180,8 +185,20 @@ const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData
 
         {/* Feed Content */}
         {isApiDataAvailable
-          ? suggestedProfiles.map((profile) => <RealPost key={profile.username} profile={profile} />)
-          : mockPosts.map((post) => <LockedPost key={post.id} post={post} />)
+          ? suggestedProfiles.map((profile, index) => (
+              <RealPost 
+                key={profile.username} 
+                profile={profile} 
+                location={locations.length > 0 ? locations[index % locations.length] : undefined} 
+              />
+            ))
+          : mockPosts.map((post, index) => (
+              <LockedPost 
+                key={post.id} 
+                post={post} 
+                location={locations.length > 0 ? locations[index % locations.length] : undefined} 
+              />
+            ))
         }
         
         <div className="text-center p-4 text-gray-500 text-sm">
