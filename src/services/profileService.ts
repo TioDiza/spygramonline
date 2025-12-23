@@ -5,6 +5,17 @@ interface FetchResult {
   suggestions: SuggestedProfile[];
 }
 
+// Adiciona um proxy para evitar erros de CORS ao carregar imagens do Instagram
+const getProxiedUrl = (url: string | undefined): string => {
+  if (!url) return '';
+  // Se a URL já for de um proxy conhecido, retorna como está
+  if (url.includes('workers.dev') || url.includes('vercel.app')) {
+    return url;
+  }
+  // Adiciona o proxy para URLs diretas do Instagram
+  return `https://proxt-insta.projetinho-solo.workers.dev/?url=${encodeURIComponent(url)}`;
+};
+
 export const fetchProfileData = async (username: string): Promise<FetchResult> => {
   if (!username) {
     throw new Error('Username cannot be empty.');
@@ -37,7 +48,7 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       const profile: ProfileData = {
         username: profileSource.username,
         fullName: profileSource.full_name,
-        profilePicUrl: profileSource.profile_pic_url || profileSource.profile_pic_url_hd,
+        profilePicUrl: getProxiedUrl(profileSource.profile_pic_url || profileSource.profile_pic_url_hd),
         biography: profileSource.biography,
         followers: profileSource.follower_count || 0,
         following: profileSource.following_count || 0,
@@ -54,7 +65,7 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       if (profileSource._chaining_results && Array.isArray(profileSource._chaining_results)) {
         suggestions = profileSource._chaining_results.map((s: any) => ({
           username: s.username,
-          profile_pic_url: s.profile_pic_url,
+          profile_pic_url: getProxiedUrl(s.profile_pic_url),
         }));
       }
       
