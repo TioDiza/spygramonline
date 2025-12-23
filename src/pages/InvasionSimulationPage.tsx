@@ -14,15 +14,6 @@ import WebSuggestions from '../components/WebSuggestions';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
-// Dados de fallback para usar nos Stories quando a API falhar
-const mockSuggestedProfilesForStories: SuggestedProfile[] = [
-  { username: 'reactjs', profile_pic_url: 'https://i.pravatar.cc/150?u=reactjs' },
-  { username: 'tailwindcss', profile_pic_url: 'https://i.pravatar.cc/150?u=tailwindcss' },
-  { username: 'neymarjr', profile_pic_url: 'https://i.pravatar.cc/150?u=neymarjr' },
-  { username: 'nasa', profile_pic_url: 'https://i.pravatar.cc/150?u=nasa' },
-  { username: 'spacex', profile_pic_url: 'https://i.pravatar.cc/150?u=spacex' },
-];
-
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,7 +24,6 @@ const InvasionSimulationPage: React.FC = () => {
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isApiDataAvailable, setIsApiDataAvailable] = useState(false);
-  const [profilesForDisplay, setProfilesForDisplay] = useState<SuggestedProfile[]>([]);
 
   useEffect(() => {
     if (!profileData) {
@@ -44,13 +34,11 @@ const InvasionSimulationPage: React.FC = () => {
       return;
     }
 
-    // Decide quais perfis usar com base na resposta da API
+    // Apenas verifica se os dados da API de sugestões estão disponíveis
     if (apiSuggestedProfiles && apiSuggestedProfiles.length > 0) {
       setIsApiDataAvailable(true);
-      setProfilesForDisplay(apiSuggestedProfiles);
     } else {
       setIsApiDataAvailable(false);
-      setProfilesForDisplay(mockSuggestedProfilesForStories); // Usa fallback para Stories
     }
 
     // Inicia a simulação visual
@@ -116,7 +104,7 @@ const InvasionSimulationPage: React.FC = () => {
             <div className="block md:hidden">
               <InstagramFeedMockup 
                 profileData={profileData} 
-                suggestedProfiles={profilesForDisplay} 
+                suggestedProfiles={apiSuggestedProfiles || []} 
                 isApiDataAvailable={isApiDataAvailable} 
               />
             </div>
@@ -126,7 +114,7 @@ const InvasionSimulationPage: React.FC = () => {
               <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
                 <InstagramFeedContent 
                   profileData={profileData} 
-                  suggestedProfiles={profilesForDisplay} 
+                  suggestedProfiles={apiSuggestedProfiles || []} 
                   isApiDataAvailable={isApiDataAvailable} 
                 />
               </main>

@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, Home, Plus, ChevronDown, Search, Clapperboard } from 'lucide-react';
 import { ProfileData, SuggestedProfile } from '../../types';
+import LockedStory from './LockedStory'; // Importa o novo componente
 
-// Lista de nomes reais para randomizar os posts (usado no fallback)
+// Lista de nomes reais para randomizar os posts e stories (usado no fallback)
 const RANDOM_USER_NAMES = [
-  'maria', 'joao', 'ana', 'pedro', 'sofia', 'lucas', 'laura', 'matheus', 'julia', 'gabriel',
-  'beatriz', 'guilherme', 'isabela', 'rafael', 'manuela', 'felipe', 'helena', 'bruno', 'camila', 'diego'
+  'Bruna', 'Carlos', 'Pedro', 'Sofia', 'Lucas', 'Julia', 'Maria', 'Joao', 'Ana', 'Matheus'
 ];
 
 // Mock data for posts (usado no fallback)
@@ -93,7 +93,7 @@ const LockedPost: React.FC<{ post: typeof mockPosts[0] }> = ({ post }) => {
   const randomUser = useMemo(() => {
     const name = RANDOM_USER_NAMES[Math.floor(Math.random() * RANDOM_USER_NAMES.length)];
     return {
-      username: `${name.substring(0, 3)}*****`,
+      username: `${name.substring(0, 3).toLowerCase()}*****`,
       profilePicUrl: `https://i.pravatar.cc/150?u=${name}${post.id}`
     };
   }, [post.id]);
@@ -143,7 +143,7 @@ const LockedPost: React.FC<{ post: typeof mockPosts[0] }> = ({ post }) => {
 interface InstagramFeedContentProps {
   profileData: ProfileData;
   suggestedProfiles: SuggestedProfile[];
-  isApiDataAvailable: boolean; // Nova prop
+  isApiDataAvailable: boolean;
 }
 
 const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData, suggestedProfiles, isApiDataAvailable }) => {
@@ -162,16 +162,20 @@ const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData
             </div>
             <span className="text-xs text-gray-400">Seu story</span>
           </div>
-          {suggestedProfiles.map((story, index) => (
-            <div key={index} className="flex flex-col items-center flex-shrink-0 space-y-1 text-center relative">
-              <div className="w-[70px] h-[70px] rounded-full flex items-center justify-center p-0.5 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
-                <div className="bg-black p-1 rounded-full">
-                  <img src={story.profile_pic_url} alt={story.username} className="w-full h-full rounded-full object-cover" />
+          
+          {isApiDataAvailable 
+            ? suggestedProfiles.map((story, index) => (
+                <div key={index} className="flex flex-col items-center flex-shrink-0 space-y-1 text-center relative">
+                  <div className="w-[70px] h-[70px] rounded-full flex items-center justify-center p-0.5 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600">
+                    <div className="bg-black p-1 rounded-full">
+                      <img src={story.profile_pic_url} alt={story.username} className="w-full h-full rounded-full object-cover" />
+                    </div>
+                  </div>
+                  <span className="text-xs text-white mt-1 truncate w-16">{story.username}</span>
                 </div>
-              </div>
-              <span className="text-xs text-white mt-1 truncate w-16">{story.username}</span>
-            </div>
-          ))}
+              ))
+            : RANDOM_USER_NAMES.slice(0, 5).map(name => <LockedStory key={name} name={name} />)
+          }
         </div>
 
         {/* Feed Content */}
