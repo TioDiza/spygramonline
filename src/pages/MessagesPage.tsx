@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, Video, SquarePen, Camera } from 'lucide-react';
 import DirectStoryItem from '../components/DirectStoryItem';
-import PreviewBanner from '../components/PreviewBanner';
 import './MessagesPage.css';
 
 const mockStories = [
@@ -95,7 +94,6 @@ const MessagesPage: React.FC = () => {
           ))}
         </div>
       </main>
-      <PreviewBanner />
     </div>
   );
 };
