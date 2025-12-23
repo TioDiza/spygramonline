@@ -16,11 +16,6 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     const response = await fetch(url.toString(), {
       method: 'GET',
       signal: controller.signal,
-      headers: { // Adicionando headers para evitar cache
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-      },
     });
     clearTimeout(timeoutId);
     console.log(`[profileService] Fetch response received for ${username}. Status: ${response.status}`);
