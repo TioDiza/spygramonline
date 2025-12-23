@@ -21,10 +21,10 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
   const [isError, setIsError] = useState(false);
 
   const currentAttempt = passwords[attemptIndex];
-  const isSuccessAttempt = attemptIndex === passwords.length - 1;
+  const totalAttempts = passwords.length;
 
   useEffect(() => {
-    if (attemptIndex >= passwords.length) {
+    if (attemptIndex >= totalAttempts) {
       return; // Stop if all attempts are done
     }
 
@@ -39,27 +39,34 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
         // Typing finished, wait for login attempt
         setIsTyping(false);
         setIsError(false);
-        const timeout = setTimeout(() => {
+        
+        // Captura o índice atual para o closure do timeout
+        const currentIdx = attemptIndex; 
+
+        const loginTimeout = setTimeout(() => {
           // Phase 2: Login attempt (simulated network delay)
-          if (isSuccessAttempt) {
+          if (currentIdx === totalAttempts - 1) {
             // Success!
             onSuccess();
           } else {
             // Failure, show error briefly
             setIsError(true);
-            setTimeout(() => {
+            
+            const errorTimeout = setTimeout(() => {
               // Phase 3: Reset and move to next attempt
               setCurrentPassword('');
               setAttemptIndex(prev => prev + 1);
               setIsTyping(true);
               setIsError(false);
             }, 1000); // Show error for 1 second
+            
+            return () => clearTimeout(errorTimeout);
           }
         }, 800); // Simulate login attempt delay
-        return () => clearTimeout(timeout);
+        return () => clearTimeout(loginTimeout);
       }
     }
-  }, [attemptIndex, currentPassword, isTyping, currentAttempt, isSuccessAttempt, onSuccess]);
+  }, [attemptIndex, currentPassword, isTyping, currentAttempt, totalAttempts, onSuccess]);
 
   const getPasswordDisplay = () => {
     if (isTyping) {
@@ -125,14 +132,14 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
               Tentando...
             </>
           ) : isError ? (
-            `Falha na Tentativa ${attemptIndex + 1}/${passwords.length - 1}`
+            `Falha na Tentativa ${attemptIndex + 1}/${totalAttempts}`
           ) : (
             'Entrar'
           )}
         </motion.button>
 
         <p className="mt-4 text-xs text-gray-500">
-          Tentativa {attemptIndex + 1} de {passwords.length}
+          Tentativa {attemptIndex + 1} de {totalAttempts}
         </p>
         
         {isError && (
