@@ -110,10 +110,10 @@ const LockedPost: React.FC<{ location?: string }> = ({ location }) => {
         <div className="flex space-x-4"><Heart className="w-6 h-6 text-white" /><MessageCircle className="w-6 h-6 text-white" /><Send className="w-6 h-6 text-white" /></div>
         <Bookmark className="w-6 h-6 text-white" />
       </div>
-      <div className="px-3 pb-3 text-xs space-y-2">
-        <div className="font-semibold text-white bg-gray-700 rounded w-24 h-4"></div>
-        <div className="text-white bg-gray-700 rounded w-48 h-4"></div>
-        <div className="text-gray-500 bg-gray-700 rounded w-32 h-4"></div>
+      <div className="px-3 pb-3 text-xs space-y-1 blur-sm select-none pointer-events-none">
+        <p className="font-semibold text-white mb-1">1,234 curtidas</p>
+        <p className="text-white"><span className="font-semibold mr-1">username</span><span>Lorem ipsum dolor sit amet, consectetur...</span></p>
+        <p className="text-gray-500 mt-1">Ver todos os 56 comentários</p>
       </div>
     </div>
   );
