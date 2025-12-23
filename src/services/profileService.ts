@@ -36,42 +36,36 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
     const apiData = await response.json();
     console.log(`[profileService] Raw data received from backend for ${username}:`, apiData);
 
-    // A API pode retornar um array ou um objeto com uma propriedade de resultados.
-    // Vamos pegar o primeiro resultado, como solicitado.
-    let profileDataFromApi;
-    if (apiData.results && Array.isArray(apiData.results) && apiData.results.length > 0) {
-        profileDataFromApi = apiData.results[0];
-    } else if (Array.isArray(apiData) && apiData.length > 0) {
-        profileDataFromApi = apiData[0];
-    } else if (typeof apiData === 'object' && apiData !== null && !Array.isArray(apiData) && apiData.username) {
-        // Lida com o caso de ser um único objeto de perfil
-        profileDataFromApi = apiData;
+    // A nova API envolve os dados do perfil em uma propriedade 'data'.
+    // Verificamos se 'data' existe e não é um objeto vazio.
+    const profileDataFromApi = apiData.data;
+    if (profileDataFromApi && typeof profileDataFromApi === 'object' && Object.keys(profileDataFromApi).length > 0) {
+      
+      const profile: ProfileData = {
+        username: profileDataFromApi.username,
+        fullName: profileDataFromApi.full_name,
+        profilePicUrl: profileDataFromApi.profile_pic_url,
+        biography: profileDataFromApi.biography,
+        followers: profileDataFromApi.follower_count,
+        following: profileDataFromApi.following_count,
+        postsCount: profileDataFromApi.media_count,
+        isVerified: profileDataFromApi.is_verified,
+        isPrivate: profileDataFromApi.is_private,
+      };
+
+      // Validação básica para campos essenciais
+      if (!profile.username) {
+        console.error('[profileService] Failed to fetch profile data: Response from backend is incomplete.');
+        throw new Error('Dados do perfil inválidos ou incompletos do backend.');
+      }
+
+      console.log(`[profileService] Successfully fetched and parsed real profile data for: ${profile.username}`);
+      return profile;
+
     } else {
-        console.error('[profileService] Failed to fetch profile data: Invalid or empty response structure from backend.');
-        throw new Error('Nenhum perfil encontrado na resposta da API.');
+      console.error('[profileService] Failed to fetch profile data: The "data" field is empty or invalid in the API response.');
+      throw new Error('Nenhum perfil encontrado na resposta da API.');
     }
-
-    // Mapeia os campos da nova resposta da API para nossa interface ProfileData
-    const profile: ProfileData = {
-      username: profileDataFromApi.username,
-      fullName: profileDataFromApi.full_name,
-      profilePicUrl: profileDataFromApi.profile_pic_url,
-      biography: profileDataFromApi.biography,
-      followers: profileDataFromApi.follower_count,
-      following: profileDataFromApi.following_count,
-      postsCount: profileDataFromApi.media_count,
-      isVerified: profileDataFromApi.is_verified,
-      isPrivate: profileDataFromApi.is_private,
-    };
-
-    // Validação básica para campos essenciais
-    if (!profile.username || !profile.fullName || !profile.profilePicUrl) {
-      console.error('[profileService] Failed to fetch profile data: Invalid or incomplete response structure from backend.');
-      throw new Error('Dados do perfil inválidos ou incompletos do backend.');
-    }
-
-    console.log(`[profileService] Successfully fetched and parsed real profile data for: ${profile.username}`);
-    return profile;
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error) {
