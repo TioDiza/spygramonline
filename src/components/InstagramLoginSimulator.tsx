@@ -61,7 +61,7 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
               setAttemptIndex(prev => prev + 1);
               setIsTyping(true);
               setIsError(false);
-            }, 400); // Mostra o erro por 400ms
+            }, 1000); // Aumentado para 1000ms (1 segundo) para estabilidade
           }
         }, 400); // Tempo de espera da tentativa de login (400ms)
       }
