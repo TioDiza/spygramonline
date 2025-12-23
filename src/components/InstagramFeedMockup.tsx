@@ -7,14 +7,14 @@ interface InstagramFeedMockupProps {
   profileData: ProfileData;
   suggestedProfiles: SuggestedProfile[];
   isApiDataAvailable: boolean;
-  locations: string[]; // Nova prop
+  locations: string[];
+  onLockedFeatureClick: (featureName: string) => void;
 }
 
-const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, suggestedProfiles, isApiDataAvailable, locations }) => {
+const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, suggestedProfiles, isApiDataAvailable, locations, onLockedFeatureClick }) => {
   const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
-    // Mostra a notificação após 2.5 segundos
     const timer = setTimeout(() => {
       setShowNotification(true);
     }, 2500);
@@ -30,7 +30,7 @@ const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, 
           message="Vai dar certo me ver essa semana,amor?"
           time="agora"
           onClose={() => setShowNotification(false)}
-          duration={8000} // A notificação some após 8 segundos
+          duration={8000}
         />
       )}
       <InstagramFeedContent 
@@ -38,6 +38,7 @@ const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData, 
         suggestedProfiles={suggestedProfiles} 
         isApiDataAvailable={isApiDataAvailable} 
         locations={locations}
+        onLockedFeatureClick={onLockedFeatureClick}
       />
     </div>
   );

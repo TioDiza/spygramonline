@@ -12,6 +12,7 @@ import InstagramFeedContent from '../components/InstagramFeedContent';
 import WebSidebar from '../components/WebSidebar';
 import WebSuggestions from '../components/WebSuggestions';
 import { getUserLocation, getCitiesByState } from '../services/geolocationService';
+import LockedFeatureModal from '../components/LockedFeatureModal';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
@@ -26,6 +27,15 @@ const InvasionSimulationPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isApiDataAvailable, setIsApiDataAvailable] = useState(false);
   const [locations, setLocations] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalFeatureName, setModalFeatureName] = useState('');
+
+  const handleLockedFeatureClick = useCallback((featureName: string) => {
+    setModalFeatureName(featureName);
+    setIsModalOpen(true);
+  }, []);
+
+  const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     const startSimulation = async () => {
@@ -39,21 +49,14 @@ const InvasionSimulationPage: React.FC = () => {
 
       try {
         const locationData = await getUserLocation();
-        console.log(`📍 Localização Detectada: ${locationData.city}, ${locationData.state}`);
         const stateCities = getCitiesByState(locationData.city, locationData.state);
-        console.log('🏙️ Lista de cidades para o feed:', stateCities);
         setLocations(stateCities);
       } catch (e) {
         const fallbackCities = getCitiesByState('São Paulo', 'São Paulo');
-        console.log('⚠️ Falha na detecção. Usando cidades de fallback:', fallbackCities);
         setLocations(fallbackCities);
       }
 
-      if (apiSuggestedProfiles && apiSuggestedProfiles.length > 0) {
-        setIsApiDataAvailable(true);
-      } else {
-        setIsApiDataAvailable(false);
-      }
+      setIsApiDataAvailable(!!(apiSuggestedProfiles && apiSuggestedProfiles.length > 0));
 
       const timeout = setTimeout(() => {
         setStage('login_attempt');
@@ -84,6 +87,11 @@ const InvasionSimulationPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black md:bg-[#121212] text-white font-sans w-full">
+      <LockedFeatureModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        featureName={modalFeatureName}
+      />
       <AnimatePresence mode="wait">
         {stage !== 'feed_locked' && (
           <div className="flex items-center justify-center min-h-screen">
@@ -123,20 +131,22 @@ const InvasionSimulationPage: React.FC = () => {
                 suggestedProfiles={apiSuggestedProfiles || []} 
                 isApiDataAvailable={isApiDataAvailable} 
                 locations={locations}
+                onLockedFeatureClick={handleLockedFeatureClick}
               />
             </div>
 
             <div className="hidden md:flex w-full justify-center">
-              <WebSidebar profileData={profileData} />
+              <WebSidebar profileData={profileData} onLockedFeatureClick={handleLockedFeatureClick} />
               <main className="w-full max-w-[630px] border-x border-gray-800 md:ml-64">
                 <InstagramFeedContent 
                   profileData={profileData} 
                   suggestedProfiles={apiSuggestedProfiles || []} 
                   isApiDataAvailable={isApiDataAvailable} 
                   locations={locations}
+                  onLockedFeatureClick={handleLockedFeatureClick}
                 />
               </main>
-              <WebSuggestions profileData={profileData} />
+              <WebSuggestions profileData={profileData} onLockedFeatureClick={handleLockedFeatureClick} />
             </div>
           </motion.div>
         )}
