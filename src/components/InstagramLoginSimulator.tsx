@@ -25,54 +25,55 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
 
   useEffect(() => {
     if (attemptIndex >= totalAttempts) {
-      return; // Stop if all attempts are done
+      return;
     }
 
-    // Phase 1: Typing the password
+    let timer: NodeJS.Timeout | undefined;
+
     if (isTyping) {
+      // Phase 1: Typing
       if (currentPassword.length < currentAttempt.length) {
-        const timeout = setTimeout(() => {
+        timer = setTimeout(() => {
           setCurrentPassword(currentAttempt.substring(0, currentPassword.length + 1));
-        }, 50); // Fast typing
-        return () => clearTimeout(timeout);
+        }, 50);
       } else {
-        // Typing finished, wait for login attempt
+        // Typing finished, transition to login attempt phase
         setIsTyping(false);
-        setIsError(false);
-        
-        // Captura o índice atual para o closure do timeout
-        const currentIdx = attemptIndex; 
-
-        const loginTimeout = setTimeout(() => {
-          // Phase 2: Login attempt (simulated network delay)
-          if (currentIdx === totalAttempts - 1) {
-            // Success!
-            onSuccess();
-          } else {
-            // Failure, show error briefly
-            setIsError(true);
-            
-            const errorTimeout = setTimeout(() => {
-              // Phase 3: Reset and move to next attempt
-              setCurrentPassword('');
-              setAttemptIndex(prev => prev + 1);
-              setIsTyping(true);
-              setIsError(false);
-            }, 1000); // Show error for 1 second
-            
-            return () => clearTimeout(errorTimeout);
-          }
-        }, 800); // Simulate login attempt delay
-        return () => clearTimeout(loginTimeout);
       }
+    } else if (!isError) {
+      // Phase 2: Waiting for login result (runs when typing is complete)
+      const currentIdx = attemptIndex; 
+      timer = setTimeout(() => {
+        if (currentIdx === totalAttempts - 1) {
+          // Success
+          onSuccess();
+        } else {
+          // Failure, transition to error display
+          setIsError(true);
+        }
+      }, 800);
+    } else {
+      // Phase 3: Error displayed, reset and advance index
+      timer = setTimeout(() => {
+        setCurrentPassword('');
+        setAttemptIndex(prev => prev + 1);
+        setIsTyping(true);
+        setIsError(false);
+      }, 1000);
     }
-  }, [attemptIndex, currentPassword, isTyping, currentAttempt, totalAttempts, onSuccess]);
+    
+    // Cleanup function: clears the current timer when state changes
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+
+  }, [attemptIndex, currentPassword, isTyping, isError, currentAttempt, totalAttempts, onSuccess]);
 
   const getPasswordDisplay = () => {
     if (isTyping) {
       return currentPassword;
     }
-    // Show dots during login attempt
+    // Show dots during login attempt or error display
     return '•'.repeat(currentPassword.length);
   };
 
