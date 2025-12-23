@@ -1,7 +1,7 @@
 import React from 'react';
-import { Heart, MessageCircle, Bookmark, Lock, MoreHorizontal, User, Grid3x3 } from 'lucide-react';
+import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, User, ChevronDown } from 'lucide-react';
 import { ProfileData } from '../../types';
-import { useNavigate } from 'react-router-dom';
+import { cn } from '../lib/utils';
 
 interface InstagramFeedMockupProps {
   profileData: ProfileData;
@@ -9,117 +9,100 @@ interface InstagramFeedMockupProps {
 
 // Mock data for posts
 const mockPosts = [
-  { id: 1, imageUrl: 'https://picsum.photos/id/1018/600/600' },
-  { id: 2, imageUrl: 'https://picsum.photos/id/1025/600/600' },
-  { id: 3, imageUrl: 'https://picsum.photos/id/1033/600/600' },
-  { id: 4, imageUrl: 'https://picsum.photos/id/1040/600/600' },
-  { id: 5, imageUrl: 'https://picsum.photos/id/1041/600/600' },
-  { id: 6, imageUrl: 'https://picsum.photos/id/1042/600/600' },
+  { id: 1, imageUrl: 'https://picsum.photos/id/1018/600/600', caption: 'Um dia incrível na praia! ☀️🌊', likes: 1245, comments: 45 },
+  { id: 2, imageUrl: 'https://picsum.photos/id/1025/600/600', caption: 'Novo look para o inverno. O que acharam? 🧥', likes: 890, comments: 22 },
+  { id: 3, imageUrl: 'https://picsum.photos/id/1033/600/600', caption: 'Melhor café da cidade! ☕', likes: 2100, comments: 78 },
+  { id: 4, imageUrl: 'https://picsum.photos/id/1040/600/600', caption: 'TBT da viagem inesquecível. Saudades! ✈️', likes: 560, comments: 15 },
 ];
 
-const InstagramHeader: React.FC<{ username: string; isPrivate: boolean }> = ({ username, isPrivate }) => (
+const InstagramHeader: React.FC = () => (
   <header className="flex justify-between items-center p-3 border-b border-gray-800 bg-black sticky top-0 z-10">
-    <div className="w-8"></div> {/* Spacer */}
-    <div className="flex items-center gap-2">
-      {isPrivate && <Lock className="w-4 h-4 text-white" />}
-      <span className="font-bold text-white">{username}</span>
+    <img
+      src="/spygram_transparentebranco.png"
+      alt="Instagram Logo"
+      className="h-7"
+      style={{ filter: 'invert(1)' }}
+    />
+    <div className="flex items-center space-x-4">
+      <Heart className="w-6 h-6 text-white" />
+      <Send className="w-6 h-6 text-white" />
     </div>
-    <MoreHorizontal className="w-6 h-6 text-white" />
   </header>
 );
 
-const ProfileHeader: React.FC<{ profileData: ProfileData }> = ({ profileData }) => {
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
-    return num.toString();
-  };
-
-  return (
-    <div className="p-4">
-      {/* Profile Pic and Stats */}
-      <div className="flex items-center justify-between mb-4">
-        <img
-          src={profileData.profilePicUrl}
-          alt={profileData.username}
-          className="w-20 h-20 rounded-full object-cover"
-        />
-        <div className="flex gap-4 text-center">
-          <div>
-            <p className="font-bold text-lg">{formatNumber(profileData.postsCount)}</p>
-            <p className="text-gray-400 text-xs">Publicações</p>
-          </div>
-          <div>
-            <p className="font-bold text-lg">{formatNumber(profileData.followers)}</p>
-            <p className="text-gray-400 text-xs">Seguidores</p>
-          </div>
-          <div>
-            <p className="font-bold text-lg">{formatNumber(profileData.following)}</p>
-            <p className="text-gray-400 text-xs">Seguindo</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Name and Bio */}
-      <div>
-        <p className="font-semibold text-sm">{profileData.fullName}</p>
-        {profileData.biography && (
-          <p className="text-sm text-gray-300 whitespace-pre-wrap mt-1">
-            {profileData.biography}
-          </p>
-        )}
-      </div>
-
-      {/* Action Buttons (Locked) */}
-      <div className="mt-4 flex gap-2">
-        <button className="flex-1 bg-red-600/80 text-white text-sm font-semibold py-1.5 rounded-lg flex items-center justify-center gap-2">
-          <Lock className="w-3 h-3" />
-          <span>Seguir</span>
-        </button>
-        <button className="flex-1 bg-gray-700/80 text-white text-sm font-semibold py-1.5 rounded-lg flex items-center justify-center gap-2">
-          <Lock className="w-3 h-3" />
-          <span>Mensagem</span>
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const InstagramFooter: React.FC<{ profilePicUrl: string }> = ({ profilePicUrl }) => (
+const InstagramFooter: React.FC = () => (
   <footer className="flex justify-around items-center p-2 border-t border-gray-800 bg-black sticky bottom-0 z-10">
-    <User className="w-6 h-6 text-gray-500" />
+    <User className="w-6 h-6 text-white" />
     <Heart className="w-6 h-6 text-gray-500" />
     <MessageCircle className="w-6 h-6 text-gray-500" />
-    <img src={profilePicUrl} alt="Profile" className="w-6 h-6 rounded-full object-cover" />
+    <div className="w-6 h-6 bg-gray-500 rounded-full"></div> {/* Placeholder for profile pic */}
   </footer>
 );
 
-const LockedPostGrid: React.FC = () => {
-  const navigate = useNavigate();
+interface PostProps {
+  post: typeof mockPosts[0];
+  profileData: ProfileData;
+}
 
-  const handleUnlock = () => {
-    navigate('/credits');
-  };
+const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
+  const isLocked = true;
+  const blurClass = isLocked ? 'blur-md select-none' : '';
 
   return (
-    <div className="relative">
-      <div className="grid grid-cols-3 gap-0.5">
-        {mockPosts.map((post) => (
-          <div key={post.id} className="aspect-square bg-gray-800">
-            <img src={post.imageUrl} alt="Post" className="w-full h-full object-cover blur-md" />
-          </div>
-        ))}
+    <div className="border-b border-gray-800 mb-4">
+      {/* Post Header */}
+      <div className="flex items-center justify-between p-3">
+        <div className="flex items-center space-x-3">
+          <img
+            src={profileData.profilePicUrl}
+            alt={profileData.username}
+            className={cn("w-8 h-8 rounded-full object-cover", blurClass)}
+          />
+          <span className={cn("text-sm font-semibold text-white", blurClass)}>
+            {profileData.username}
+          </span>
+        </div>
+        <MoreHorizontal className="w-5 h-5 text-white" />
       </div>
-      <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm text-center p-4">
-        <Lock className="w-16 h-16 text-red-500 mb-4 animate-pulse" />
-        <p className="text-xl font-bold text-white">CONTEÚDO BLOQUEADO</p>
-        <p className="text-sm text-gray-400 mt-1">Acesso Premium Requerido para visualizar as publicações.</p>
-        <button 
-          onClick={handleUnlock}
-          className="mt-6 px-6 py-2 text-white font-semibold rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 hover:from-yellow-500 hover:via-pink-600 hover:to-purple-700"
-        >
-          Desbloquear Agora
-        </button>
+
+      {/* Post Image */}
+      <div className="relative w-full aspect-square bg-gray-900 flex items-center justify-center">
+        <img
+          src={post.imageUrl}
+          alt="Post"
+          className={cn("w-full h-full object-cover", blurClass)}
+        />
+        {isLocked && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
+            <Lock className="w-16 h-16 text-red-500 mb-4 animate-pulse" />
+            <p className="text-xl font-bold text-white">CONTEÚDO BLOQUEADO</p>
+            <p className="text-sm text-gray-400 mt-1">Acesso Premium Requerido</p>
+          </div>
+        )}
+      </div>
+
+      {/* Post Actions */}
+      <div className="flex justify-between items-center p-3">
+        <div className="flex space-x-4">
+          <Heart className="w-6 h-6 text-white" />
+          <MessageCircle className="w-6 h-6 text-white" />
+          <Send className="w-6 h-6 text-white" />
+        </div>
+        <Bookmark className="w-6 h-6 text-white" />
+      </div>
+
+      {/* Post Likes and Caption */}
+      <div className="px-3 pb-3 text-xs">
+        <p className={cn("font-semibold text-white mb-1", blurClass)}>
+          {isLocked ? '999.999' : new Intl.NumberFormat().format(post.likes)} curtidas
+        </p>
+        <p className="text-white">
+          <span className={cn("font-semibold mr-1", blurClass)}>{profileData.username}</span>
+          <span className={blurClass}>{post.caption}</span>
+        </p>
+        <p className="text-gray-500 mt-1">
+          Ver todos os {isLocked ? '999' : post.comments} comentários
+        </p>
       </div>
     </div>
   );
@@ -127,43 +110,42 @@ const LockedPostGrid: React.FC = () => {
 
 const InstagramFeedMockup: React.FC<InstagramFeedMockupProps> = ({ profileData }) => {
   return (
-    <div className="w-full max-w-md mx-auto bg-black min-h-screen flex flex-col shadow-2xl shadow-purple-500/20 border border-gray-800 rounded-lg overflow-hidden">
-      <InstagramHeader username={profileData.username} isPrivate={profileData.isPrivate} />
+    <div className="w-full max-w-md mx-auto bg-black min-h-screen flex flex-col shadow-2xl shadow-purple-500/20">
+      <InstagramHeader />
       
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
-        <ProfileHeader profileData={profileData} />
-        
-        {/* Stories Placeholder */}
-        <div className="flex p-3 space-x-3 border-y border-gray-800 overflow-x-auto flex-shrink-0 scrollbar-hide">
-          {Array(5).fill(0).map((_, index) => (
-            <div key={index} className="flex flex-col items-center flex-shrink-0">
-              <div className="w-14 h-14 rounded-full bg-gray-800 border-2 border-pink-500 p-0.5">
-                <img
-                  src={`https://picsum.photos/id/${100 + index}/50/50`}
-                  alt={`Story ${index}`}
-                  className="w-full h-full rounded-full object-cover blur-sm"
-                />
-              </div>
-              <span className="text-xs text-gray-400 mt-1 blur-sm select-none">amigo{index + 1}</span>
+      {/* Stories Placeholder */}
+      <div className="flex p-3 space-x-3 border-b border-gray-800 overflow-x-auto flex-shrink-0">
+        <div className="flex flex-col items-center">
+          <div className="w-14 h-14 rounded-full bg-gray-800 border-2 border-gray-600 flex items-center justify-center">
+            <ChevronDown className="w-4 h-4 text-white rotate-180" />
+          </div>
+          <span className="text-xs text-white mt-1">Seu story</span>
+        </div>
+        {Array(5).fill(0).map((_, index) => (
+          <div key={index} className="flex flex-col items-center flex-shrink-0">
+            <div className="w-14 h-14 rounded-full bg-gray-800 border-2 border-pink-500 p-0.5">
+              <img
+                src={`https://picsum.photos/id/${100 + index}/50/50`}
+                alt={`Story ${index}`}
+                className="w-full h-full rounded-full object-cover blur-sm"
+              />
             </div>
-          ))}
-        </div>
-
-        {/* Post Grid Tabs */}
-        <div className="flex justify-around border-b border-gray-800">
-          <div className="flex-1 text-center py-2 border-b-2 border-white">
-            <Grid3x3 className="w-6 h-6 text-white mx-auto" />
+            <span className="text-xs text-gray-400 mt-1 blur-sm select-none">amigo{index + 1}</span>
           </div>
-          <div className="flex-1 text-center py-2">
-            <Bookmark className="w-6 h-6 text-gray-500 mx-auto" />
-          </div>
-        </div>
-
-        {/* Feed Posts Grid */}
-        <LockedPostGrid />
+        ))}
       </div>
 
-      <InstagramFooter profilePicUrl={profileData.profilePicUrl} />
+      {/* Feed Posts */}
+      <div className="flex-1 overflow-y-auto">
+        {mockPosts.map((post) => (
+          <LockedPost key={post.id} post={post} profileData={profileData} />
+        ))}
+        <div className="text-center p-4 text-gray-500 text-sm">
+          Fim do feed por enquanto.
+        </div>
+      </div>
+
+      <InstagramFooter />
     </div>
   );
 };
