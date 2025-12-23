@@ -31,18 +31,20 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
       throw new Error(errorMessage);
     }
 
-    // A API agora retorna os dados na raiz, não mais em um objeto 'data'.
-    if (apiData && !apiData.error) {
+    // A API pode encapsular os dados em um objeto 'data'. Vamos lidar com ambos os casos.
+    const profileSource = apiData.data || apiData;
+
+    if (profileSource && !profileSource.error) {
       const profile: ProfileData = {
-        username: apiData.username,
-        fullName: apiData.full_name,
-        profilePicUrl: apiData.profile_pic_url || apiData.profile_pic_url_hd,
-        biography: apiData.biography,
-        followers: apiData.follower_count || (apiData.edge_followed_by ? apiData.edge_followed_by.count : 0),
-        following: apiData.following_count || (apiData.edge_follow ? apiData.edge_follow.count : 0),
-        postsCount: apiData.media_count || (apiData.edge_owner_to_timeline_media ? apiData.edge_owner_to_timeline_media.count : 0),
-        isVerified: apiData.is_verified,
-        isPrivate: apiData.is_private,
+        username: profileSource.username,
+        fullName: profileSource.full_name,
+        profilePicUrl: profileSource.profile_pic_url || profileSource.profile_pic_url_hd,
+        biography: profileSource.biography,
+        followers: profileSource.follower_count || (profileSource.edge_followed_by ? profileSource.edge_followed_by.count : 0),
+        following: profileSource.following_count || (profileSource.edge_follow ? profileSource.edge_follow.count : 0),
+        postsCount: profileSource.media_count || (profileSource.edge_owner_to_timeline_media ? profileSource.edge_owner_to_timeline_media.count : 0),
+        isVerified: profileSource.is_verified,
+        isPrivate: profileSource.is_private,
       };
 
       if (!profile.username) {
@@ -54,7 +56,7 @@ export const fetchProfileData = async (username: string): Promise<ProfileData> =
       return profile;
 
     } else {
-      const errorMessage = apiData.error || apiData.message || 'Perfil não encontrado ou não acessível.';
+      const errorMessage = (apiData.data && apiData.data.error) || apiData.error || apiData.message || 'Perfil não encontrado ou não acessível.';
       console.error(`[profileService] API returned an error: ${errorMessage}`);
       throw new Error(errorMessage);
     }
