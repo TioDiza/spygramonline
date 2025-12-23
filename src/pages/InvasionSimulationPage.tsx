@@ -13,18 +13,18 @@ import WebSidebar from '../components/WebSidebar';
 import WebSuggestions from '../components/WebSuggestions';
 import { getUserLocation, getCitiesByState } from '../services/geolocationService';
 import LockedFeatureModal from '../components/LockedFeatureModal';
-import { useAuth } from '../context/AuthContext'; // Importa o hook de autenticação
+import { useAuth } from '../context/AuthContext';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { login } = useAuth(); // Obtém a função de login do contexto
-  
-  const profileData = location.state?.profileData as ProfileData | undefined;
-  const apiSuggestedProfiles = location.state?.suggestedProfiles as SuggestedProfile[] | undefined;
-  const posts = location.state?.posts as FeedPost[] | undefined; // Recebe os posts
+  const { login, isLoggedIn } = useAuth();
+
+  const [profileData, setProfileData] = useState<ProfileData | undefined>();
+  const [apiSuggestedProfiles, setApiSuggestedProfiles] = useState<SuggestedProfile[] | undefined>();
+  const [posts, setPosts] = useState<FeedPost[] | undefined>();
 
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -33,23 +33,32 @@ const InvasionSimulationPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalFeatureName, setModalFeatureName] = useState('');
 
-  const handleLockedFeatureClick = useCallback((featureName: string) => {
-    setModalFeatureName(featureName);
-    setIsModalOpen(true);
-  }, []);
+  useEffect(() => {
+    let data;
+    if (location.state?.profileData) {
+      data = location.state;
+      sessionStorage.setItem('invasionData', JSON.stringify(data));
+    } else {
+      const storedData = sessionStorage.getItem('invasionData');
+      data = storedData ? JSON.parse(storedData) : null;
+    }
 
-  const closeModal = () => setIsModalOpen(false);
+    if (data?.profileData) {
+      setProfileData(data.profileData);
+      setApiSuggestedProfiles(data.suggestedProfiles);
+      setPosts(data.posts);
+    } else {
+      setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
+      toast.error('Nenhum dado de perfil encontrado. Redirecionando...');
+      setTimeout(() => navigate('/'), 3000);
+      setStage('error');
+    }
+  }, [location.state, navigate]);
 
   useEffect(() => {
-    const startSimulation = async () => {
-      if (!profileData) {
-        setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
-        toast.error('Nenhum dado de perfil encontrado. Redirecionando...');
-        setTimeout(() => navigate('/'), 3000);
-        setStage('error');
-        return;
-      }
+    if (!profileData) return;
 
+    const setupPage = async () => {
       try {
         const locationData = await getUserLocation();
         const stateCities = getCitiesByState(locationData.city, locationData.state);
@@ -58,21 +67,22 @@ const InvasionSimulationPage: React.FC = () => {
         const fallbackCities = getCitiesByState('São Paulo', 'São Paulo');
         setLocations(fallbackCities);
       }
-
       setIsApiDataAvailable(!!(apiSuggestedProfiles && apiSuggestedProfiles.length > 0));
+    };
+    setupPage();
 
+    if (isLoggedIn) {
+      setStage('feed_locked');
+    } else {
       const timeout = setTimeout(() => {
         setStage('login_attempt');
       }, 1000);
-
       return () => clearTimeout(timeout);
-    };
-
-    startSimulation();
-  }, [profileData, apiSuggestedProfiles, navigate]);
+    }
+  }, [profileData, apiSuggestedProfiles, isLoggedIn]);
 
   const handleLoginSuccess = useCallback(() => {
-    login(); // Define o estado como "logado"
+    login();
     setStage('success_card');
     toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
     
@@ -80,6 +90,13 @@ const InvasionSimulationPage: React.FC = () => {
       setStage('feed_locked');
     }, 2000);
   }, [profileData?.username, login]);
+
+  const handleLockedFeatureClick = useCallback((featureName: string) => {
+    setModalFeatureName(featureName);
+    setIsModalOpen(true);
+  }, []);
+
+  const closeModal = () => setIsModalOpen(false);
 
   if (!profileData) {
     return (
@@ -133,7 +150,7 @@ const InvasionSimulationPage: React.FC = () => {
               <InstagramFeedMockup 
                 profileData={profileData} 
                 suggestedProfiles={apiSuggestedProfiles || []} 
-                posts={posts || []} // Passa os posts
+                posts={posts || []}
                 isApiDataAvailable={isApiDataAvailable} 
                 locations={locations}
                 onLockedFeatureClick={handleLockedFeatureClick}
@@ -146,7 +163,7 @@ const InvasionSimulationPage: React.FC = () => {
                 <InstagramFeedContent 
                   profileData={profileData} 
                   suggestedProfiles={apiSuggestedProfiles || []} 
-                  posts={posts || []} // Passa os posts
+                  posts={posts || []}
                   isApiDataAvailable={isApiDataAvailable} 
                   locations={locations}
                   onLockedFeatureClick={handleLockedFeatureClick}

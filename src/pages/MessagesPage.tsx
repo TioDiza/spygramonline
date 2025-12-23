@@ -27,7 +27,7 @@ const MessagesPage: React.FC = () => {
   return (
     <div className="messages-page-container">
       <header className="messages-header">
-        <button onClick={() => navigate(-1)} className="p-1">
+        <button onClick={() => navigate('/invasion-simulation')} className="p-1">
           <ArrowLeft size={24} />
         </button>
         <div className="header-title">

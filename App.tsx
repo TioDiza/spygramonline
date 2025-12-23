@@ -92,12 +92,16 @@ const MainAppContent: React.FC = () => {
 
   const handleConfirmInvasion = useCallback(() => {
     if (confirmedProfileData) {
+      const invasionData = {
+        profileData: confirmedProfileData,
+        suggestedProfiles: confirmedSuggestions,
+        posts: confirmedPosts,
+      };
+      // Armazena os dados na sessão para persistir entre as páginas
+      sessionStorage.setItem('invasionData', JSON.stringify(invasionData));
+
       navigate('/invasion-simulation', { 
-        state: { 
-          profileData: confirmedProfileData,
-          suggestedProfiles: confirmedSuggestions,
-          posts: confirmedPosts // Passa os posts para a próxima página
-        } 
+        state: invasionData
       });
     }
   }, [confirmedProfileData, confirmedSuggestions, confirmedPosts, navigate]);
