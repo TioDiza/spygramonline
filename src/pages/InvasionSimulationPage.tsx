@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import type { ProfileData } from '../../types';
 import InstagramLoginSimulator from '../components/InstagramLoginSimulator';
 import InstagramFeedMockup from '../components/InstagramFeedMockup';
+import InvasionSuccessCard from '../components/InvasionSuccessCard'; // New import
 import Loader from '../components/Loader';
 import ErrorMessage from '../components/ErrorMessage';
 import { mockProfileData } from '../services/profileService';
@@ -10,7 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 
 // Define os estados da simulação
-type SimulationStage = 'loading' | 'login_attempt' | 'feed_locked' | 'error';
+type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
@@ -48,9 +49,14 @@ const InvasionSimulationPage: React.FC = () => {
   }, [profileData, navigate, isMockData]);
 
   const handleLoginSuccess = () => {
-    // Transição para o feed bloqueado
-    setStage('feed_locked');
+    // 1. Transição para o card de sucesso
+    setStage('success_card');
     toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
+
+    // 2. Após 2 segundos, transição para o feed bloqueado
+    setTimeout(() => {
+      setStage('feed_locked');
+    }, 2000);
   };
 
   if (!profileData) {
@@ -99,6 +105,19 @@ const InvasionSimulationPage: React.FC = () => {
               profileData={profileData} 
               onSuccess={handleLoginSuccess} 
             />
+          </motion.div>
+        )}
+        
+        {stage === 'success_card' && (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-md flex flex-col items-center justify-center min-h-[600px]"
+          >
+            <InvasionSuccessCard profileData={profileData} />
           </motion.div>
         )}
 

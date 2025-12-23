@@ -10,9 +10,9 @@ import LoginPage from '@/src/pages/LoginPage';
 import ServersPage from '@/src/pages/ServersPage';
 import CreditsPage from '@/src/pages/CreditsPage';
 import ProgressBar from '@/src/components/ProgressBar';
-import InvasionSimulationPage from '@/src/pages/InvasionSimulationPage'; // New import
+import InvasionSimulationPage from '@/src/pages/InvasionSimulationPage';
 import { MIN_LOADING_DURATION } from './constants';
-import { fetchProfileData, mockProfileData } from './src/services/profileService';
+import { fetchProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
 
@@ -23,39 +23,14 @@ const MainAppContent: React.FC = () => {
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
-  const [loadingStartTime, setLoadingStartTime] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  // Mensagens para a sequência de carregamento
-  const loadingMessages = [
-    ">> INVASÃO INICIADA: rompendo defesas...",
-    ">> ACESSO FORÇADO: credenciais localizadas.",
-    ">> VARREDURA INTENSA: exfiltrando artefatos — stream ativo.",
-    ">> QUEBRA DE CAMADAS: token mock capturado — elevando privilégios.",
-    ">> MINERANDO HISTÓRICO: reconstruindo contatos e conversas.",
-    ">> ENTRADA COMPROMETIDA: mantendo backdoor.",
-    ">> OPERAÇÃO CONCLUÍDA: implante fantasma adicionado — rastros limpos.",
-    "Perfil Invadido com Sucesso"
-  ];
-  const [displayedMessages, setDisplayedMessages] = useState<{ text: string; timestamp: string }[]>([]);
-  const [areMessagesDone, setAreMessagesDone] = useState<boolean>(false);
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isLoading) {
       setProgressBarProgress(0); // Resetar o progresso ao iniciar o carregamento
-      // Captura o horário de início do carregamento
-      const now = new Date();
-      setLoadingStartTime(
-        new Intl.DateTimeFormat('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          timeZone: 'America/Sao_Paulo',
-        }).format(now)
-      );
-
+      
       interval = setInterval(() => {
         setProgressBarProgress((prev: number) => {
           // Incrementa lentamente até ~95% enquanto o carregamento está ativo
@@ -68,7 +43,6 @@ const MainAppContent: React.FC = () => {
     } else {
       setProgressBarProgress(100); // Garante que a barra chegue a 100% quando o carregamento termina
       if (interval) clearInterval(interval);
-      setLoadingStartTime(null); // Limpa o horário de início quando o carregamento termina
     }
     return () => {
       if (interval) clearInterval(interval);
@@ -88,50 +62,20 @@ const MainAppContent: React.FC = () => {
     setIsLoading(true);
     setError(null);
     setProgressBarProgress(0); // Garante que a barra comece do zero
-    setDisplayedMessages([]); // Clear messages for new search
-    setAreMessagesDone(false); // Reset message completion state
 
     try {
       // 1. Inicia a busca de dados da API imediatamente
       const fetchPromise = fetchProfileData(searchQuery.trim());
 
-      // 2. Inicia a exibição das mensagens de carregamento em segundo plano
-      const messageDisplayPromise = (async () => {
-        for (let i = 0; i < loadingMessages.length; i++) {
-          await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5 segundos de atraso por mensagem
-          const messageText = loadingMessages[i];
-          const now = new Date();
-          const timestamp = new Intl.DateTimeFormat('pt-BR', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: 'America/Sao_Paulo',
-          }).format(now);
-          setDisplayedMessages((prev: { text: string; timestamp: string }[]) => [...prev, { text: messageText, timestamp }]);
-        }
-        setAreMessagesDone(true); // Marca as mensagens como concluídas
-      })();
-
-      // 3. Garante uma duração mínima de carregamento para a interface
+      // 2. Garante uma duração mínima de carregamento para a interface
       const minimumDurationPromise = new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
 
-      // 4. Aguarda todas as promessas: busca de dados, exibição de mensagens e duração mínima
+      // 3. Aguarda a busca de dados e a duração mínima
       const [fetchedProfileData] = await Promise.all([
         fetchPromise,
-        messageDisplayPromise,
         minimumDurationPromise,
       ]);
 
-      console.log('Fetched profile data (before mock check in App.tsx):', fetchedProfileData);
-
-      // VERIFICAÇÃO EXPLÍCITA PARA DADOS MOCKADOS RETORNADOS PELO BACKEND
-      if (fetchedProfileData.username === mockProfileData.username &&
-          fetchedProfileData.fullName === mockProfileData.fullName &&
-          fetchedProfileData.profilePicUrl === mockProfileData.profilePicUrl) {
-        // Se for mock data, ainda navegamos, mas a página de simulação deve lidar com isso
-        console.warn('Using mock data due to backend failure.');
-      }
-      
       console.log('Navigating to /invasion-simulation with profileData for:', fetchedProfileData.username);
       navigate('/invasion-simulation', { state: { profileData: fetchedProfileData } });
 
@@ -145,10 +89,8 @@ const MainAppContent: React.FC = () => {
     } finally {
       setIsLoading(false);
       setProgressBarProgress(100);
-      setLoadingStartTime(null);
-      setAreMessagesDone(true); // Garante que isso seja verdadeiro mesmo em caso de erro
     }
-  }, [searchQuery, hasConsented, navigate, loadingMessages]);
+  }, [searchQuery, hasConsented, navigate]);
 
   return (
     <div className="min-h-screen">
@@ -249,54 +191,7 @@ const MainAppContent: React.FC = () => {
           {isLoading ? (
             <div className="mt-4 w-full max-w-2xl mx-auto bg-black backdrop-blur-sm border border-white rounded-3xl shadow-lg shadow-purple-500/10 p-8 transition-all duration-300 animate-fade-in flex flex-col items-center justify-center min-h-[150px]">
               <Loader />
-              {loadingStartTime && (
-                <p className="text-sm text-gray-500 mb-4">Início: {loadingStartTime}</p>
-              )}
-              
-              {/* Renderiza as mensagens uma por uma */}
-              {displayedMessages.map((msgObj, idx) => {
-                const { text, timestamp } = msgObj;
-                const isLastMessage = idx === loadingMessages.length - 1;
-
-                if (isLastMessage) {
-                  return (
-                    <p key={idx} className="text-xl font-bold mt-4 animate-fade-in flex items-start">
-                      <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
-                        {text}
-                      </span>
-                    </p>
-                  );
-                }
-
-                const prefixMatch = text.match(/^(>>[^:]+?:)/);
-                if (prefixMatch) {
-                  const prefix = prefixMatch[1];
-                  const suffix = text.substring(prefix.length);
-                  return (
-                    <p key={idx} className="text-base mt-2 animate-fade-in flex items-start">
-                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span>
-                      <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
-                        {prefix}
-                      </span>
-                      <span className="text-gray-400">{suffix}</span>
-                    </p>
-                  );
-                } else {
-                  return (
-                    <p key={idx} className="text-base text-gray-400 mt-2 animate-fade-in flex items-start">
-                      <span className="text-gray-500 mr-2 w-20 flex-shrink-0 text-left">[{timestamp}]</span>
-                      {text}
-                    </p>
-                  );
-                }
-              })}
-
-              {/* Mostra uma mensagem final após a sequência de mensagens */}
-              {areMessagesDone && (
-                <p className="text-base text-gray-400 mt-4 animate-fade-in">
-                  Finalizando invasão e limpando rastros...
-                </p>
-              )}
+              <h1 className="text-xl font-bold mt-4 text-gray-400">Buscando dados do perfil...</h1>
             </div>
           ) : (
             <>
