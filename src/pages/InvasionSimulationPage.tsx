@@ -15,6 +15,16 @@ import { fetchSuggestedProfiles } from '../services/profileService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
+// Dados de fallback para usar quando a API falhar
+const mockSuggestedProfiles: SuggestedProfile[] = [
+  { username: 'reactjs', profile_pic_url: 'https://i.pravatar.cc/150?u=reactjs' },
+  { username: 'tailwindcss', profile_pic_url: 'https://i.pravatar.cc/150?u=tailwindcss' },
+  { username: 'neymarjr', profile_pic_url: 'https://i.pravatar.cc/150?u=neymarjr' },
+  { username: 'nasa', profile_pic_url: 'https://i.pravatar.cc/150?u=nasa' },
+  { username: 'spacex', profile_pic_url: 'https://i.pravatar.cc/150?u=spacex' },
+  { username: 'microsoft', profile_pic_url: 'https://i.pravatar.cc/150?u=microsoft' },
+];
+
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,9 +47,16 @@ const InvasionSimulationPage: React.FC = () => {
 
     // Inicia a busca pelos perfis sugeridos em segundo plano
     const getSuggestions = async () => {
-      const suggestions = await fetchSuggestedProfiles(profileData.username);
+      let suggestions = await fetchSuggestedProfiles(profileData.username);
+      
+      // Se a API falhar ou retornar uma lista vazia, usa os dados de fallback
+      if (suggestions.length === 0) {
+        console.warn('[InvasionSimulationPage] API de sugestões falhou. Usando dados de fallback.');
+        suggestions = mockSuggestedProfiles;
+      }
+
       setSuggestedProfiles(suggestions);
-      // Quando a API terminar, sinaliza para o simulador parar
+      // Quando a busca (bem-sucedida ou não) terminar, sinaliza para o simulador parar
       setIsHacking(false);
     };
     getSuggestions();
@@ -61,7 +78,7 @@ const InvasionSimulationPage: React.FC = () => {
     setTimeout(() => {
       setStage('feed_locked');
     }, 2000); // 2 segundos na tela de sucesso
-  }, [profileData?.username, navigate]);
+  }, [profileData?.username]);
 
   if (!profileData) {
     return (
