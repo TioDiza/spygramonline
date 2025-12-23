@@ -10,13 +10,12 @@ import ServersPage from '@/src/pages/ServersPage';
 import CreditsPage from '@/src/pages/CreditsPage';
 import ProgressBar from '@/src/components/ProgressBar';
 import InvasionSimulationPage from '@/src/pages/InvasionSimulationPage';
-import ProfileConfirmationCard from '@/src/components/ProfileConfirmationCard'; // Importar novo componente
+import ProfileConfirmationCard from '@/src/components/ProfileConfirmationCard';
 import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
-import { ProfileData } from './types'; // Importar ProfileData
-import { ChristmasSnowfall } from './src/components/ui/ChristmasSnowfall';
+import { ProfileData } from './types';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -25,26 +24,25 @@ const MainAppContent: React.FC = () => {
   const [hasConsented, setHasConsented] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [progressBarProgress, setProgressBarProgress] = useState(0);
-  const [confirmedProfileData, setConfirmedProfileData] = useState<ProfileData | null>(null); // Novo estado para dados confirmados
+  const [confirmedProfileData, setConfirmedProfileData] = useState<ProfileData | null>(null);
   const navigate = useNavigate();
 
   // Efeito para simular o progresso da barra enquanto isLoading está ativo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isLoading) {
-      setProgressBarProgress(0); // Resetar o progresso ao iniciar o carregamento
+      setProgressBarProgress(0);
       
       interval = setInterval(() => {
         setProgressBarProgress((prev: number) => {
-          // Incrementa lentamente até ~95% enquanto o carregamento está ativo
           if (prev < 95) {
             return prev + 1;
           }
           return prev;
         });
-      }, 100); // Atualiza a cada 100ms
+      }, 100);
     } else {
-      setProgressBarProgress(100); // Garante que a barra chegue a 100% quando o carregamento termina
+      setProgressBarProgress(100);
       if (interval) clearInterval(interval);
     }
     return () => {
@@ -62,37 +60,27 @@ const MainAppContent: React.FC = () => {
       return;
     }
 
-    // Inicia o carregamento e a barra de progresso
     setIsLoading(true);
     setError(null);
     setProgressBarProgress(0);
-    setConfirmedProfileData(null); // Limpa qualquer confirmação anterior
+    setConfirmedProfileData(null);
 
     try {
-      // 1. Inicia a busca de dados da API imediatamente
       const fetchPromise = fetchProfileData(searchQuery.trim());
-
-      // 2. Garante uma duração mínima de carregamento para a interface
       const minimumDurationPromise = new Promise(resolve => setTimeout(resolve, MIN_LOADING_DURATION));
-
-      // 3. Aguarda a busca de dados e a duração mínima
       const [fetchedProfileData] = await Promise.all([
         fetchPromise,
         minimumDurationPromise,
       ]);
-
-      // Em vez de navegar, armazena os dados para confirmação
       setConfirmedProfileData(fetchedProfileData);
-
     } catch (err) {
       if (err instanceof Error) {
         setError(`Erro ao buscar perfil: ${err.message}`);
       } else {
         setError('Ocorreu um erro inesperado ao buscar o perfil.');
       }
-      console.error('Error during search process:', err); // Log de erro detalhado
+      console.error('Error during search process:', err);
     } finally {
-      // O estado de loading é resetado
       setIsLoading(false);
       setProgressBarProgress(100);
     }
@@ -100,34 +88,30 @@ const MainAppContent: React.FC = () => {
 
   const handleConfirmInvasion = useCallback(() => {
     if (confirmedProfileData) {
-      // Navega para a simulação com os dados confirmados
       navigate('/invasion-simulation', { state: { profileData: confirmedProfileData } });
     }
   }, [confirmedProfileData, navigate]);
 
   const handleCorrectUsername = useCallback(() => {
-    // Limpa os dados de confirmação e o erro, permitindo nova busca
     setConfirmedProfileData(null);
     setSearchQuery('');
     setError(null);
   }, []);
 
-  // Se houver dados para confirmar, renderiza o card de confirmação
   if (confirmedProfileData) {
     return (
-      <ChristmasSnowfall className="min-h-screen bg-black flex items-center justify-center p-4">
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
         <ProfileConfirmationCard
           profileData={confirmedProfileData}
           onConfirm={handleConfirmInvasion}
           onCorrect={handleCorrectUsername}
         />
-      </ChristmasSnowfall>
+      </div>
     );
   }
 
-  // Se não houver dados para confirmar, renderiza a tela de busca principal
   return (
-    <ChristmasSnowfall className="min-h-screen">
+    <div className="min-h-screen bg-black">
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full">
         <style>{`
@@ -240,7 +224,7 @@ const MainAppContent: React.FC = () => {
           <p>Todos os direitos reservados a SpyGram</p>
         </footer>
       </div>
-    </ChristmasSnowfall>
+    </div>
   );
 };
 
@@ -251,7 +235,7 @@ const App: React.FC = () => {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<MainAppContent />} />
-          <Route path="/invasion-simulation" element={<InvasionSimulationPage />} /> {/* New Route */}
+          <Route path="/invasion-simulation" element={<InvasionSimulationPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route 
             path="/servers" 
