@@ -13,12 +13,14 @@ import WebSidebar from '../components/WebSidebar';
 import WebSuggestions from '../components/WebSuggestions';
 import { getUserLocation, getCitiesByState } from '../services/geolocationService';
 import LockedFeatureModal from '../components/LockedFeatureModal';
+import { useAuth } from '../context/AuthContext'; // Importa o hook de autenticação
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { login } = useAuth(); // Obtém a função de login do contexto
   
   const profileData = location.state?.profileData as ProfileData | undefined;
   const apiSuggestedProfiles = location.state?.suggestedProfiles as SuggestedProfile[] | undefined;
@@ -70,13 +72,14 @@ const InvasionSimulationPage: React.FC = () => {
   }, [profileData, apiSuggestedProfiles, navigate]);
 
   const handleLoginSuccess = useCallback(() => {
+    login(); // Define o estado como "logado"
     setStage('success_card');
     toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
     
     setTimeout(() => {
       setStage('feed_locked');
     }, 2000);
-  }, [profileData?.username]);
+  }, [profileData?.username, login]);
 
   if (!profileData) {
     return (
