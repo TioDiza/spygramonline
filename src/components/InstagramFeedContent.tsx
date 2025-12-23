@@ -1,8 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, Home, Plus, ChevronDown, Search, Clapperboard } from 'lucide-react';
 import { ProfileData, SuggestedProfile, FeedPost } from '../../types';
 import LockedStory from './LockedStory';
-import toast from 'react-hot-toast';
 
 const RANDOM_USER_NAMES = ['Bruna', 'Carlos', 'Pedro', 'Sofia', 'Lucas', 'Julia', 'Maria', 'Joao', 'Ana', 'Matheus'];
 
@@ -27,24 +27,28 @@ const InstagramHeader: React.FC<ClickableProps> = ({ onLockedFeatureClick }) => 
   </header>
 );
 
-const InstagramFooter: React.FC<{ profileData: ProfileData } & ClickableProps> = ({ profileData, onLockedFeatureClick }) => (
-  <footer className="flex justify-around items-center py-3 border-t border-gray-800 bg-black sticky bottom-0 z-10 md:hidden">
-    <button onClick={() => onLockedFeatureClick('acessar a página inicial')}><Home className="w-7 h-7 text-white" fill="white" /></button>
-    <button onClick={() => onLockedFeatureClick('fazer uma pesquisa')}><Search className="w-7 h-7 text-white" /></button>
-    <button onClick={() => onLockedFeatureClick('ver os Reels')}><Clapperboard className="w-7 h-7 text-white" /></button>
-    <button onClick={() => toast.success('Carregando mensagens...')} className="relative">
-      <Send className="w-7 h-7 text-white" />
-      <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-black"></div>
-    </button>
-    <button onClick={() => onLockedFeatureClick('ver o seu perfil')}>
-      <img src={profileData.profilePicUrl} alt={profileData.username} className="w-7 h-7 rounded-full object-cover" />
-    </button>
-  </footer>
-);
+const InstagramFooter: React.FC<{ profileData: ProfileData } & ClickableProps> = ({ profileData, onLockedFeatureClick }) => {
+  const navigate = useNavigate();
+  return (
+    <footer className="flex justify-around items-center py-3 border-t border-gray-800 bg-black sticky bottom-0 z-10 md:hidden">
+      <button onClick={() => onLockedFeatureClick('acessar a página inicial')}><Home className="w-7 h-7 text-white" fill="white" /></button>
+      <button onClick={() => onLockedFeatureClick('fazer uma pesquisa')}><Search className="w-7 h-7 text-white" /></button>
+      <button onClick={() => onLockedFeatureClick('ver os Reels')}><Clapperboard className="w-7 h-7 text-white" /></button>
+      <button onClick={() => navigate('/messages')} className="relative">
+        <Send className="w-7 h-7 text-white" />
+        <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-black"></div>
+      </button>
+      <button onClick={() => onLockedFeatureClick('ver o seu perfil')}>
+        <img src={profileData.profilePicUrl} alt={profileData.username} className="w-7 h-7 rounded-full object-cover" />
+      </button>
+    </footer>
+  );
+};
 
 const RealPost: React.FC<{ postData: FeedPost; location?: string } & ClickableProps> = ({ postData, location, onLockedFeatureClick }) => {
   const { de_usuario, post } = postData;
   const maskedUsername = maskUsername(de_usuario.username);
+  const navigate = useNavigate();
 
   return (
     <div className="border-b border-gray-800 mb-4">
@@ -69,7 +73,7 @@ const RealPost: React.FC<{ postData: FeedPost; location?: string } & ClickablePr
         <div className="flex space-x-4">
           <button onClick={() => onLockedFeatureClick('curtir publicações')}><Heart className="w-6 h-6 text-white" /></button>
           <button onClick={() => onLockedFeatureClick('ver os comentários')}><MessageCircle className="w-6 h-6 text-white" /></button>
-          <button onClick={() => toast.success('Carregando mensagens...')}><Send className="w-6 h-6 text-white" /></button>
+          <button onClick={() => navigate('/messages')}><Send className="w-6 h-6 text-white" /></button>
         </div>
         <button onClick={() => onLockedFeatureClick('salvar publicações')}><Bookmark className="w-6 h-6 text-white" /></button>
       </div>

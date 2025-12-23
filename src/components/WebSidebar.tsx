@@ -1,7 +1,7 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Home, Search, Compass, Clapperboard, Send, Heart, PlusSquare, Menu } from 'lucide-react';
 import { ProfileData } from '../../types';
-import toast from 'react-hot-toast';
 
 interface NavItemProps {
   icon: React.ElementType;
@@ -23,8 +23,10 @@ interface WebSidebarProps {
 }
 
 const WebSidebar: React.FC<WebSidebarProps> = ({ profileData, onLockedFeatureClick }) => {
+  const navigate = useNavigate();
+
   const handleMessagesClick = () => {
-    toast.success('Carregando mensagens...');
+    navigate('/messages');
   };
 
   return (

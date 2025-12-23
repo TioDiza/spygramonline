@@ -1,0 +1,203 @@
+/* Reset e Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    hyphens: none;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+}
+
+html, body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #000000; /* Fundo preto sólido para consistência */
+    color: #F9F9F9;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.messages-page-container {
+    background-color: #000000;
+    color: #F9F9F9;
+    min-height: 100vh;
+    max-width: 450px; /* Limita a largura em telas maiores */
+    margin: 0 auto;
+    border-left: 1px solid #262626; /* Bordas sutis para simular o app */
+    border-right: 1px solid #262626;
+}
+
+/* Header */
+.messages-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #262626;
+    background-color: #000;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Search Bar */
+.search-bar-container {
+    padding: 0.5rem 1rem;
+}
+
+.search-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    background-color: #262626;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 2.5rem;
+    color: #F9F9F9;
+    font-size: 1rem;
+}
+
+.search-input::placeholder {
+    color: #8e8e8e;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #8e8e8e;
+}
+
+/* Message List */
+.messages-list {
+    padding: 0 1rem;
+}
+
+.message-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.message-item:hover {
+    background-color: #1a1a1a;
+}
+
+.message-avatar-wrapper {
+    position: relative;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.message-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.online-indicator {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
+    background-color: #31d049;
+    border: 2px solid #000;
+    border-radius: 50%;
+}
+
+.message-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.message-name {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #f5f5f5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message-name.unread {
+    font-weight: 600;
+}
+
+.message-preview {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #a8a8a8;
+}
+
+.message-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 0.25rem;
+}
+
+.message-text.unread {
+    color: #f5f5f5;
+    font-weight: 600;
+}
+
+.message-time::before {
+    content: '·';
+    margin: 0 0.25rem;
+}
+
+.message-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 0.75rem;
+}
+
+.unread-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #3797f0;
+    border-radius: 50%;
+}
+
+/* Locked State */
+.locked .message-avatar {
+    filter: blur(4px);
+}
+
+.locked .message-name,
+.locked .message-text,
+.locked .message-time {
+    filter: blur(4px);
+    user-select: none;
+}

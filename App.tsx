@@ -8,6 +8,7 @@ import { Lock } from 'lucide-react';
 import LoginPage from '@/src/pages/LoginPage';
 import ServersPage from '@/src/pages/ServersPage';
 import CreditsPage from '@/src/pages/CreditsPage';
+import MessagesPage from '@/src/pages/MessagesPage'; // Importa a nova página
 import ProgressBar from '@/src/components/ProgressBar';
 import InvasionSimulationPage from '@/src/pages/InvasionSimulationPage';
 import ProfileConfirmationCard from '@/src/components/ProfileConfirmationCard';
@@ -261,6 +262,14 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <CreditsPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/messages" 
+            element={
+              <ProtectedRoute>
+                <MessagesPage />
               </ProtectedRoute>
             } 
           />
