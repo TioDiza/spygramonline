@@ -1,31 +1,35 @@
 import React from 'react';
-import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, Home } from 'lucide-react';
+import { Heart, MessageCircle, Send, Bookmark, Lock, MoreHorizontal, Home, Plus, ChevronDown, Search, Clapperboard } from 'lucide-react';
 import { ProfileData } from '../../types';
 import { cn } from '../lib/utils';
 
-interface InstagramFeedContentProps {
-  profileData: ProfileData;
-}
-
-// Mock data for posts
+// Mock data for posts, including a sponsored one
 const mockPosts = [
-  { id: 1, imageUrl: 'https://picsum.photos/id/1018/600/600', caption: 'Um dia incrível na praia! ☀️🌊', likes: 1245, comments: 45 },
+  { id: 1, imageUrl: 'https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6', caption: 'HOJE - VIRADA DE LOTE', likes: 1245, comments: 45, sponsored: true, sponsorName: 'reveillonfestival', sponsorPic: 'https://i.pravatar.cc/150?u=reveillon' },
   { id: 2, imageUrl: 'https://picsum.photos/id/1025/600/600', caption: 'Novo look para o inverno. O que acharam? 🧥', likes: 890, comments: 22 },
   { id: 3, imageUrl: 'https://picsum.photos/id/1033/600/600', caption: 'Melhor café da cidade! ☕', likes: 2100, comments: 78 },
-  { id: 4, imageUrl: 'https://picsum.photos/id/1040/600/600', caption: 'TBT da viagem inesquecível. Saudades! ✈️', likes: 560, comments: 15 },
+];
+
+// Mock data for stories with different states (live, seen, unseen)
+const mockStories = [
+  { username: 'beltran', live: true, imageUrl: 'https://i.pravatar.cc/150?u=beltran' },
+  { username: 'brendalabanca_', live: false, seen: false, imageUrl: 'https://i.pravatar.cc/150?u=brenda' },
+  { username: 'gabrielbianchin...', live: false, seen: false, imageUrl: 'https://i.pravatar.cc/150?u=gabriel' },
+  { username: 'reactjs', live: false, seen: true, imageUrl: 'https://i.pravatar.cc/150?u=react' },
+  { username: 'tailwindcss', live: false, seen: true, imageUrl: 'https://i.pravatar.cc/150?u=tailwind' },
 ];
 
 const InstagramHeader: React.FC = () => (
-  <header className="flex justify-between items-center p-3 border-b border-gray-800 bg-black sticky top-0 z-10 md:hidden">
-    <img
-      src="/spygram_transparentebranco.png"
-      alt="Instagram Logo"
-      className="h-7"
-      style={{ filter: 'invert(1)' }}
-    />
-    <div className="flex items-center space-x-4">
-      <Heart className="w-6 h-6 text-white" />
-      <Send className="w-6 h-6 text-white" />
+  <header className="grid grid-cols-3 items-center px-4 py-2 border-b border-gray-800 bg-black sticky top-0 z-10 md:hidden">
+    <div className="flex justify-start">
+      <Plus className="w-8 h-8 text-white" />
+    </div>
+    <div className="flex justify-center items-center gap-1 cursor-pointer">
+      <h1 className="text-3xl text-white font-serif italic" style={{fontFamily: "cursive"}}>Instagram</h1>
+      <ChevronDown className="w-5 h-5 text-white mt-1" />
+    </div>
+    <div className="flex justify-end">
+      <Heart className="w-7 h-7 text-white" />
     </div>
   </header>
 );
@@ -35,14 +39,18 @@ interface InstagramFooterProps {
 }
 
 const InstagramFooter: React.FC<InstagramFooterProps> = ({ profileData }) => (
-  <footer className="flex justify-around items-center p-2 border-t border-gray-800 bg-black sticky bottom-0 z-10 md:hidden">
-    <Home className="w-6 h-6 text-white" />
-    <Heart className="w-6 h-6 text-gray-500" />
-    <MessageCircle className="w-6 h-6 text-gray-500" />
+  <footer className="flex justify-around items-center py-3 border-t border-gray-800 bg-black sticky bottom-0 z-10 md:hidden">
+    <Home className="w-7 h-7 text-white" fill="white" />
+    <Search className="w-7 h-7 text-white" />
+    <Clapperboard className="w-7 h-7 text-white" />
+    <div className="relative">
+      <Send className="w-7 h-7 text-white" />
+      <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-black"></div>
+    </div>
     <img
       src={profileData.profilePicUrl}
       alt={profileData.username}
-      className="w-6 h-6 rounded-full object-cover"
+      className="w-7 h-7 rounded-full object-cover"
     />
   </footer>
 );
@@ -55,28 +63,34 @@ interface PostProps {
 const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
   const isLocked = true;
   const blurClass = isLocked ? 'blur-md select-none' : '';
+  const postUser = post.sponsored 
+    ? { username: post.sponsorName, profilePicUrl: post.sponsorPic } 
+    : profileData;
 
   return (
     <div className="border-b border-gray-800 mb-4">
       <div className="flex items-center justify-between p-3">
         <div className="flex items-center space-x-3">
           <img
-            src={profileData.profilePicUrl}
-            alt={profileData.username}
+            src={postUser.profilePicUrl}
+            alt={postUser.username}
             className={cn("w-8 h-8 rounded-full object-cover", blurClass)}
           />
-          <span className={cn("text-sm font-semibold text-white", blurClass)}>
-            {profileData.username}
-          </span>
+          <div>
+            <p className={cn("text-sm font-semibold text-white", blurClass)}>
+              {postUser.username}
+            </p>
+            {post.sponsored && <p className={cn("text-xs text-gray-400", blurClass)}>Patrocinado</p>}
+          </div>
         </div>
         <MoreHorizontal className="w-5 h-5 text-white" />
       </div>
 
-      <div className="relative w-full aspect-square bg-gray-900 flex items-center justify-center">
+      <div className="relative w-full bg-gray-900 flex items-center justify-center">
         <img
           src={post.imageUrl}
           alt="Post"
-          className={cn("w-full h-full object-cover", blurClass)}
+          className={cn("w-full h-auto object-contain", blurClass)}
         />
         {isLocked && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -101,7 +115,7 @@ const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
           {isLocked ? '999.999' : new Intl.NumberFormat().format(post.likes)} curtidas
         </p>
         <p className="text-white">
-          <span className={cn("font-semibold mr-1", blurClass)}>{profileData.username}</span>
+          <span className={cn("font-semibold mr-1", blurClass)}>{postUser.username}</span>
           <span className={blurClass}>{post.caption}</span>
         </p>
         <p className="text-gray-500 mt-1">
@@ -112,35 +126,50 @@ const LockedPost: React.FC<PostProps> = ({ post, profileData }) => {
   );
 };
 
-const InstagramFeedContent: React.FC<InstagramFeedContentProps> = ({ profileData }) => {
+const InstagramFeedContent: React.FC<{ profileData: ProfileData }> = ({ profileData }) => {
   return (
     <>
       <InstagramHeader />
       
       <div className="flex-1 overflow-y-auto scrollbar-hide">
-        <div className="flex p-3 space-x-3 border-b border-gray-800 overflow-x-auto flex-shrink-0 scrollbar-hide md:my-4">
-          <div className="flex flex-col items-center flex-shrink-0">
-            <div className="w-14 h-14 rounded-full bg-gray-800 border-2 border-pink-500 p-0.5">
+        {/* Stories */}
+        <div className="flex p-3 space-x-4 border-b border-gray-800 overflow-x-auto flex-shrink-0 scrollbar-hide">
+          {/* Your Story */}
+          <div className="flex flex-col items-center flex-shrink-0 space-y-1">
+            <div className="relative">
               <img
                 src={profileData.profilePicUrl}
-                alt={profileData.username}
-                className="w-full h-full rounded-full object-cover"
+                alt="Seu story"
+                className="w-16 h-16 rounded-full object-cover"
               />
-            </div>
-            <span className="text-xs text-white mt-1 truncate w-14 text-center">{profileData.username}</span>
-          </div>
-          {Array(8).fill(0).map((_, index) => (
-            <div key={index} className="flex flex-col items-center flex-shrink-0">
-              <div className="w-14 h-14 rounded-full bg-gray-800 border-2 border-pink-500 p-0.5">
-                <img
-                  src={`https://picsum.photos/id/${100 + index}/50/50`}
-                  alt={`Story ${index}`}
-                  className="w-full h-full rounded-full object-cover blur-sm"
-                />
+              <div className="absolute bottom-0 right-0 w-6 h-6 bg-blue-500 rounded-full border-2 border-black flex items-center justify-center">
+                <Plus className="w-4 h-4 text-white" />
               </div>
-              <span className="text-xs text-gray-400 mt-1 blur-sm select-none">amigo{index + 1}</span>
             </div>
-          ))}
+            <span className="text-xs text-gray-400">Seu story</span>
+          </div>
+
+          {/* Other Stories */}
+          {mockStories.map((story, index) => {
+            const ringClass = story.live 
+              ? 'bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600' 
+              : story.seen 
+                ? 'bg-gray-700' 
+                : 'bg-green-500';
+            return (
+              <div key={index} className="flex flex-col items-center flex-shrink-0 space-y-1 text-center relative">
+                <div className={`w-[70px] h-[70px] rounded-full flex items-center justify-center p-0.5 ${ringClass}`}>
+                  <div className="bg-black p-1 rounded-full">
+                    <img src={story.imageUrl} alt={story.username} className="w-full h-full rounded-full object-cover" />
+                  </div>
+                </div>
+                {story.live && (
+                  <span className="absolute bottom-6 text-[10px] bg-red-500 text-white font-bold px-1.5 py-0.5 rounded-md border-2 border-black uppercase">Ao vivo</span>
+                )}
+                <span className="text-xs text-white mt-1 truncate w-16">{story.username}</span>
+              </div>
+            )
+          })}
         </div>
 
         {mockPosts.map((post) => (
