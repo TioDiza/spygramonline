@@ -25,7 +25,7 @@ const InstagramHeader: React.FC = () => (
       <Plus className="w-8 h-8 text-white" />
     </div>
     <div className="flex justify-center items-center gap-1 cursor-pointer">
-      <h1 className="text-3xl text-white font-serif italic" style={{fontFamily: "cursive"}}>Instagram</h1>
+      <img src="/instagram-logo.png" alt="Instagram Logo" className="h-8" style={{ filter: 'invert(1)' }} />
       <ChevronDown className="w-5 h-5 text-white mt-1" />
     </div>
     <div className="flex justify-end">
