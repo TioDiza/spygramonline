@@ -26,7 +26,11 @@ const fetchWithTimeout = async (url: string, timeout = REQUEST_TIMEOUT): Promise
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-            throw new Error(`API Error (${response.status})`);
+            if (response.status >= 500 && response.status < 600) {
+                throw new Error('Nossos servidores estão sobrecarregados. Por favor, tente novamente em alguns instantes.');
+            }
+            // Para outros erros como 404, etc.
+            throw new Error('Ocorreu um erro ao buscar o perfil. Verifique o nome de usuário e tente novamente.');
         }
         return await response.json();
 
@@ -53,7 +57,11 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
     console.log(`[profileService] Dados completos recebidos para ${cleanUsername}:`, data);
 
     if (!data || data.error) {
-      throw new Error(data?.error || 'Erro ao buscar dados completos do perfil.');
+      // Trata o erro de "usuário não encontrado" que vem da API
+      if (data?.error && typeof data.error === 'string' && data.error.toLowerCase().includes('not found')) {
+          throw new Error(`Usuário "${cleanUsername}" não encontrado. Verifique o nome e tente novamente.`);
+      }
+      throw new Error(data?.error || 'Não foi possível carregar os dados do perfil.');
     }
 
     // 1. Processar dados do perfil principal
