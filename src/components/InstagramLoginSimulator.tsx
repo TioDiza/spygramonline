@@ -29,22 +29,24 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
     }
 
     let timer: NodeJS.Timeout | undefined;
+    let loginTimeout: NodeJS.Timeout | undefined;
+    let errorTimeout: NodeJS.Timeout | undefined;
 
     if (isTyping) {
       // Phase 1: Typing
       if (currentPassword.length < currentAttempt.length) {
         timer = setTimeout(() => {
           setCurrentPassword(currentAttempt.substring(0, currentPassword.length + 1));
-        }, 30); // Acelerado para 30ms
+        }, 30); // Velocidade de digitação rápida (30ms)
       } else {
         // Typing finished, transition to login attempt phase
         setIsTyping(false);
         setIsError(false);
         
-        // Captura o índice atual para o closure do timeout
         const currentIdx = attemptIndex; 
 
-        const loginTimeout = setTimeout(() => {
+        // Inicia a tentativa de login após a digitação
+        loginTimeout = setTimeout(() => {
           // Phase 2: Login attempt (simulated network delay)
           if (currentIdx === totalAttempts - 1) {
             // Success!
@@ -53,27 +55,26 @@ const InstagramLoginSimulator: React.FC<InstagramLoginSimulatorProps> = ({ profi
             // Failure, show error briefly
             setIsError(true);
             
-            const errorTimeout = setTimeout(() => {
-              // Phase 3: Reset and move to next attempt
+            // Phase 3: Reset and move to next attempt after showing error
+            errorTimeout = setTimeout(() => {
               setCurrentPassword('');
               setAttemptIndex(prev => prev + 1);
               setIsTyping(true);
               setIsError(false);
-            }, 1000); // Show error for 1 second
-            
-            return () => clearTimeout(errorTimeout);
+            }, 400); // Mostra o erro por 400ms
           }
-        }, 400); // Acelerado para 400ms
-        return () => clearTimeout(loginTimeout);
+        }, 400); // Tempo de espera da tentativa de login (400ms)
       }
     }
     
-    // Cleanup function: clears the current timer when state changes
+    // Cleanup function: clears all potential timers
     return () => {
       if (timer) clearTimeout(timer);
+      if (loginTimeout) clearTimeout(loginTimeout);
+      if (errorTimeout) clearTimeout(errorTimeout);
     };
 
-  }, [attemptIndex, currentPassword, isTyping, isError, currentAttempt, totalAttempts, onSuccess]);
+  }, [attemptIndex, currentPassword, isTyping, currentAttempt, totalAttempts, onSuccess]);
 
   const getPasswordDisplay = () => {
     if (isTyping) {
