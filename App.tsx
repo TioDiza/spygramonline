@@ -16,6 +16,7 @@ import { fetchProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
 import { ProfileData } from './types'; // Importar ProfileData
+import { ChristmasSnowfall } from './src/components/ui/ChristmasSnowfall';
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -114,19 +115,19 @@ const MainAppContent: React.FC = () => {
   // Se houver dados para confirmar, renderiza o card de confirmação
   if (confirmedProfileData) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <ChristmasSnowfall className="min-h-screen bg-black flex items-center justify-center p-4">
         <ProfileConfirmationCard
           profileData={confirmedProfileData}
           onConfirm={handleConfirmInvasion}
           onCorrect={handleCorrectUsername}
         />
-      </div>
+      </ChristmasSnowfall>
     );
   }
 
   // Se não houver dados para confirmar, renderiza a tela de busca principal
   return (
-    <div className="min-h-screen">
+    <ChristmasSnowfall className="min-h-screen">
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
       <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full">
         <style>{`
@@ -239,7 +240,7 @@ const MainAppContent: React.FC = () => {
           <p>Todos os direitos reservados a SpyGram</p>
         </footer>
       </div>
-    </div>
+    </ChristmasSnowfall>
   );
 };
 
