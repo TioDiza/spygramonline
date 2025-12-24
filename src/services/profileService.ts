@@ -99,3 +99,53 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
     throw new Error('Ocorreu um erro desconhecido ao buscar dados do backend.');
   }
 };
+
+export const fetchFullInvasionData = async (username: string): Promise<{ suggestions: SuggestedProfile[], posts: FeedPost[] }> => {
+  const cleanUsername = username.replace(/^@+/, '').trim();
+  const url = `${API_BASE_URL}/first?tipo=busca_completa&username=${encodeURIComponent(cleanUsername)}`;
+  console.log(`[profileService] Buscando dados completos de: ${url}`);
+
+  try {
+    const data = await fetchWithTimeout(url);
+    console.log(`[profileService] Dados completos recebidos para ${cleanUsername}:`, data);
+
+    if (!data || data.error) {
+      throw new Error(data?.error || 'Não foi possível carregar os dados completos.');
+    }
+
+    let suggestions: SuggestedProfile[] = [];
+    if (data.lista_perfis_publicos && Array.isArray(data.lista_perfis_publicos)) {
+      suggestions = data.lista_perfis_publicos.map((s: any) => ({
+        username: s.username,
+        profile_pic_url: getProxiedUrl(s.profile_pic_url),
+      }));
+    }
+
+    let posts: FeedPost[] = [];
+    if (data.posts && Array.isArray(data.posts)) {
+        posts = data.posts.map((item: any) => ({
+            de_usuario: {
+                username: item.de_usuario?.username || '',
+                full_name: item.de_usuario?.full_name || '',
+                profile_pic_url: getProxiedUrl(item.de_usuario?.profile_pic_url),
+            },
+            post: {
+                id: item.post?.id || '',
+                image_url: getProxiedUrl(item.post?.image_url),
+                video_url: item.post?.video_url ? getProxiedUrl(item.post.video_url) : undefined,
+                is_video: item.post?.is_video || false,
+                caption: item.post?.caption || '',
+                like_count: item.post?.like_count || 0,
+                comment_count: item.post?.comment_count || 0,
+            }
+        }));
+    }
+    
+    return { suggestions, posts };
+
+  } catch (error) {
+    console.error(`[profileService] Erro ao buscar dados completos para ${cleanUsername}:`, error);
+    // Retorna arrays vazios em caso de falha para que o app possa usar dados de fallback
+    return { suggestions: [], posts: [] };
+  }
+};

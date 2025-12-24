@@ -15,6 +15,7 @@ import { getUserLocation, getCitiesByState } from '../services/geolocationServic
 import LockedFeatureModal from '../components/LockedFeatureModal';
 import { useAuth } from '../context/AuthContext';
 import { MOCK_SUGGESTION_NAMES } from '../../constants';
+import { fetchFullInvasionData } from '../services/profileService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
@@ -27,55 +28,34 @@ const InvasionSimulationPage: React.FC = () => {
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
   const [posts, setPosts] = useState<FeedPost[] | undefined>();
 
-  const [stage, setStage] = useState<SimulationStage>(() => {
-    const storedData = sessionStorage.getItem('invasionData');
-    if (isLoggedIn && storedData) {
-      return 'feed_locked';
-    }
-    return 'loading';
-  });
+  const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [locations, setLocations] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalFeatureName, setModalFeatureName] = useState('');
 
   useEffect(() => {
-    let data;
-    if (location.state?.profileData) {
-      data = location.state;
-      sessionStorage.setItem('invasionData', JSON.stringify(data));
-    } else {
-      const storedData = sessionStorage.getItem('invasionData');
-      data = storedData ? JSON.parse(storedData) : null;
-    }
-
-    if (data?.profileData) {
-      setProfileData(data.profileData);
-      setPosts(data.posts);
-
-      if (data.suggestedProfiles && data.suggestedProfiles.length > 0) {
-        setSuggestedProfiles(data.suggestedProfiles);
+    const loadAllDataAndProceed = async () => {
+      let data;
+      // 1. Obter dados básicos do perfil
+      if (location.state?.profileData) {
+        data = location.state;
       } else {
-        // Gera perfis de fallback se a API não retornar nenhum
-        const shuffledNames = [...MOCK_SUGGESTION_NAMES].sort(() => 0.5 - Math.random());
-        const mockSuggestions: SuggestedProfile[] = shuffledNames.slice(0, 15).map(name => ({
-          username: name,
-          profile_pic_url: '/perfil.jpg',
-        }));
-        setSuggestedProfiles(mockSuggestions);
+        const storedData = sessionStorage.getItem('invasionData');
+        data = storedData ? JSON.parse(storedData) : null;
       }
-    } else {
-      setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
-      toast.error('Nenhum dado de perfil encontrado. Redirecionando...');
-      setTimeout(() => navigate('/'), 3000);
-      setStage('error');
-    }
-  }, [location.state, navigate]);
 
-  useEffect(() => {
-    if (!profileData) return;
+      if (!data?.profileData) {
+        setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
+        toast.error('Nenhum dado de perfil encontrado. Redirecionando...');
+        setTimeout(() => navigate('/'), 3000);
+        setStage('error');
+        return;
+      }
 
-    const setupPage = async () => {
+      setProfileData(data.profileData);
+
+      // 2. Buscar localizações
       try {
         const locationData = await getUserLocation();
         const stateCities = getCitiesByState(locationData.city, locationData.state);
@@ -84,20 +64,47 @@ const InvasionSimulationPage: React.FC = () => {
         const fallbackCities = getCitiesByState('São Paulo', 'São Paulo');
         setLocations(fallbackCities);
       }
-    };
-    setupPage();
 
-    if (stage !== 'feed_locked') {
+      // 3. Buscar dados completos (sugestões e posts) se necessário
+      const hasFullData = (data.suggestedProfiles && data.suggestedProfiles.length > 0) || (data.posts && data.posts.length > 0);
+      let fullData = { ...data };
+
+      if (!hasFullData) {
+        const { suggestions, posts } = await fetchFullInvasionData(data.profileData.username);
+        
+        if (suggestions.length > 0 || posts.length > 0) {
+          fullData.suggestedProfiles = suggestions;
+          fullData.posts = posts;
+        } else {
+          // Usar fallback se a API retornar vazio
+          console.log("API não retornou sugestões/posts, usando fallback.");
+          const shuffledNames = [...MOCK_SUGGESTION_NAMES].sort(() => 0.5 - Math.random());
+          const mockSuggestions: SuggestedProfile[] = shuffledNames.slice(0, 15).map(name => ({
+            username: name,
+            profile_pic_url: '/perfil.jpg',
+          }));
+          fullData.suggestedProfiles = mockSuggestions;
+          fullData.posts = [];
+        }
+      }
+      
+      // 4. Atualizar estado e sessionStorage
+      setSuggestedProfiles(fullData.suggestedProfiles || []);
+      setPosts(fullData.posts || []);
+      sessionStorage.setItem('invasionData', JSON.stringify(fullData));
+
+      // 5. Transição para o próximo estágio
       if (isLoggedIn) {
         setStage('feed_locked');
       } else {
-        const timeout = setTimeout(() => {
-          setStage('login_attempt');
-        }, 1000);
-        return () => clearTimeout(timeout);
+        setTimeout(() => setStage('login_attempt'), 1000);
       }
+    };
+
+    if (stage === 'loading') {
+      loadAllDataAndProceed();
     }
-  }, [profileData, isLoggedIn, stage]);
+  }, [location.state, navigate, stage, isLoggedIn]);
 
   const handleLoginSuccess = useCallback(() => {
     login();
@@ -117,7 +124,6 @@ const InvasionSimulationPage: React.FC = () => {
   const closeModal = () => setIsModalOpen(false);
 
   if (!profileData) {
-    // Se houver uma mensagem de erro real, exiba-a.
     if (errorMessage) {
       return (
         <div className="min-h-screen bg-black flex items-center justify-center">
@@ -125,7 +131,6 @@ const InvasionSimulationPage: React.FC = () => {
         </div>
       );
     }
-    // Caso contrário, é apenas um estado de carregamento. Exiba o loader.
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <Loader />
