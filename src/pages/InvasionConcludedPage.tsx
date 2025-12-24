@@ -74,6 +74,16 @@ const ChristmasBackground: React.FC = () => {
   );
 };
 
+// Novo componente para a seção fixa
+const FixedScrollPrompt: React.FC = () => (
+  <div className="fixed bottom-0 left-0 right-0 z-20 p-4 bg-black/80 backdrop-blur-sm border-t border-gray-800 md:hidden">
+    <div className="text-center">
+      <p className="text-sm text-gray-500 mb-1">Continue lendo</p>
+      <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
+    </div>
+  </div>
+);
+
 const InvasionConcludedPage: React.FC = () => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
@@ -97,7 +107,7 @@ const InvasionConcludedPage: React.FC = () => {
       <ChristmasBackground />
       <PurchaseNotification />
 
-      <main className="w-full max-w-2xl mx-auto text-center relative z-10 pt-12">
+      <main className="w-full max-w-2xl mx-auto text-center relative z-10 pt-12 pb-20"> {/* Adicionado pb-20 para compensar o FixedScrollPrompt */}
         
         {/* Título Principal */}
         <h1 className="text-3xl md:text-4xl font-extrabold mb-8">
@@ -112,15 +122,16 @@ const InvasionConcludedPage: React.FC = () => {
         {/* Card de Perfil Detalhado */}
         <ProfileCardDetailed profileData={profileData} />
 
-        {/* Seção de Interação (Continue Lendo) */}
-        <div className="mt-12 mb-8">
+        {/* Seção de Interação (Continue Lendo) - Removida daqui e movida para FixedScrollPrompt */}
+        <div className="mt-12 mb-8 hidden md:block"> {/* Mantido para desktop, mas escondido em mobile */}
           <p className="text-sm text-gray-500 mb-2">Continue lendo</p>
           <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
-          <h2 className="text-2xl font-extrabold text-white mt-4">
-            Perfis com Maior Interação 
-            <span className="text-gray-500 font-normal text-lg ml-2">(Desbloqueie para ver nomes)</span>
-          </h2>
         </div>
+
+        <h2 className="text-2xl font-extrabold text-white mt-4 mb-8">
+          Perfis com Maior Interação 
+          <span className="text-gray-500 font-normal text-lg ml-2">(Desbloqueie para ver nomes)</span>
+        </h2>
 
         {/* Grid de Features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left">
@@ -157,6 +168,9 @@ const InvasionConcludedPage: React.FC = () => {
           <span>Pagamento Seguro | Site Protegido</span>
         </div>
       </footer>
+      
+      {/* Prompt de Scroll Fixo (Apenas em Mobile) */}
+      <FixedScrollPrompt />
     </div>
   );
 };
