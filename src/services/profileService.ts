@@ -29,8 +29,8 @@ const fetchWithTimeout = async (url: string, timeout = REQUEST_TIMEOUT): Promise
             if (response.status >= 500 && response.status < 600) {
                 throw new Error('Nossos servidores estão sobrecarregados. Por favor, tente novamente em alguns instantes.');
             }
-            // Para outros erros como 404, etc.
-            throw new Error('Ocorreu um erro ao buscar o perfil. Verifique o nome de usuário e tente novamente.');
+            const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido.' }));
+            throw new Error(errorData.error || `Erro ${response.status}`);
         }
         return await response.json();
 
@@ -49,6 +49,7 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
   }
 
   const cleanUsername = username.replace(/^@+/, '').trim();
+  // Usando o endpoint de busca completa, como no código fornecido
   const url = `${API_BASE_URL}/first?tipo=busca_completa&username=${encodeURIComponent(cleanUsername)}`;
   console.log(`[profileService] Buscando dados completos de: ${url}`);
 
@@ -57,18 +58,19 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
     console.log(`[profileService] Dados completos recebidos para ${cleanUsername}:`, data);
 
     if (!data || data.error) {
-      // Trata o erro de "usuário não encontrado" que vem da API
       if (data?.error && typeof data.error === 'string' && data.error.toLowerCase().includes('not found')) {
           throw new Error(`Usuário "${cleanUsername}" não encontrado. Verifique o nome e tente novamente.`);
       }
       throw new Error(data?.error || 'Não foi possível carregar os dados do perfil.');
     }
 
-    // 1. Processar dados do perfil principal
-    const profileSource = data.perfil_buscado;
+    // Lógica inspirada no seu código: procurar o perfil em múltiplos locais
+    const profileSource = data.perfil_buscado || data.data || data;
+    
     if (!profileSource || !profileSource.username) {
       throw new Error('Dados do perfil principal não encontrados na resposta da API.');
     }
+
     const profile: ProfileData = {
       username: profileSource.username,
       fullName: profileSource.full_name || '',
@@ -81,7 +83,6 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       isPrivate: profileSource.is_private || false,
     };
 
-    // 2. Processar perfis sugeridos/públicos para os stories
     let suggestions: SuggestedProfile[] = [];
     if (data.lista_perfis_publicos && Array.isArray(data.lista_perfis_publicos)) {
       suggestions = data.lista_perfis_publicos.map((s: any) => ({
@@ -90,7 +91,6 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       }));
     }
 
-    // 3. Processar posts
     let posts: FeedPost[] = [];
     if (data.posts && Array.isArray(data.posts)) {
         posts = data.posts.map((item: any) => ({
