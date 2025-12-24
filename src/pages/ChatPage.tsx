@@ -4,12 +4,15 @@ import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart, VolumeX } from 
 import { motion, AnimatePresence } from 'framer-motion';
 import './ChatPage.css';
 import { Message } from './MessagesPage';
+import LockedFeatureModal from '../components/LockedFeatureModal'; // Importa o modal
 
 const ChatPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [chatUser, setChatUser] = useState<Message | null>(null);
   const [showVolumePopup, setShowVolumePopup] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para o modal principal
+  const [modalFeatureName, setModalFeatureName] = useState(''); // Estado para o nome do recurso
 
   useEffect(() => {
     if (location.state?.user) {
@@ -19,8 +22,9 @@ const ChatPage: React.FC = () => {
     }
   }, [location.state, navigate]);
 
-  const handleLockedFeature = () => {
-    navigate('/credits');
+  const handleLockedFeature = (feature: string) => {
+    setModalFeatureName(feature);
+    setIsModalOpen(true);
   };
 
   const handleAudioClick = () => {
@@ -51,6 +55,12 @@ const ChatPage: React.FC = () => {
 
   return (
     <div className="chat-container">
+      <LockedFeatureModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        featureName={modalFeatureName}
+      />
+
       <AnimatePresence>
         {showVolumePopup && (
           <motion.div
@@ -81,7 +91,7 @@ const ChatPage: React.FC = () => {
           <button onClick={() => navigate('/messages')} className="back-button">
             <ChevronLeft size={28} strokeWidth={2.5} />
           </button>
-          <div className="chat-user-info" onClick={handleLockedFeature}>
+          <div className="chat-user-info" onClick={() => handleLockedFeature('ver o perfil do usuário')}>
             <div className="chat-avatar-wrapper-header">
               <img src={chatUser.avatar} alt={chatUser.name} className="chat-avatar-img" />
             </div>
@@ -92,8 +102,8 @@ const ChatPage: React.FC = () => {
           </div>
         </div>
         <div className="chat-header-right">
-          <button onClick={handleLockedFeature}><Phone size={24} /></button>
-          <button onClick={handleLockedFeature}><Video size={24} /></button>
+          <button onClick={() => handleLockedFeature('fazer uma ligação')}><Phone size={24} /></button>
+          <button onClick={() => handleLockedFeature('fazer uma chamada de vídeo')}><Video size={24} /></button>
         </div>
       </header>
 
@@ -114,7 +124,7 @@ const ChatPage: React.FC = () => {
               <div className="audio-waveform"></div>
               <span className="audio-duration">0:11</span>
             </div>
-            <div className="transcription-link" onClick={handleLockedFeature}>Ver transcrição</div>
+            <div className="transcription-link" onClick={(e) => { e.stopPropagation(); handleLockedFeature('ver transcrições de áudio'); }}>Ver transcrição</div>
           </div>
         </div>
 
@@ -151,7 +161,7 @@ const ChatPage: React.FC = () => {
         </div>
       </main>
 
-      <footer className="message-input-container" onClick={handleLockedFeature}>
+      <footer className="message-input-container" onClick={() => handleLockedFeature('enviar mensagens')}>
         <div className="message-input-wrapper">
           <button className="input-icon-button camera-button">
             <Camera size={24} />
