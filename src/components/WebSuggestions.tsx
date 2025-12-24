@@ -1,11 +1,11 @@
 import React from 'react';
-import { ProfileData } from '../../types';
+import { ProfileData, SuggestedProfile } from '../../types';
 
-const mockSuggestions = [
-  { username: 'reactjs', reason: 'Sugestões para você' },
-  { username: 'tailwindcss', reason: 'Sugestões para você' },
-  { username: 'vitejs', reason: 'Popular' },
-  { username: 'typescript', reason: 'Sugestões para você' },
+const mockSuggestions: SuggestedProfile[] = [
+  { username: 'reactjs', profile_pic_url: '/perfil.jpg' },
+  { username: 'tailwindcss', profile_pic_url: '/perfil.jpg' },
+  { username: 'vitejs', profile_pic_url: '/perfil.jpg' },
+  { username: 'typescript', profile_pic_url: '/perfil.jpg' },
 ];
 
 // Helper function to mask usernames
@@ -39,10 +39,10 @@ const WebSuggestions: React.FC<WebSuggestionsProps> = ({ profileData, onLockedFe
       <div className="space-y-4">
         {mockSuggestions.map(suggestion => (
           <div key={suggestion.username} className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gray-700 rounded-full"></div>
+            <img src={suggestion.profile_pic_url} alt={suggestion.username} className="w-8 h-8 rounded-full object-cover" />
             <div>
               <p className="font-bold text-white text-xs">{maskUsername(suggestion.username)}</p>
-              <p className="text-gray-500 text-xs">{suggestion.reason}</p>
+              <p className="text-gray-500 text-xs">Sugestões para você</p>
             </div>
             <button onClick={() => onLockedFeatureClick(`seguir @${suggestion.username}`)} className="ml-auto text-blue-400 text-xs font-semibold">Seguir</button>
           </div>
@@ -51,7 +51,7 @@ const WebSuggestions: React.FC<WebSuggestionsProps> = ({ profileData, onLockedFe
 
       <footer className="mt-8 text-gray-600 text-xs space-y-4">
         <p>Sobre · Ajuda · Imprensa · API · Carreiras · Privacidade · Termos · Localizações · Idioma</p>
-        <p>© 2024 SPYGRAM</p>
+        <p>© 2024 INSTAGRAM</p>
       </footer>
     </aside>
   );
