@@ -9,14 +9,14 @@ import './MessagesPage.css';
 import { ProfileData, SuggestedProfile } from '../../types';
 
 // Interfaces para os dados da página
-interface Story {
+export interface Story {
   id: string;
   name: string;
   note: string;
   avatar: string;
 }
 
-interface Message {
+export interface Message {
   id: string;
   name: string;
   message: string;
@@ -38,8 +38,10 @@ const MessagesPage: React.FC = () => {
       const data = JSON.parse(storedData);
       setProfileData(data.profileData);
 
+      const suggestedProfiles = data.suggestedProfiles || [];
+
       // Cria stories a partir dos perfis sugeridos
-      const suggestedStories: Story[] = (data.suggestedProfiles || []).slice(0, 4).map((profile: SuggestedProfile, index: number) => ({
+      const suggestedStories: Story[] = suggestedProfiles.slice(0, 4).map((profile: SuggestedProfile, index: number) => ({
         id: profile.username,
         name: `${profile.username.substring(0, 4)}*******`,
         note: ['Preguiça Hoje 🥱🥱', 'Coração Partido (Ao Vivo)', 'O vontde fudê a 3 😈', '📍💦 São Paulo'][index % 4],
@@ -48,7 +50,7 @@ const MessagesPage: React.FC = () => {
       setStories(suggestedStories);
 
       // Cria mensagens a partir dos mesmos perfis
-      const suggestedMessages: Message[] = (data.suggestedProfiles || []).slice(0, 4).map((profile: SuggestedProfile, index: number) => ({
+      const suggestedMessages: Message[] = suggestedProfiles.slice(0, 4).map((profile: SuggestedProfile, index: number) => ({
         id: profile.username,
         name: `${profile.username.substring(0, 4)}*******`,
         message: ['Oi delícia, adivinha o que vc esq...', 'Encaminhou um reel de jonas.milgrau', 'Blz depois a gente se fala', 'Reagiu com 👍 à sua mensagem'][index % 4],
@@ -58,7 +60,6 @@ const MessagesPage: React.FC = () => {
         avatar: profile.profile_pic_url,
       }));
       
-      // Adiciona as outras mensagens genéricas/bloqueadas
       const otherMessages: Message[] = [
         { id: 'user-5', name: '𝕭𝖗𝖚****', message: '4 novas mensagens', time: '22 h', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=bru' },
         { id: 'user-6', name: '*****', message: 'Enviado segunda-feira', time: '3 d', unread: false, locked: true, avatar: '' },
@@ -70,13 +71,16 @@ const MessagesPage: React.FC = () => {
 
     } else {
       console.warn("Nenhum dado de invasão encontrado. Usando dados de fallback.");
-      // Fallback para o caso de não haver dados na sessão
       navigate('/');
     }
   }, [navigate]);
 
   const handleLockedClick = () => {
     navigate('/credits');
+  };
+
+  const handleChatClick = (user: Message) => {
+    navigate(`/chat/${user.id}`, { state: { user } });
   };
 
   return (
@@ -87,7 +91,7 @@ const MessagesPage: React.FC = () => {
             <ChevronLeft size={28} strokeWidth={2.5} />
           </button>
           <div className="header-title">
-            <span>biel_sfm</span>
+            <span>{profileData?.username || 'mensagens'}</span>
           </div>
         </div>
         <div className="header-actions">
@@ -127,7 +131,7 @@ const MessagesPage: React.FC = () => {
         </div>
 
         <div className="messages-list">
-          {messages.map((msg) => (
+          {messages.map((msg, index) => (
             <MessageItem
               key={msg.id}
               avatarUrl={msg.avatar}
@@ -136,7 +140,7 @@ const MessagesPage: React.FC = () => {
               time={msg.time}
               unread={msg.unread}
               locked={msg.locked}
-              onClick={handleLockedClick}
+              onClick={index === 0 && !msg.locked ? () => handleChatClick(msg) : handleLockedClick}
             />
           ))}
         </div>

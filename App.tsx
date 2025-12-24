@@ -8,7 +8,8 @@ import { Lock } from 'lucide-react';
 import LoginPage from '@/src/pages/LoginPage';
 import ServersPage from '@/src/pages/ServersPage';
 import CreditsPage from '@/src/pages/CreditsPage';
-import MessagesPage from '@/src/pages/MessagesPage'; // Importa a nova página
+import MessagesPage from '@/src/pages/MessagesPage';
+import ChatPage from '@/src/pages/ChatPage'; // Importa a nova página de chat
 import ProgressBar from '@/src/components/ProgressBar';
 import InvasionSimulationPage from '@/src/pages/InvasionSimulationPage';
 import ProfileConfirmationCard from '@/src/components/ProfileConfirmationCard';
@@ -274,6 +275,14 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <MessagesPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/chat/:id" 
+            element={
+              <ProtectedRoute>
+                <ChatPage />
               </ProtectedRoute>
             } 
           />
