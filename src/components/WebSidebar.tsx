@@ -33,8 +33,8 @@ const WebSidebar: React.FC<WebSidebarProps> = ({ profileData, onLockedFeatureCli
     <aside className="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-black border-r border-gray-800 p-4 z-30">
       <div className="py-4 mb-6">
         <img
-          src="/spygram_transparentebranco.png"
-          alt="SpyGram Logo"
+          src="/instagram-logo.png"
+          alt="Instagram Logo"
           className="h-10"
           style={{ filter: 'invert(1)' }}
         />
