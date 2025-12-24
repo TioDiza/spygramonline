@@ -49,13 +49,13 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
   }
 
   const cleanUsername = username.replace(/^@+/, '').trim();
-  // Usando o endpoint de busca completa, como no código fornecido
-  const url = `${API_BASE_URL}/first?tipo=busca_completa&username=${encodeURIComponent(cleanUsername)}`;
-  console.log(`[profileService] Buscando dados completos de: ${url}`);
+  // CORREÇÃO: Usando o endpoint 'perfil' que é mais rápido e retorna os dados completos do perfil.
+  const url = `${API_BASE_URL}/first?tipo=perfil&username=${encodeURIComponent(cleanUsername)}`;
+  console.log(`[profileService] Buscando perfil rápido de: ${url}`);
 
   try {
     const data = await fetchWithTimeout(url);
-    console.log(`[profileService] Dados completos recebidos para ${cleanUsername}:`, data);
+    console.log(`[profileService] Dados do perfil recebidos para ${cleanUsername}:`, data);
 
     if (!data || data.error) {
       if (data?.error && typeof data.error === 'string' && data.error.toLowerCase().includes('not found')) {
@@ -64,8 +64,8 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       throw new Error(data?.error || 'Não foi possível carregar os dados do perfil.');
     }
 
-    // Lógica inspirada no seu código: procurar o perfil em múltiplos locais
-    const profileSource = data.perfil_buscado || data.data || data;
+    // A API retorna os dados em 'data' ou na raiz do objeto
+    const profileSource = data.data || data;
     
     if (!profileSource || !profileSource.username) {
       throw new Error('Dados do perfil principal não encontrados na resposta da API.');
@@ -75,43 +75,20 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       username: profileSource.username,
       fullName: profileSource.full_name || '',
       profilePicUrl: getProxiedUrl(profileSource.profile_pic_url),
-      biography: profileSource.biography || profileSource.biografia || '',
-      followers: profileSource.follower_count || profileSource.followers || profileSource.seguidores || 0,
-      following: profileSource.following_count || profileSource.following || profileSource.seguindo || 0,
-      postsCount: profileSource.media_count || profileSource.posts_count || profileSource.publicacoes || 0,
+      biography: profileSource.biography || '',
+      followers: profileSource.follower_count || 0,
+      following: profileSource.following_count || 0,
+      postsCount: profileSource.media_count || 0,
       isVerified: profileSource.is_verified || false,
       isPrivate: profileSource.is_private || false,
     };
 
-    let suggestions: SuggestedProfile[] = [];
-    if (data.lista_perfis_publicos && Array.isArray(data.lista_perfis_publicos)) {
-      suggestions = data.lista_perfis_publicos.map((s: any) => ({
-        username: s.username,
-        profile_pic_url: getProxiedUrl(s.profile_pic_url),
-      }));
-    }
+    // O endpoint 'perfil' não retorna sugestões ou posts, então retornamos arrays vazios.
+    // Os posts e sugestões serão carregados em uma etapa posterior, se necessário.
+    const suggestions: SuggestedProfile[] = [];
+    const posts: FeedPost[] = [];
 
-    let posts: FeedPost[] = [];
-    if (data.posts && Array.isArray(data.posts)) {
-        posts = data.posts.map((item: any) => ({
-            de_usuario: {
-                username: item.de_usuario?.username || '',
-                full_name: item.de_usuario?.full_name || '',
-                profile_pic_url: getProxiedUrl(item.de_usuario?.profile_pic_url),
-            },
-            post: {
-                id: item.post?.id || '',
-                image_url: getProxiedUrl(item.post?.image_url),
-                video_url: item.post?.video_url ? getProxiedUrl(item.post.video_url) : undefined,
-                is_video: item.post?.is_video || false,
-                caption: item.post?.caption || '',
-                like_count: item.post?.like_count || 0,
-                comment_count: item.post?.comment_count || 0,
-            }
-        }));
-    }
-
-    console.log(`[profileService] Sucesso: Perfil ${profile.username}, ${suggestions.length} sugestões, ${posts.length} posts.`);
+    console.log(`[profileService] Sucesso: Perfil ${profile.username} carregado.`);
     return { profile, suggestions, posts };
 
   } catch (error) {
