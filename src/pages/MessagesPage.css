@@ -114,13 +114,14 @@ body {
     top: 0;
     background-color: #262626;
     color: #F9F9F9;
-    padding: 0.3rem 0.6rem;
-    border-radius: 1rem;
-    font-size: 0.7rem;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 13px;
     white-space: nowrap;
-    max-width: 90px;
+    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
 }
 .story-bubble::after {
     content: '';
