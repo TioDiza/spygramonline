@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Search, Video, SquarePen } from 'lucide-react';
+import { ChevronLeft, SquarePen } from 'lucide-react';
+import SmileyStarIcon from '../components/icons/SmileyStarIcon';
+import MetaAIIcon from '../components/icons/MetaAIIcon';
 import DirectStoryItem from '../components/DirectStoryItem';
 import MessageItem from '../components/MessageItem';
 import './MessagesPage.css';
@@ -37,10 +39,10 @@ const MessagesPage: React.FC = () => {
           <ChevronLeft size={28} strokeWidth={2.5} />
         </button>
         <div className="header-title">
-          <span>biel sfm</span>
+          <span>biel_sfm</span>
         </div>
         <div className="header-actions">
-          <Video size={28} strokeWidth={1.5} onClick={handleLockedClick} />
+          <SmileyStarIcon size={28} strokeWidth={1.5} onClick={handleLockedClick} />
           <SquarePen size={24} strokeWidth={1.5} onClick={handleLockedClick} />
         </div>
       </header>
@@ -48,7 +50,7 @@ const MessagesPage: React.FC = () => {
       <main>
         <div className="search-bar-container">
           <div className="search-input-wrapper">
-            <Search size={20} className="search-icon" />
+            <MetaAIIcon size={20} className="search-icon" />
             <input type="text" placeholder="Interaja com a Meta AI ou pesquise" className="search-input" readOnly onClick={handleLockedClick} />
           </div>
         </div>
