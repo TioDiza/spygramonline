@@ -105,9 +105,9 @@ const InvasionSimulationPage: React.FC = () => {
     toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
     
     setTimeout(() => {
-      setStage('feed_locked');
+      navigate('/invasion-concluded'); // Redireciona para a página de conversão
     }, 2000);
-  }, [profileData?.username, login]);
+  }, [profileData?.username, login, navigate]);
 
   const handleLockedFeatureClick = useCallback((featureName: string) => {
     setModalFeatureName(featureName);

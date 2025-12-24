@@ -9,9 +9,10 @@ import LoginPage from '@/src/pages/LoginPage';
 import ServersPage from '@/src/pages/ServersPage';
 import CreditsPage from '@/src/pages/CreditsPage';
 import MessagesPage from '@/src/pages/MessagesPage';
-import ChatPage from '@/src/pages/ChatPage'; // Importa a nova página de chat
+import ChatPage from '@/src/pages/ChatPage';
 import ProgressBar from '@/src/components/ProgressBar';
 import InvasionSimulationPage from '@/src/pages/InvasionSimulationPage';
+import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage'; // Importa a nova página
 import ProfileConfirmationCard from '@/src/components/ProfileConfirmationCard';
 import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData } from './src/services/profileService';
@@ -253,6 +254,14 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<MainAppContent />} />
           <Route path="/invasion-simulation" element={<InvasionSimulationPage />} />
+          <Route 
+            path="/invasion-concluded" 
+            element={
+              <ProtectedRoute>
+                <InvasionConcludedPage />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/login" element={<LoginPage />} />
           <Route 
             path="/servers" 
