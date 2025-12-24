@@ -74,9 +74,9 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       fullName: profileSource.full_name || '',
       profilePicUrl: getProxiedUrl(profileSource.profile_pic_url),
       biography: profileSource.biography || '',
-      followers: profileSource.follower_count || 0,
-      following: profileSource.following_count || 0,
-      postsCount: profileSource.media_count || 0,
+      followers: profileSource.follower_count || profileSource.followers || 0,
+      following: profileSource.following_count || profileSource.following || 0,
+      postsCount: profileSource.media_count || profileSource.posts_count || 0,
       isVerified: profileSource.is_verified || false,
       isPrivate: profileSource.is_private || false,
     };
