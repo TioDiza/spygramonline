@@ -15,10 +15,10 @@ const mockStories = [
 ];
 
 const mockMessages = [
-  { id: 1, name: 'Fer*****', message: 'Oi delícia, adivinha o que vc esq...', time: 'Agora', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=bruna' },
-  { id: 2, name: 'itzbryan', message: 'Encaminhou um reel de jonas.milgrau', time: '33 min', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=carlos' },
-  { id: 3, name: 'MIGUEL🇧🇷🇺🇲', message: 'Blz depois a gente se fala', time: '2 h', unread: false, locked: false, avatar: 'https://i.pravatar.cc/150?u=julia' },
-  { id: 4, name: 'And*****', message: 'Reagiu com 👍 à sua mensagem', time: '6 h', unread: false, locked: false, avatar: 'https://i.pravatar.cc/150?u=pedro' },
+  { id: 1, name: 'Ana*******', message: 'Oi delícia, adivinha o que vc esq...', time: 'Agora', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=ana' },
+  { id: 2, name: 'Swa*******', message: 'Encaminhou um reel de jonas.milgrau', time: '33 min', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=bia' },
+  { id: 3, name: 'Swi*******', message: 'Blz depois a gente se fala', time: '2 h', unread: false, locked: false, avatar: 'https://i.pravatar.cc/150?u=swing' },
+  { id: 4, name: 'Marc*******', message: 'Reagiu com 👍 à sua mensagem', time: '6 h', unread: false, locked: false, avatar: 'https://i.pravatar.cc/150?u=marc' },
   { id: 5, name: '𝕭𝖗𝖚****', message: '4 novas mensagens', time: '22 h', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=bru' },
   { id: 6, name: '*****', message: 'Enviado segunda-feira', time: '3 d', unread: false, locked: true, avatar: '' },
   { id: 7, name: '*****', message: 'Delícia você 😈 😈', time: '4 d', unread: false, locked: true, avatar: '' },
@@ -35,11 +35,13 @@ const MessagesPage: React.FC = () => {
   return (
     <div className="messages-page-container">
       <header className="messages-header">
-        <button onClick={() => navigate('/invasion-simulation')} className="p-1">
-          <ChevronLeft size={28} strokeWidth={2.5} />
-        </button>
-        <div className="header-title">
-          <span>biel_sfm</span>
+        <div className="header-left-content">
+          <button onClick={() => navigate('/invasion-simulation')} className="p-1">
+            <ChevronLeft size={28} strokeWidth={2.5} />
+          </button>
+          <div className="header-title">
+            <span>biel_sfm</span>
+          </div>
         </div>
         <div className="header-actions">
           <SmileyStarIcon size={28} strokeWidth={1.5} onClick={handleLockedClick} />
