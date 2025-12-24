@@ -111,7 +111,7 @@ const InvasionSimulationPage: React.FC = () => {
     toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
     
     setTimeout(() => {
-      setStage('feed_locked'); // Vai para o feed bloqueado
+      setStage('feed_locked'); // CORREÇÃO: Muda o estado para mostrar o feed, não navega para outra página
     }, 2000);
   }, [profileData?.username]);
 
