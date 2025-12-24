@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, SquarePen } from 'lucide-react';
 import SmileyStarIcon from '../components/icons/SmileyStarIcon';
@@ -6,27 +6,74 @@ import MetaAIIcon from '../components/icons/MetaAIIcon';
 import DirectStoryItem from '../components/DirectStoryItem';
 import MessageItem from '../components/MessageItem';
 import './MessagesPage.css';
+import { ProfileData, SuggestedProfile } from '../../types';
 
-const mockStories = [
-  { id: 1, name: 'Ana*******', note: 'Preguiça Hoje 🥱🥱', avatar: 'https://i.pravatar.cc/150?u=ana' },
-  { id: 2, name: 'Swa*******', note: 'Coração Partido (Ao Vivo)', avatar: 'https://i.pravatar.cc/150?u=bia' },
-  { id: 3, name: 'Swi*******', note: 'O vontde fudê a 3 😈', avatar: 'https://i.pravatar.cc/150?u=swing' },
-  { id: 4, name: 'Marc*******', note: '📍💦 São Paulo', avatar: 'https://i.pravatar.cc/150?u=marc' },
-];
+// Interfaces para os dados da página
+interface Story {
+  id: string;
+  name: string;
+  note: string;
+  avatar: string;
+}
 
-const mockMessages = [
-  { id: 1, name: 'Ana*******', message: 'Oi delícia, adivinha o que vc esq...', time: 'Agora', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=ana' },
-  { id: 2, name: 'Swa*******', message: 'Encaminhou um reel de jonas.milgrau', time: '33 min', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=bia' },
-  { id: 3, name: 'Swi*******', message: 'Blz depois a gente se fala', time: '2 h', unread: false, locked: false, avatar: 'https://i.pravatar.cc/150?u=swing' },
-  { id: 4, name: 'Marc*******', message: 'Reagiu com 👍 à sua mensagem', time: '6 h', unread: false, locked: false, avatar: 'https://i.pravatar.cc/150?u=marc' },
-  { id: 5, name: '𝕭𝖗𝖚****', message: '4 novas mensagens', time: '22 h', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=bru' },
-  { id: 6, name: '*****', message: 'Enviado segunda-feira', time: '3 d', unread: false, locked: true, avatar: '' },
-  { id: 7, name: '*****', message: 'Delícia você 😈 😈', time: '4 d', unread: false, locked: true, avatar: '' },
-  { id: 8, name: '*****', message: 'Curtiu sua mensagem', time: '4 d', unread: false, locked: true, avatar: '' },
-];
+interface Message {
+  id: string;
+  name: string;
+  message: string;
+  time: string;
+  unread: boolean;
+  locked: boolean;
+  avatar: string;
+}
 
 const MessagesPage: React.FC = () => {
   const navigate = useNavigate();
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [stories, setStories] = useState<Story[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    const storedData = sessionStorage.getItem('invasionData');
+    if (storedData) {
+      const data = JSON.parse(storedData);
+      setProfileData(data.profileData);
+
+      // Cria stories a partir dos perfis sugeridos
+      const suggestedStories: Story[] = (data.suggestedProfiles || []).slice(0, 4).map((profile: SuggestedProfile, index: number) => ({
+        id: profile.username,
+        name: `${profile.username.substring(0, 4)}*******`,
+        note: ['Preguiça Hoje 🥱🥱', 'Coração Partido (Ao Vivo)', 'O vontde fudê a 3 😈', '📍💦 São Paulo'][index % 4],
+        avatar: profile.profile_pic_url,
+      }));
+      setStories(suggestedStories);
+
+      // Cria mensagens a partir dos mesmos perfis
+      const suggestedMessages: Message[] = (data.suggestedProfiles || []).slice(0, 4).map((profile: SuggestedProfile, index: number) => ({
+        id: profile.username,
+        name: `${profile.username.substring(0, 4)}*******`,
+        message: ['Oi delícia, adivinha o que vc esq...', 'Encaminhou um reel de jonas.milgrau', 'Blz depois a gente se fala', 'Reagiu com 👍 à sua mensagem'][index % 4],
+        time: ['Agora', '33 min', '2 h', '6 h'][index % 4],
+        unread: index < 2,
+        locked: false,
+        avatar: profile.profile_pic_url,
+      }));
+      
+      // Adiciona as outras mensagens genéricas/bloqueadas
+      const otherMessages: Message[] = [
+        { id: 'user-5', name: '𝕭𝖗𝖚****', message: '4 novas mensagens', time: '22 h', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=bru' },
+        { id: 'user-6', name: '*****', message: 'Enviado segunda-feira', time: '3 d', unread: false, locked: true, avatar: '' },
+        { id: 'user-7', name: '*****', message: 'Delícia você 😈 😈', time: '4 d', unread: false, locked: true, avatar: '' },
+        { id: 'user-8', name: '*****', message: 'Curtiu sua mensagem', time: '4 d', unread: false, locked: true, avatar: '' },
+      ];
+
+      setMessages([...suggestedMessages, ...otherMessages]);
+
+    } else {
+      console.warn("Nenhum dado de invasão encontrado. Usando dados de fallback.");
+      // Fallback para o caso de não haver dados na sessão
+      navigate('/');
+    }
+  }, [navigate]);
 
   const handleLockedClick = () => {
     navigate('/credits');
@@ -59,12 +106,12 @@ const MessagesPage: React.FC = () => {
 
         <div className="stories-container">
           <DirectStoryItem
-            avatarUrl="https://i.pravatar.cc/150?u=user403"
+            avatarUrl={profileData?.profilePicUrl || ''}
             name="Sua nota"
             note="Conte as novidades"
             isOwnStory
           />
-          {mockStories.map(story => (
+          {stories.map(story => (
             <DirectStoryItem
               key={story.id}
               avatarUrl={story.avatar}
@@ -80,7 +127,7 @@ const MessagesPage: React.FC = () => {
         </div>
 
         <div className="messages-list">
-          {mockMessages.map((msg) => (
+          {messages.map((msg) => (
             <MessageItem
               key={msg.id}
               avatarUrl={msg.avatar}
