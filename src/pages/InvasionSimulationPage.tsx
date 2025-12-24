@@ -22,7 +22,7 @@ type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_lock
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, login } = useAuth(); // Importa a função login
 
   const [profileData, setProfileData] = useState<ProfileData | undefined>();
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
@@ -107,13 +107,14 @@ const InvasionSimulationPage: React.FC = () => {
   }, [location.state, navigate, stage, isLoggedIn]);
 
   const handleLoginSuccess = useCallback(() => {
+    login(); // Define o usuário como logado no contexto
     setStage('success_card');
     toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
     
     setTimeout(() => {
-      setStage('feed_locked'); // CORREÇÃO: Muda o estado para mostrar o feed, não navega para outra página
+      setStage('feed_locked');
     }, 2000);
-  }, [profileData?.username]);
+  }, [profileData?.username, login]);
 
   const handleLockedFeatureClick = useCallback((featureName: string) => {
     setModalFeatureName(featureName);
