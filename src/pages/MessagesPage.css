@@ -22,7 +22,6 @@ body {
     margin: 0 auto;
     border-left: 1px solid #262626;
     border-right: 1px solid #262626;
-    padding-bottom: 120px; /* Space for the fixed banner */
 }
 
 /* Header */
@@ -310,84 +309,4 @@ body {
 
 .chat-item.chat-unread .chat-camera-icon {
     opacity: 1;
-}
-
-/* Preview Banner */
-#preview-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    max-width: 450px;
-    margin: 0 auto;
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.98) 0%, rgba(59, 130, 246, 0.98) 100%);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-top: 1px solid rgba(249, 249, 249, 0.25);
-    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
-    z-index: 999;
-    padding: 10px 16px;
-    display: flex;
-    align-items: flex-start;
-    gap: 0;
-    border-radius: 16px 16px 0 0;
-}
-
-.preview-banner-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    flex: 1;
-}
-
-.preview-banner-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #F9F9F9;
-    margin: 0;
-    line-height: 1.2;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 3px;
-}
-
-.preview-banner-description {
-    font-size: 11px;
-    color: rgba(249, 249, 249, 0.9);
-    margin: 0;
-    padding-top: 4px;
-    line-height: 1.4;
-}
-
-.preview-timer-inline {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #F9F9F9;
-}
-
-.preview-timer-icon {
-    width: 12px;
-    height: 12px;
-}
-
-.preview-banner-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: #F9F9F9;
-    color: rgb(139, 92, 246);
-    border: none;
-    padding: 5px 11px;
-    border-radius: 0 16px 0 8px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    white-space: nowrap;
-    z-index: 1;
-    height: auto;
-    line-height: 1.2;
 }

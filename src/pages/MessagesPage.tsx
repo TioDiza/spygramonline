@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Video, SquarePen, Clock } from 'lucide-react';
+import { ArrowLeft, Search, Video, SquarePen } from 'lucide-react';
 import DirectStoryItem from '../components/DirectStoryItem';
 import MessageItem from '../components/MessageItem';
 import './MessagesPage.css';
@@ -25,21 +25,6 @@ const mockMessages = [
 
 const MessagesPage: React.FC = () => {
   const navigate = useNavigate();
-  const [timeLeft, setTimeLeft] = useState(10 * 60); // 10 minutes in seconds
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prevTime => (prevTime > 0 ? prevTime - 1 : 0));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const handleLockedClick = () => {
     navigate('/credits');
@@ -105,22 +90,6 @@ const MessagesPage: React.FC = () => {
           ))}
         </div>
       </main>
-
-      <div id="preview-banner">
-        <div className="preview-banner-content">
-            <div className="preview-banner-text">
-                <p className="preview-banner-title">
-                    ⚡ Prévia disponível por
-                    <span className="preview-timer-inline">
-                        <span id="timer-text">{formatTime(timeLeft)}</span>
-                        <Clock className="preview-timer-icon" />
-                    </span>
-                </p>
-                <p className="preview-banner-description">Você ganhou 10 minutos para testar gratuitamente nossa ferramenta, mas para liberar todas as funcionalidades e ter acesso permanente é necessário ser um membro VIP.</p>
-            </div>
-        </div>
-        <button type="button" className="preview-banner-button" onClick={() => navigate('/credits')}>Tornar-se VIP</button>
-    </div>
     </div>
   );
 };
