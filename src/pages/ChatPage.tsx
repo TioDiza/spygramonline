@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart } from 'lucide-react';
+import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart, VolumeX } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './ChatPage.css';
-import { Message } from './MessagesPage'; // Assuming Message type is exported from MessagesPage
+import { Message } from './MessagesPage';
 
 const ChatPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [chatUser, setChatUser] = useState<Message | null>(null);
+  const [showVolumePopup, setShowVolumePopup] = useState(false);
 
   useEffect(() => {
     if (location.state?.user) {
       setChatUser(location.state.user);
     } else {
-      // Fallback or redirect if no user data is passed
       navigate('/messages');
     }
   }, [location.state, navigate]);
@@ -22,28 +23,59 @@ const ChatPage: React.FC = () => {
     navigate('/credits');
   };
 
-  // Simulate generating audio waveform bars
+  const handleAudioClick = () => {
+    if (showVolumePopup) return;
+    setShowVolumePopup(true);
+    setTimeout(() => {
+      setShowVolumePopup(false);
+    }, 2500);
+  };
+
   useEffect(() => {
     const waveforms = document.querySelectorAll('.audio-waveform');
     waveforms.forEach(waveform => {
-      // Clear existing bars
       waveform.innerHTML = '';
-      const numBars = Math.floor(Math.random() * 10) + 20; // 20 to 30 bars
+      const numBars = waveform.classList.contains('short') ? 20 : 40;
       for (let i = 0; i < numBars; i++) {
         const bar = document.createElement('div');
         bar.className = 'audio-waveform-bar';
-        bar.style.height = `${Math.floor(Math.random() * 18) + 2}px`;
+        bar.style.height = `${Math.floor(Math.random() * 16) + 2}px`;
         waveform.appendChild(bar);
       }
     });
-  }, []);
+  }, [chatUser]);
 
   if (!chatUser) {
-    return null; // Or a loading spinner
+    return null;
   }
 
   return (
     <div className="chat-container">
+      <AnimatePresence>
+        {showVolumePopup && (
+          <motion.div
+            className="volume-popup-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="volume-popup-content"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', damping: 15 }}
+            >
+              <p>Seja membro VIP para liberar o volume</p>
+              <VolumeX className="volume-popup-icon" size={48} strokeWidth={1.5} />
+              <div className="volume-popup-bar">
+                {[...Array(15)].map((_, i) => <div key={i} className="volume-popup-bar-segment" />)}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <header className="chat-header-sticky">
         <div className="chat-header-left">
           <button onClick={() => navigate('/messages')} className="back-button">
@@ -66,97 +98,40 @@ const ChatPage: React.FC = () => {
       </header>
 
       <main className="chat-messages">
-        <div className="message-date">3 dias atrás, 11:12</div>
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble">Oi minha delícia</div>
-        </div>
-        <div className="message sent">
-          <div className="message-bubble">Oi amor da minha vidq</div>
-        </div>
-        <div className="message sent">
-          <div className="message-bubble">vida*</div>
-        </div>
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble">To com saudade</div>
-        </div>
         <div className="message received">
           <img src={chatUser.avatar} alt="User" className="message-avatar" />
           <div className="message-bubble">
-            <div className="message-media" onClick={handleLockedFeature}>
-              <img src="/nudes1-chat1.jpg" alt="Conteúdo sensível" className="media-blurred" />
-              <div className="sensitive-overlay">
-                <span className="sensitive-icon">🚫</span>
-                <span className="sensitive-text">Conteúdo Sensível</span>
-              </div>
-            </div>
-            <div className="message-reaction">❤️</div>
-          </div>
-        </div>
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble">Disso??</div>
-        </div>
-        <div className="message sent">
-          <div className="message-bubble">😍😍😍😍😍😍</div>
-        </div>
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble">Gostou amor?</div>
-        </div>
-        <div className="message sent">
-          <div className="message-bubble" onClick={handleLockedFeature}>
-            <div className="audio-message sent">
-              <span className="play-icon">▶</span>
+            <div className="audio-message received" onClick={handleAudioClick}>
+              <span className="play-icon purple">▶</span>
               <div className="audio-waveform"></div>
-              <span className="audio-duration">0:11</span>
+              <span className="audio-duration">0:32</span>
+            </div>
+            <div className="transcription-link" onClick={handleLockedFeature}>
+              Ver transcrição
             </div>
           </div>
-        </div>
-        
-        <div className="message-date">ONTEM, 21:34</div>
-        
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble">Amor</div>
-        </div>
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble">Ta podendo falar?</div>
-        </div>
-        <div className="message sent">
-          <div className="message-bubble">
-            <div className="message-reply">
-              <div className="reply-line"></div>
-              <div className="reply-content">
-                <span className="reply-user">Você respondeu</span>
-                <span className="reply-text">Amor</span>
-              </div>
-            </div>
-            Oii bb
-          </div>
-        </div>
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble">Perai que a vaca da Bruna tá aqui do lado</div>
-        </div>
-        <div className="message sent">
-          <div className="message-bubble">kkkkkkkkk</div>
-        </div>
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble">
-            🦌🦌🦌 kkkk
-            <div className="message-reaction">😂</div>
-          </div>
-        </div>
-        
-        <div className="message-unread-divider">
-          <span>Novas mensagens</span>
         </div>
 
-        <div className="message-date">Agora</div>
+        <div className="message received">
+          <img src={chatUser.avatar} alt="User" className="message-avatar" />
+          <div className="message-bubble">
+            <div className="audio-message received" onClick={handleAudioClick}>
+              <span className="play-icon paused">||</span>
+              <div className="audio-waveform short"></div>
+              <span className="audio-duration">0:03</span>
+            </div>
+            <div className="transcription-link" onClick={handleLockedFeature}>
+              Ver transcrição
+            </div>
+          </div>
+        </div>
+
+        <div className="message sent heart">
+          <div className="message-bubble heart-bubble">❤️</div>
+        </div>
+
+        <div className="message-date">01:25</div>
+
         <div className="message received">
           <img src={chatUser.avatar} alt="User" className="message-avatar" />
           <div className="message-bubble">Oi delícia, adivinha o que vc esqueceu aqui? kkkk</div>
