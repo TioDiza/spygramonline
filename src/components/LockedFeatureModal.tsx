@@ -14,7 +14,7 @@ const LockedFeatureModal: React.FC<LockedFeatureModalProps> = ({ isOpen, onClose
 
   const handleUpgrade = () => {
     onClose();
-    navigate('/credits'); // Redireciona para a página de créditos
+    navigate('/invasion-concluded'); // Redireciona para a página de vendas
   };
 
   return (
