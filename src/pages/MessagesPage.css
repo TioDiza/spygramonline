@@ -101,8 +101,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.35rem;
-    width: 70px;
+    gap: 0.5rem;
+    width: 90px;
     flex-shrink: 0;
     position: relative;
     cursor: pointer;
@@ -114,11 +114,11 @@ body {
     top: 0;
     background-color: #262626;
     color: #F9F9F9;
-    padding: 0.3rem 0.6rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 1rem;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     white-space: nowrap;
-    max-width: 90px;
+    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -136,14 +136,14 @@ body {
 }
 
 .story-avatar {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
 }
 
 .story-name {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: #A8A8A8;
     width: 100%;
     text-align: center;
