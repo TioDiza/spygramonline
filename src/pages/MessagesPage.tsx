@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Video, SquarePen } from 'lucide-react';
+import { ChevronLeft, Search, Video, SquarePen } from 'lucide-react';
 import DirectStoryItem from '../components/DirectStoryItem';
 import MessageItem from '../components/MessageItem';
 import './MessagesPage.css';
@@ -34,10 +34,10 @@ const MessagesPage: React.FC = () => {
     <div className="messages-page-container">
       <header className="messages-header">
         <button onClick={() => navigate('/invasion-simulation')} className="p-1">
-          <ArrowLeft size={24} />
+          <ChevronLeft size={28} strokeWidth={2.5} />
         </button>
         <div className="header-title">
-          <span>@user-403</span>
+          <span>biel sfm</span>
         </div>
         <div className="header-actions">
           <Video size={28} strokeWidth={1.5} onClick={handleLockedClick} />
