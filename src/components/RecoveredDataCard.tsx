@@ -68,12 +68,15 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
           Desbloqueie agora e veja o que ele(a) estava escondendo!
         </p>
 
+        {/* Botão menor e centralizado */}
         <ShineButton 
           onClick={onUnlockClick} 
-          className="w-full max-w-xs bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 hover:ring-pink-500/50 active:ring-pink-500/50"
+          className="w-full max-w-[280px] bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 hover:ring-pink-500/50 active:ring-pink-500/50"
           shineColorClasses="bg-pink-600"
         >
-          VER FOTOS E CONVERSAS APAGADAS
+          <span className="text-lg font-extrabold leading-tight">
+            VER FOTOS E CONVERSAS<br/>APAGADAS
+          </span>
         </ShineButton>
       </div>
     </motion.div>
