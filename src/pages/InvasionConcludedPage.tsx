@@ -6,8 +6,9 @@ import ProfileCardDetailed from '../components/ProfileCardDetailed';
 import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
 import RealTimeLocationCard from '../components/RealTimeLocationCard';
 import DatingAppCard from '../components/DatingAppCard';
+import LicensePlateLocationCard from '../components/LicensePlateLocationCard'; // Importa o novo componente
 import CheckoutPromptModal from '../components/CheckoutPromptModal';
-import ShineButton from '../components/ui/ShineButton'; // Importa o novo botão
+import ShineButton from '../components/ui/ShineButton';
 
 const features = [
   { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
@@ -53,7 +54,7 @@ const InvasionConcludedPage: React.FC = () => {
   }, [navigate]);
 
   // Handler modificado para abrir o modal
-  const handleUnlockClick = (feature: 'localização' | 'sites de namoro' | 'acesso completo') => {
+  const handleUnlockClick = (feature: 'localização' | 'sites de namoro' | 'placa de carro' | 'acesso completo') => {
     setModalFeatureName(feature);
     setIsModalOpen(true);
   };
@@ -106,8 +107,11 @@ const InvasionConcludedPage: React.FC = () => {
           onUnlockClick={() => handleUnlockClick('localização')} // Aciona o modal
         />
         
-        {/* 4. Cartão de Aplicativos de Relacionamento (NOVO) */}
-        <DatingAppCard onUnlockClick={() => handleUnlockClick('sites de namoro')} /> // Aciona o modal
+        {/* 4. Cartão de Aplicativos de Relacionamento */}
+        <DatingAppCard onUnlockClick={() => handleUnlockClick('sites de namoro')} /> 
+        
+        {/* 5. Cartão de Rastreamento Veicular (NOVO) */}
+        <LicensePlateLocationCard onUnlockClick={() => handleUnlockClick('placa de carro')} />
 
         {/* Grid de Features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left mt-8">
