@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ProfileData, SuggestedProfile } from '../../types';
 import { ShieldCheck, ChevronDown } from 'lucide-react';
@@ -13,16 +13,27 @@ import FeatureCarousel from '../components/FeatureCarousel';
 import PriceDiscountCard from '../components/PriceDiscountCard';
 import LiveChatFAQ from '../components/LiveChatFAQ';
 import GuaranteeBanner from '../components/GuaranteeBanner';
-import StaticFAQSection from '../components/StaticFAQSection'; // Importa o novo componente
+import StaticFAQSection from '../components/StaticFAQSection';
+import { motion, AnimatePresence } from 'framer-motion'; // Importa motion e AnimatePresence
 
-// Novo componente para a seção fixa
-const FixedScrollPrompt: React.FC = () => (
-  <div className="fixed bottom-0 left-0 right-0 z-20 p-4 bg-black/80 backdrop-blur-sm border-t border-gray-800">
-    <div className="text-center">
-      <p className="text-sm text-gray-500 mb-1">Continue lendo</p>
-      <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
-    </div>
-  </div>
+// Componente para a seção fixa (agora animado)
+const FixedScrollPrompt: React.FC<{ isVisible: boolean }> = ({ isVisible }) => (
+  <AnimatePresence>
+    {isVisible && (
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 50, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="fixed bottom-0 left-0 right-0 z-20 p-4 bg-black/80 backdrop-blur-sm border-t border-gray-800"
+      >
+        <div className="text-center">
+          <p className="text-sm text-gray-500 mb-1">Continue lendo</p>
+          <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
+        </div>
+      </motion.div>
+    )}
+  </AnimatePresence>
 );
 
 const CHECKOUT_URL = 'https://go.perfectpay.com.br/PPU38CPUD1S';
@@ -33,9 +44,9 @@ const InvasionConcludedPage: React.FC = () => {
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
   const [userCity, setUserCity] = useState<string>('Sua Localização');
   
-  // Novo estado para gerenciamento do modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalFeatureName, setModalFeatureName] = useState('');
+  const [showScrollPrompt, setShowScrollPrompt] = useState(true); // Novo estado para o prompt
 
   useEffect(() => {
     const storedData = sessionStorage.getItem('invasionData');
@@ -49,7 +60,28 @@ const InvasionConcludedPage: React.FC = () => {
     }
   }, [navigate]);
 
-  // Handler modificado para abrir o modal
+  // Lógica para ocultar o prompt de rolagem
+  const handleScroll = useCallback(() => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    
+    // Define um limite de 100px do final da página
+    const isNearBottom = scrollHeight - (scrollTop + clientHeight) < 100;
+
+    setShowScrollPrompt(!isNearBottom);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    // Executa uma vez na montagem para verificar a posição inicial
+    handleScroll(); 
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll]);
+
   const handleUnlockClick = (feature: 'localização' | 'sites de namoro' | 'placa de carro' | 'fotos e conversas apagadas' | 'acesso completo') => {
     setModalFeatureName(feature);
     setIsModalOpen(true);
@@ -132,7 +164,7 @@ const InvasionConcludedPage: React.FC = () => {
         {/* Banner de Garantia */}
         <GuaranteeBanner />
 
-        {/* NOVO: Seção de Perguntas Frequentes Estáticas */}
+        {/* Seção de Perguntas Frequentes Estáticas */}
         <StaticFAQSection />
 
       </main>
@@ -146,7 +178,7 @@ const InvasionConcludedPage: React.FC = () => {
       </footer>
       
       {/* Prompt de Scroll Fixo */}
-      <FixedScrollPrompt />
+      <FixedScrollPrompt isVisible={showScrollPrompt} />
     </div>
   );
 };
