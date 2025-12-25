@@ -34,19 +34,19 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
 
   return (
     <div className={cn("relative overflow-hidden rounded-full", className)}>
-      {/* Elemento de Brilho (Reflexo) - Opacidade reduzida e gradiente ajustado */}
+      {/* Elemento de Brilho (Reflexo) - Opacidade aumentada para 90% */}
       <motion.div
         className={cn(
-          "absolute inset-0 w-full h-full opacity-50", // Mantendo opacidade de fundo razoável
+          "absolute inset-0 w-full h-full opacity-50", 
           shineColorClasses
         )}
         variants={shineVariants}
         initial="initial"
         animate="animate"
         style={{
-          // Gradiente mais suave e largo (0.6 opacidade)
-          backgroundImage: `linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 30%, rgba(255, 255, 255, 0.6) 70%, transparent 100%)`,
-          width: '300%', // Aumenta a largura para simular uma faixa mais larga
+          // Gradiente mais forte (0.9 opacidade)
+          backgroundImage: `linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 30%, rgba(255, 255, 255, 0.9) 70%, transparent 100%)`,
+          width: '300%', 
           left: '-100%',
         }}
       />
