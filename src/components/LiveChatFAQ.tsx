@@ -85,8 +85,7 @@ const INITIAL_CONVERSATION: ChatMessageProps[] = [
 ];
 
 const LiveChatFAQ: React.FC = () => {
-  const chatEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null); // Novo ref para o contêiner de rolagem
+  const chatContainerRef = useRef<HTMLDivElement>(null); // Ref para o contêiner de rolagem
   const [displayedMessages, setDisplayedMessages] = useState<ChatMessageProps[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [conversationFinished, setConversationFinished] = useState(false);
@@ -129,12 +128,18 @@ const LiveChatFAQ: React.FC = () => {
   useEffect(() => {
     const container = chatContainerRef.current;
     if (container) {
-      // Verifica se o usuário está a 100px ou menos do final
-      const isScrolledToBottom = container.scrollHeight - container.clientHeight <= container.scrollTop + 100;
+      // Define um limite de 50px
+      const THRESHOLD = 50;
+      
+      // Calcula a distância máxima de rolagem
+      const maxScrollTop = container.scrollHeight - container.clientHeight;
+      
+      // Verifica se o usuário está a 50px ou menos do final
+      const isNearBottom = maxScrollTop - container.scrollTop <= THRESHOLD;
 
-      if (isScrolledToBottom) {
-        // Rola suavemente para o final
-        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      if (isNearBottom) {
+        // Rola diretamente para o final
+        container.scrollTop = maxScrollTop;
       }
     }
   }, [displayedMessages]);
@@ -205,9 +210,6 @@ const LiveChatFAQ: React.FC = () => {
             Admin SpyGram está digitando...
           </div>
         )}
-        
-        {/* Ponto de rolagem automática */}
-        <div ref={chatEndRef} />
       </div>
 
       {/* Campo de Digitação Simulada */}
