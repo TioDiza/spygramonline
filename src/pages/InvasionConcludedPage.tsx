@@ -17,7 +17,7 @@ const features = [
 
 // Novo componente para a seção fixa
 const FixedScrollPrompt: React.FC = () => (
-  <div className="fixed bottom-0 left-0 right-0 z-20 p-4 bg-black/80 backdrop-blur-sm border-t border-gray-800 md:hidden">
+  <div className="fixed bottom-0 left-0 right-0 z-20 p-4 bg-black/80 backdrop-blur-sm border-t border-gray-800">
     <div className="text-center">
       <p className="text-sm text-gray-500 mb-1">Continue lendo</p>
       <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
@@ -61,11 +61,7 @@ const InvasionConcludedPage: React.FC = () => {
         {/* 1. Card de Perfil Detalhado (Perfil Pesquisado) */}
         <ProfileCardDetailed profileData={profileData} />
 
-        {/* Seção de Interação (Continue Lendo) - Mantida para desktop, mas escondida em mobile */}
-        <div className="mt-12 mb-8 hidden md:block">
-          <p className="text-sm text-gray-500 mb-2">Continue lendo</p>
-          <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
-        </div>
+        {/* A seção estática 'Continue lendo' foi removida daqui. */}
 
         {/* 2. Perfis com Maior Interação */}
         <h2 className="text-2xl font-extrabold text-white mt-4 mb-4">
@@ -94,7 +90,7 @@ const InvasionConcludedPage: React.FC = () => {
         </div>
 
         {/* Botão de Ação */}
-        <div className="w-full"> {/* Removido max-w-md para que o botão use a largura total do main container */}
+        <div className="w-full">
           <button
             onClick={() => navigate('/credits')}
             className="w-full py-4 px-6 text-lg font-bold text-white rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-500/50"
@@ -116,7 +112,7 @@ const InvasionConcludedPage: React.FC = () => {
         </div>
       </footer>
       
-      {/* Prompt de Scroll Fixo (Apenas em Mobile) */}
+      {/* Prompt de Scroll Fixo (Agora visível em todas as resoluções) */}
       <FixedScrollPrompt />
     </div>
   );
