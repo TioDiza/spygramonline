@@ -15,17 +15,10 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
     px-4 py-2 text-sm font-medium text-white
     bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400
     transition-all duration-300 ease-in-out
-    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black
+    focus:outline-none 
     disabled:opacity-50 disabled:cursor-not-allowed
     mx-auto
   `;
-
-  // Classes interativas removidas conforme solicitado:
-  // const interactiveClasses = `
-  //   cursor-pointer
-  //   hover:scale-105 hover:ring-4 hover:ring-purple-500/50
-  //   active:scale-100 active:ring-4 active:ring-purple-500/50
-  // `;
 
   const handleButtonClick = () => {
     if (checkoutUrl) {
