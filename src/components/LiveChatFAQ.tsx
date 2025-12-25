@@ -1,5 +1,5 @@
-import React from 'react';
-import { MessageSquare, User, ShieldCheck } from 'lucide-react';
+import React, { useRef, useEffect } from 'react';
+import { MessageSquare, User, ShieldCheck, Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface ChatMessageProps {
@@ -43,6 +43,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ sender, message, time }) => {
 };
 
 const LiveChatFAQ: React.FC = () => {
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
   const messages: ChatMessageProps[] = [
     { sender: 'user', message: 'O acesso é realmente vitalício?', time: '14:30' },
     { sender: 'admin', message: 'Sim! O acesso é permanente. Você paga uma única vez e tem acesso ao perfil invadido para sempre.', time: '14:31' },
@@ -51,6 +53,26 @@ const LiveChatFAQ: React.FC = () => {
     { sender: 'user', message: 'E se eu não gostar do que encontrar?', time: '14:34' },
     { sender: 'admin', message: 'Oferecemos uma garantia de 7 dias. Se não estiver satisfeito, basta solicitar o reembolso total.', time: '14:35' },
   ];
+
+  const commonQuestions = [
+    'Aceita PIX?',
+    'É seguro comprar?',
+    'O acesso é imediato?',
+  ];
+
+  // Efeito para rolar automaticamente para o final do chat
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  // Função simulada para lidar com o clique nas perguntas
+  const handleQuestionClick = (question: string) => {
+    // Simula o envio da pergunta e a resposta do admin
+    console.log(`Pergunta simulada: ${question}`);
+    // Aqui você poderia adicionar lógica para simular a resposta, mas por enquanto, apenas logamos.
+  };
 
   return (
     <div className="mt-12 w-full max-w-md mx-auto">
@@ -61,6 +83,7 @@ const LiveChatFAQ: React.FC = () => {
         </h2>
       </div>
       
+      {/* Área de Mensagens */}
       <div className="bg-gray-900/70 border border-gray-700 rounded-xl p-4 h-[400px] overflow-y-auto flex flex-col">
         {messages.map((msg, index) => (
           <ChatMessage key={index} {...msg} />
@@ -70,6 +93,35 @@ const LiveChatFAQ: React.FC = () => {
         <div className="text-center text-xs text-gray-500 mt-4">
           Admin SpyGram está digitando...
         </div>
+        
+        {/* Ponto de rolagem automática */}
+        <div ref={chatEndRef} />
+      </div>
+
+      {/* Campo de Digitação Simulada */}
+      <div className="mt-4 p-3 bg-gray-900/70 border border-gray-700 rounded-xl flex items-center">
+        <input
+          type="text"
+          placeholder="Digite sua pergunta..."
+          className="flex-1 bg-transparent text-white placeholder-gray-500 focus:outline-none text-sm"
+          readOnly // Mantido como readOnly para simulação
+        />
+        <button className="ml-3 p-2 rounded-full bg-purple-600 hover:bg-purple-700 transition-colors cursor-pointer">
+          <Send className="w-4 h-4 text-white" />
+        </button>
+      </div>
+
+      {/* Perguntas Frequentes (Botões) */}
+      <div className="mt-4 flex flex-wrap gap-2 justify-center">
+        {commonQuestions.map((question, index) => (
+          <button
+            key={index}
+            onClick={() => handleQuestionClick(question)}
+            className="px-3 py-1 text-xs font-medium text-gray-300 bg-gray-800 border border-gray-700 rounded-full hover:bg-gray-700 transition-colors"
+          >
+            {question}
+          </button>
+        ))}
       </div>
     </div>
   );
