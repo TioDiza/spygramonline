@@ -50,7 +50,7 @@ const CheckoutPromptModal: React.FC<CheckoutPromptModalProps> = ({ isOpen, onClo
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#3a312a]/90 border border-[#6b5a4c] rounded-2xl shadow-lg text-white p-6 w-full max-w-sm text-center relative"
+            className="bg-[#443a31]/90 backdrop-blur-md border border-[#6b5a4c] rounded-2xl shadow-lg text-white p-6 w-full max-w-sm text-center relative"
           >
             <button onClick={onClose} className="absolute top-3 right-3 text-gray-400 hover:text-white transition-colors">
               <X size={20} />
@@ -66,7 +66,7 @@ const CheckoutPromptModal: React.FC<CheckoutPromptModalProps> = ({ isOpen, onClo
             
             <button
               onClick={handleAcquireAccess}
-              className="w-full py-3 rounded-lg font-semibold bg-[#6b5a4c]/80 hover:bg-[#7c6a5a] transition-colors duration-200 border border-[#8c7a6a]"
+              className="w-full py-3 rounded-lg font-semibold bg-[#6b5a4c] hover:bg-[#7c6a5a] transition-colors duration-200 border border-[#8c7a6a]"
             >
               Adquirir Acesso VIP
             </button>
