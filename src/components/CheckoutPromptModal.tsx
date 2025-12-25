@@ -65,7 +65,12 @@ const CheckoutPromptModal: React.FC<CheckoutPromptModalProps> = ({ isOpen, onClo
               Seja um membro VIP do SpyGram para ter acesso a {featureName}.
             </p>
             
-            <ShineButton onClick={handleAcquireAccess} className="w-full">
+            <ShineButton 
+              onClick={handleAcquireAccess} 
+              className="w-full"
+              // Ajustando as cores do botão para o tema do modal (marrom/amarelo)
+              shineColorClasses="bg-yellow-500" 
+            >
               Adquirir Acesso VIP
             </ShineButton>
 

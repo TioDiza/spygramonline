@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { motion, Variants } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 
 interface ShineButtonProps {
   children: React.ReactNode;
@@ -11,55 +11,35 @@ interface ShineButtonProps {
 
 const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className, shineColorClasses = 'bg-purple-600' }) => {
   const baseClasses = `
-    relative z-10 flex items-center justify-center rounded-full
-    py-3 px-6 text-lg font-bold text-white
+    relative z-10 flex items-center justify-center gap-2 rounded-lg border-none
+    px-6 py-3 text-lg font-bold text-white
+    bg-gradient-to-r from-purple-600 to-pink-600
     transition-all duration-300 ease-in-out
-    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black
-    cursor-pointer active:scale-95
+    focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-offset-black
+    active:scale-95
   `;
 
-  // Animação de reflexo (shine)
-  const shineVariants: Variants = {
-    initial: { x: '-100%' },
-    animate: {
-      x: '100%',
-      transition: {
-        duration: 3, // Mais lento
-        ease: [0, 0, 1, 1],
-        repeat: Infinity,
-        repeatDelay: 2, // Atraso maior
-      },
-    },
-  };
-
   return (
-    <div className={cn("relative overflow-hidden rounded-full", className)}>
-      {/* Elemento de Brilho (Reflexo) - Opacidade aumentada para 90% */}
-      <motion.div
-        className={cn(
-          "absolute inset-0 w-full h-full opacity-50", 
-          shineColorClasses
-        )}
-        variants={shineVariants}
-        initial="initial"
-        animate="animate"
-        style={{
-          // Gradiente mais forte (0.9 opacidade)
-          backgroundImage: `linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 30%, rgba(255, 255, 255, 0.9) 70%, transparent 100%)`,
-          width: '300%', 
-          left: '-100%',
-        }}
-      />
+    <div className={cn("relative w-full overflow-hidden group", className)}>
+      {/* Efeito de Brilho Desfocado */}
+      <div className={cn(
+        "absolute inset-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt blur-md",
+        shineColorClasses
+      )}></div>
       
       <button
         onClick={onClick}
-        className={cn(baseClasses, className)}
+        className={cn(
+          baseClasses,
+          className
+        )}
         style={{
-          // Garante que o botão tenha a cor de fundo definida pelo className
-          backgroundColor: 'transparent', 
+          // Garante que o background do botão seja visível mesmo com o gradiente
+          background: 'linear-gradient(to right, var(--tw-gradient-stops))',
         }}
       >
-        {children}
+        <Sparkles className="w-5 h-5 text-white" />
+        <span className="text-center">{children}</span>
       </button>
     </div>
   );
