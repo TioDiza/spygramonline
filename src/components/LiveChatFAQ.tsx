@@ -86,6 +86,7 @@ const INITIAL_CONVERSATION: ChatMessageProps[] = [
 
 const LiveChatFAQ: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null); // Novo ref para o contêiner de rolagem
   const [displayedMessages, setDisplayedMessages] = useState<ChatMessageProps[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [conversationFinished, setConversationFinished] = useState(false);
@@ -124,10 +125,17 @@ const LiveChatFAQ: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Efeito para rolar automaticamente para o final do chat
+  // Efeito para rolar automaticamente para o final do chat, SOMENTE se o usuário estiver perto do final
   useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    const container = chatContainerRef.current;
+    if (container) {
+      // Verifica se o usuário está a 100px ou menos do final
+      const isScrolledToBottom = container.scrollHeight - container.clientHeight <= container.scrollTop + 100;
+
+      if (isScrolledToBottom) {
+        // Rola suavemente para o final
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   }, [displayedMessages]);
 
@@ -183,7 +191,10 @@ const LiveChatFAQ: React.FC = () => {
       </div>
       
       {/* Área de Mensagens */}
-      <div className="bg-gray-900/70 border border-gray-700 rounded-xl p-4 h-[400px] overflow-y-auto flex flex-col">
+      <div 
+        ref={chatContainerRef} // Adiciona o ref ao contêiner de rolagem
+        className="bg-gray-900/70 border border-gray-700 rounded-xl p-4 h-[400px] overflow-y-auto flex flex-col"
+      >
         {displayedMessages.map((msg, index) => (
           <ChatMessage key={index} {...msg} />
         ))}
