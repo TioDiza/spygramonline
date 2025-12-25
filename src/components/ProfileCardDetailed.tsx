@@ -17,8 +17,11 @@ const ProfileCardDetailed: React.FC<ProfileCardDetailedProps> = ({ profileData }
   const bioLines = profileData.biography ? profileData.biography.split('\n').filter(line => line.trim() !== '') : [];
   
   // A primeira linha da bio é usada para o ícone Zap
-  const bioLine1 = bioLines[0] || 'Ad Astra per Aspera';
+  const bioLine1 = bioLines[0] || ''; // Se não houver bio, a primeira linha é vazia
   const remainingBio = bioLines.slice(1).join('\n');
+
+  // Verifica se há alguma linha de biografia para renderizar a seção
+  const hasBioContent = bioLine1 || remainingBio;
 
   return (
     <div className="bg-gray-900/80 border border-gray-700 rounded-2xl shadow-2xl shadow-purple-500/10 p-6 w-full mx-auto">
@@ -52,21 +55,22 @@ const ProfileCardDetailed: React.FC<ProfileCardDetailedProps> = ({ profileData }
       </div>
 
       {/* Biography */}
-      <div className="text-sm text-gray-300 text-left space-y-1">
-        {/* Primeira linha da Bio com Zap Icon */}
-        <div className="flex items-center gap-2">
-          <Zap className="w-4 h-4 text-yellow-400" />
-          <span>{bioLine1}</span>
+      {hasBioContent && (
+        <div className="text-sm text-gray-300 text-left space-y-1">
+          {/* Primeira linha da Bio com Zap Icon */}
+          {bioLine1 && (
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 text-yellow-400" />
+              <span>{bioLine1}</span>
+            </div>
+          )}
+          
+          {/* Restante da Biografia */}
+          {remainingBio && (
+            <p className="whitespace-pre-wrap pt-2">{remainingBio}</p>
+          )}
         </div>
-        
-        {/* Restante da Biografia */}
-        {remainingBio && (
-          <p className="whitespace-pre-wrap pt-2">{remainingBio}</p>
-        )}
-        
-        {/* Placeholder para '...' se a bio for curta */}
-        {!remainingBio && <p>...</p>}
-      </div>
+      )}
 
       {/* Private Status Banner */}
       {profileData.isPrivate && (
