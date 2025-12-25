@@ -43,7 +43,8 @@ const LicensePlateLocationCard: React.FC<LicensePlateLocationCardProps> = ({ onU
 
         <ShineButton 
           onClick={onUnlockClick} 
-          className="w-full bg-blue-600 hover:bg-blue-700 focus:ring-blue-500"
+          // Sobrescreve o BG e o anel de foco (ring)
+          className="w-full bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 hover:ring-blue-500/50 active:ring-blue-500/50"
           shineColorClasses="bg-blue-600"
         >
           RASTREAR PLACA AGORA

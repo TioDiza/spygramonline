@@ -35,10 +35,11 @@ const ShineButton: React.FC<ShineButtonProps> = ({
   const customBgClass = className?.split(' ').find(cls => cls.startsWith('bg-') || cls.startsWith('from-'));
   const finalBgClass = customBgClass || 'bg-gradient-to-r from-red-600 to-pink-700';
 
-  // Remove a classe de BG customizada do className para evitar duplicação, mas mantém o restante das classes customizadas (como w-full)
+  // Filtra classes de BG/Gradiente do className para que sejam aplicadas apenas uma vez (via finalBgClass)
   const otherCustomClasses = className?.split(' ').filter(cls => !cls.startsWith('bg-') && !cls.startsWith('from-')).join(' ') || '';
 
   return (
+    // Garante que 'group' e 'w-full' estejam no contêiner externo
     <div className={cn("relative w-full", !disabled && "group", otherCustomClasses)}>
       {/* O div para o brilho desfocado (usando shineColorClasses) */}
       <div className={cn(
@@ -52,8 +53,10 @@ const ShineButton: React.FC<ShineButtonProps> = ({
         className={cn(
           baseButtonClasses,
           finalBgClass, // Aplica a cor de fundo (customizada ou padrão)
-          !disabled && interactiveClasses,
-          otherCustomClasses // Aplica outras classes customizadas (como w-full)
+          !disabled && interactiveClasses
+          // Não aplicamos otherCustomClasses aqui, pois elas já estão no div pai (como w-full).
+          // Se houver classes de estilo que afetam o botão (como padding ou texto), elas devem ser passadas no className.
+          // Para simplificar, vamos garantir que o w-full seja a única classe de layout que precisamos passar.
         )}
       >
         <span className="text-center">{children}</span>
