@@ -1,13 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Radar } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 interface LocationTrackerSectionProps {
   userCity: string;
 }
 
 const LocationTrackerSection: React.FC<LocationTrackerSectionProps> = ({ userCity }) => {
-  const cityDisplay = userCity.toUpperCase();
+  // Se a cidade for o fallback, exibe 'SUA LOCALIZAÇÃO', caso contrário, exibe a cidade real.
+  const locationText = userCity.toLowerCase() === 'sua localização' 
+    ? 'SUA LOCALIZAÇÃO' 
+    : userCity.toUpperCase();
 
   return (
     <motion.div
@@ -28,7 +31,7 @@ const LocationTrackerSection: React.FC<LocationTrackerSectionProps> = ({ userCit
         </span>
       </p>
 
-      {/* Map Mockup with Animation (Ajustado para o estilo solicitado) */}
+      {/* Map Mockup with Animation */}
       <div className="relative w-full h-48 bg-[#1a1a1a] rounded-2xl overflow-hidden mb-6 border border-red-700/50">
         {/* Simulated Map Grid Background */}
         <div className="absolute inset-0 opacity-20" style={{
@@ -36,7 +39,7 @@ const LocationTrackerSection: React.FC<LocationTrackerSectionProps> = ({ userCit
           backgroundSize: '20px 20px',
         }}></div>
         
-        {/* Animated Radar Effect */}
+        {/* Animated Radar Effect (Outer Ring) */}
         <motion.div
           animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
@@ -45,16 +48,15 @@ const LocationTrackerSection: React.FC<LocationTrackerSectionProps> = ({ userCit
           <div className="w-3/4 h-3/4 border-4 border-red-500 rounded-full opacity-50"></div>
         </motion.div>
         
-        {/* Central Pin - Usando MapPin para corrigir o erro TS6133 */}
-        <div className="absolute top-[35%] left-1/2 transform -translate-x-1/2">
+        {/* Central Pin (Ajustado para o topo do balão) */}
+        <div className="absolute top-[30%] left-1/2 transform -translate-x-1/2">
           <MapPin className="w-8 h-8 text-red-500 drop-shadow-lg" fill="#EF4444" />
         </div>
 
-        {/* Location Text Overlay (Ajustado para o estilo solicitado) */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/90 px-6 py-3 rounded-full border border-red-600 shadow-xl">
-          <p className="text-lg font-bold text-red-400 flex items-center gap-2">
-            <Radar className="w-4 h-4 animate-spin-slow" />
-            PERTO DE {cityDisplay}
+        {/* Location Text Overlay (Balão) */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/90 px-8 py-4 rounded-full border border-red-600 shadow-xl">
+          <p className="text-xl font-bold text-red-400">
+            PERTO DE {locationText}
           </p>
         </div>
       </div>
