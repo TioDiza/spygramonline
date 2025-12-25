@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, Variants } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
 interface ShineButtonProps {
@@ -6,52 +7,51 @@ interface ShineButtonProps {
   onClick: () => void;
   className?: string;
   disabled?: boolean;
-  gradientClasses?: string; // Adicionado para permitir gradientes personalizados
 }
 
-const ShineButton: React.FC<ShineButtonProps> = ({ 
-  children, 
-  onClick, 
-  className, 
-  disabled = false,
-  gradientClasses,
-}) => {
-  
-  // Gradiente padrão (usado em InvasionConcludedPage para desconto)
-  const defaultGradient = "from-red-600 via-pink-700 to-purple-800 hover:from-red-700 hover:via-pink-800 hover:to-purple-900";
-  const finalGradient = gradientClasses || defaultGradient;
-
-  const baseButtonClasses = `
-    relative z-10 flex items-center justify-center gap-1 rounded-full border-none
+const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className, disabled = false }) => {
+  const baseClasses = `
+    relative z-10 flex items-center justify-center rounded-xl
     px-6 py-3 text-lg font-bold text-white
-    bg-gradient-to-r ${finalGradient}
+    bg-gradient-to-r from-red-600 to-pink-700
     transition-all duration-300 ease-in-out
-    focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black
+    focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black
     disabled:opacity-50 disabled:cursor-not-allowed
   `;
 
-  const interactiveClasses = `
-    cursor-pointer
-    hover:scale-[1.02]
-    active:scale-[0.98]
-  `;
+  const shineVariants: Variants = {
+    initial: { x: '-100%' },
+    animate: {
+      x: '100%',
+      transition: {
+        duration: 1.6, // Duração da passagem do brilho (mantida em 1.6s)
+        ease: [0, 0, 1, 1], // Linear
+        repeat: Infinity,
+        repeatDelay: 2.4, // Atraso de repetição reduzido para 2.4s (20% mais rápido)
+      },
+    },
+  };
 
   return (
-    <div className={cn("relative", className, !disabled && "group")}>
-      {/* O div para o brilho desfocado (Shine effect) */}
-      <div className={`absolute inset-0.5 bg-gradient-to-r ${finalGradient} rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt`}></div>
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(baseClasses, className, "overflow-hidden group")}
+    >
+      <span className="relative z-20">{children}</span>
       
-      <button
-        onClick={onClick}
-        disabled={disabled}
-        className={cn(
-          baseButtonClasses,
-          !disabled && interactiveClasses
-        )}
-      >
-        <span className="text-center">{children}</span>
-      </button>
-    </div>
+      {/* Efeito de Brilho (Shine) - Mais realista com gradiente */}
+      <motion.span
+        className="absolute top-0 left-0 h-full w-[200%] transform skew-x-12" // Elemento mais largo
+        style={{
+          // Gradiente: transparente -> branco/opacidade -> transparente
+          backgroundImage: 'linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%)',
+        }}
+        variants={shineVariants}
+        initial="initial"
+        animate="animate"
+      />
+    </button>
   );
 };
 
