@@ -106,7 +106,7 @@ const InvasionConcludedPage: React.FC = () => {
         checkoutUrl={CHECKOUT_URL}
       />
 
-      <main className="w-full max-w-md lg:max-w-4xl mx-auto text-center relative z-10 pt-12 pb-20">
+      <main className="w-full max-w-md lg:max-w-4xl mx-auto text-center relative z-10 pt-12 pb-12"> {/* Reduzido pb-20 para pb-12 */}
         
         {/* Título Principal */}
         <h1 className="text-3xl md:text-4xl font-extrabold mb-8">
@@ -170,7 +170,7 @@ const InvasionConcludedPage: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="text-center mt-12 py-4 relative z-10">
+      <footer className="text-center mt-6 py-4 relative z-10"> {/* Reduzido mt-12 para mt-6 */}
         <div className="inline-flex items-center gap-2 text-gray-400 text-sm mb-1">
           <ShieldCheck className="w-4 h-4 text-green-500" />
           <span>Pagamento Seguro | Site Protegido</span>
