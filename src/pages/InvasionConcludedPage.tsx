@@ -10,7 +10,8 @@ import LicensePlateLocationCard from '../components/LicensePlateLocationCard';
 import CheckoutPromptModal from '../components/CheckoutPromptModal';
 import FeatureCarousel from '../components/FeatureCarousel';
 import PriceDiscountCard from '../components/PriceDiscountCard';
-import LiveChatFAQ from '../components/LiveChatFAQ'; // Importa o novo componente
+import LiveChatFAQ from '../components/LiveChatFAQ';
+import GuaranteeBanner from '../components/GuaranteeBanner'; // Importa o novo componente
 
 // Novo componente para a seção fixa
 const FixedScrollPrompt: React.FC = () => (
@@ -122,6 +123,9 @@ const InvasionConcludedPage: React.FC = () => {
         
         {/* NOVO: Chat ao Vivo FAQ */}
         <LiveChatFAQ />
+        
+        {/* NOVO: Banner de Garantia */}
+        <GuaranteeBanner />
 
       </main>
 
