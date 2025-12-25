@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { ProfileData } from '../../types';
 import { ShieldCheck, Zap, Clock, MessageSquare, Award, ChevronDown } from 'lucide-react';
 import ProfileCardDetailed from '../components/ProfileCardDetailed';
-import PurchaseNotification from '../components/PurchaseNotification';
 
 const features = [
   { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
@@ -12,67 +11,6 @@ const features = [
   { icon: MessageSquare, title: 'Chat Ao Vivo', description: 'Acompanhe as conversas em tempo real e veja com quem a pessoa interage.' },
   { icon: Award, title: 'Garantia de 7 Dias', description: 'Se não estiver satisfeito, devolvemos seu dinheiro sem burocracia.' },
 ];
-
-// Componente para o fundo de Natal
-const ChristmasBackground: React.FC = () => {
-  const stars = Array.from({ length: 100 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 2 + 1,
-    delay: Math.random() * 5,
-  }));
-
-  const hats = Array.from({ length: 15 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    delay: Math.random() * 10,
-  }));
-
-  return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      {/* Estrelas */}
-      {stars.map(star => (
-        <div
-          key={star.id}
-          className="absolute bg-white rounded-full animate-pulse"
-          style={{
-            width: `${star.size}px`,
-            height: `${star.size}px`,
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            animationDelay: `${star.delay}s`,
-            opacity: 0.8,
-          }}
-        />
-      ))}
-      {/* Chapéus de Papai Noel */}
-      {hats.map(hat => (
-        <div
-          key={hat.id}
-          className="absolute w-10 h-10 opacity-70"
-          style={{
-            left: `${hat.x}%`,
-            top: `${hat.y}%`,
-            transform: `rotate(${Math.random() * 360}deg)`,
-            animation: `float-hat 15s infinite ease-in-out alternate`,
-            animationDelay: `${hat.delay}s`,
-          }}
-        >
-          <img src="/icons/santa-hat.png" alt="Santa Hat" className="w-full h-full" />
-        </div>
-      ))}
-      <style>{`
-        @keyframes float-hat {
-          0% { transform: translateY(0) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(10deg); }
-          100% { transform: translateY(0) rotate(0deg); }
-        }
-      `}</style>
-    </div>
-  );
-};
 
 // Novo componente para a seção fixa
 const FixedScrollPrompt: React.FC = () => (
@@ -104,26 +42,22 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8 flex flex-col items-center relative z-10">
-      <ChristmasBackground />
-      <PurchaseNotification />
+      {/* ChristmasBackground e PurchaseNotification removidos */}
 
-      <main className="w-full max-w-2xl mx-auto text-center relative z-10 pt-12 pb-20"> {/* Adicionado pb-20 para compensar o FixedScrollPrompt */}
+      <main className="w-full max-w-2xl mx-auto text-center relative z-10 pt-12 pb-20">
         
-        {/* Título Principal */}
+        {/* Título Principal - Referência a 'Oferta de Natal' removida */}
         <h1 className="text-3xl md:text-4xl font-extrabold mb-8">
           <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
             Invasão Concluída! 
-          </span>
-          <span className="text-pink-500 ml-2">
-            <span role="img" aria-label="dress">👗</span> Oferta de Natal!
           </span>
         </h1>
 
         {/* Card de Perfil Detalhado */}
         <ProfileCardDetailed profileData={profileData} />
 
-        {/* Seção de Interação (Continue Lendo) - Removida daqui e movida para FixedScrollPrompt */}
-        <div className="mt-12 mb-8 hidden md:block"> {/* Mantido para desktop, mas escondido em mobile */}
+        {/* Seção de Interação (Continue Lendo) - Mantida para desktop, mas escondida em mobile */}
+        <div className="mt-12 mb-8 hidden md:block">
           <p className="text-sm text-gray-500 mb-2">Continue lendo</p>
           <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
         </div>
