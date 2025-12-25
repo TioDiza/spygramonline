@@ -26,6 +26,8 @@ const FixedScrollPrompt: React.FC = () => (
   </div>
 );
 
+const CHECKOUT_URL = 'https://go.perfectpay.com.br/PPU38CPUD1S';
+
 const InvasionConcludedPage: React.FC = () => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
@@ -45,7 +47,8 @@ const InvasionConcludedPage: React.FC = () => {
   }, [navigate]);
 
   const handleUnlockClick = () => {
-    navigate('/credits');
+    // Redireciona para o checkout em uma nova aba
+    window.open(CHECKOUT_URL, '_blank');
   };
 
   if (!profileData) {
@@ -79,6 +82,16 @@ const InvasionConcludedPage: React.FC = () => {
         {/* 3. Cartão de Localização em Tempo Real */}
         <RealTimeLocationCard profileData={profileData} userCity={userCity} />
         
+        {/* NOVO BOTÃO: Descobrir Localização */}
+        <div className="w-full max-w-xs mx-auto mt-[-20px] mb-12">
+          <button
+            onClick={handleUnlockClick}
+            className="w-full py-3 px-6 text-lg font-bold text-white rounded-xl bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500/50"
+          >
+            DESCOBRIR LOCALIZAÇÃO
+          </button>
+        </div>
+
         {/* 4. Cartão de Aplicativos de Relacionamento (NOVO) */}
         <DatingAppCard onUnlockClick={handleUnlockClick} />
 
@@ -95,7 +108,7 @@ const InvasionConcludedPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Botão de Ação */}
+        {/* Botão de Ação Principal */}
         <div className="w-full">
           <button
             onClick={handleUnlockClick}
