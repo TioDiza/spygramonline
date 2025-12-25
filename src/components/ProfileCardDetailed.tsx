@@ -13,13 +13,18 @@ const formatNumber = (num: number) => {
 };
 
 const ProfileCardDetailed: React.FC<ProfileCardDetailedProps> = ({ profileData }) => {
-  // Mock data for demonstration purposes, as location/bio details are not always available in ProfileData
+  // Mock de localização para manter a referência visual do screenshot
   const mockLocation = 'Barroso/MG';
-  const mockBioLine1 = 'Ad Astra per Aspera';
-  const mockBioLine2 = '...';
+  
+  // Usar a biografia real, ou um placeholder se não houver
+  const bioLines = profileData.biography ? profileData.biography.split('\n').filter(line => line.trim() !== '') : [];
+  
+  // A primeira linha da bio é usada para o ícone Zap
+  const bioLine1 = bioLines[0] || 'Ad Astra per Aspera';
+  const remainingBio = bioLines.slice(1).join('\n');
 
   return (
-    <div className="bg-gray-900/80 border border-gray-700 rounded-2xl shadow-2xl shadow-purple-500/10 p-6 w-full max-w-sm mx-auto">
+    <div className="bg-gray-900/80 border border-gray-700 rounded-2xl shadow-2xl shadow-purple-500/10 p-6 w-full max-w-md mx-auto">
       {/* Header: Pic, Username, Fullname */}
       <div className="flex items-center gap-4 mb-6">
         <img
@@ -27,7 +32,7 @@ const ProfileCardDetailed: React.FC<ProfileCardDetailedProps> = ({ profileData }
           alt={profileData.username}
           className="w-20 h-20 rounded-full object-cover border-2 border-pink-500"
         />
-        <div className="flex-1">
+        <div className="flex-1 text-left">
           <p className="text-2xl font-bold text-white">{profileData.username}</p>
           <p className="text-gray-400">{profileData.fullName} 😟</p>
         </div>
@@ -50,21 +55,31 @@ const ProfileCardDetailed: React.FC<ProfileCardDetailedProps> = ({ profileData }
       </div>
 
       {/* Biography/Location */}
-      <div className="text-sm text-gray-300 text-left space-y-1 mb-6">
+      <div className="text-sm text-gray-300 text-left space-y-1">
+        {/* Primeira linha da Bio com Zap Icon */}
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 text-yellow-400" />
-          <span>{mockBioLine1}</span>
+          <span>{bioLine1}</span>
         </div>
+        
+        {/* Localização Mockada com MapPin Icon */}
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-red-500" />
           <span>{mockLocation}</span>
         </div>
-        <p>{mockBioLine2}</p>
+        
+        {/* Restante da Biografia */}
+        {remainingBio && (
+          <p className="whitespace-pre-wrap pt-2">{remainingBio}</p>
+        )}
+        
+        {/* Placeholder para '...' se a bio for curta */}
+        {!remainingBio && <p>...</p>}
       </div>
 
       {/* Private Status Banner */}
       {profileData.isPrivate && (
-        <div className="bg-yellow-800/50 border border-yellow-600 text-yellow-300 px-4 py-3 rounded-lg text-center text-sm font-semibold">
+        <div className="mt-6 bg-yellow-800/50 border border-yellow-600 text-yellow-300 px-4 py-3 rounded-lg text-center text-sm font-semibold">
           Este perfil é privado. O SpyGram conseguiu invadir mesmo assim!
         </div>
       )}

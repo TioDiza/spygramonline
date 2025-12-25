@@ -4,11 +4,11 @@ import { ProfileData, SuggestedProfile } from '../../types';
 import { ShieldCheck, Zap, Clock, MessageSquare, Award, ChevronDown, MapPin } from 'lucide-react';
 import ProfileCardDetailed from '../components/ProfileCardDetailed';
 import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
-import RealTimeLocationCard from '../components/RealTimeLocationCard'; // Importa o novo componente
+import RealTimeLocationCard from '../components/RealTimeLocationCard';
 
 const features = [
   { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
-  { icon: MapPin, title: 'Localização em Tempo Real', description: 'Saiba exatamente onde a pessoa está no momento da invasão.' }, // Novo benefício
+  { icon: MapPin, title: 'Localização em Tempo Real', description: 'Saiba exatamente onde a pessoa está no momento da invasão.' },
   { icon: ShieldCheck, title: '100% Seguro e Anônimo', description: 'Sua identidade é protegida. A invasão é indetectável.' },
   { icon: Clock, title: 'Acesso Vitalício', description: 'Pague uma vez e tenha acesso ao perfil para sempre, sem mensalidades.' },
   { icon: MessageSquare, title: 'Chat Ao Vivo', description: 'Acompanhe as conversas em tempo real e veja com quem a pessoa interage.' },
@@ -29,7 +29,7 @@ const InvasionConcludedPage: React.FC = () => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
-  const [userCity, setUserCity] = useState<string>('Sua Localização'); // Novo estado para a cidade do usuário
+  const [userCity, setUserCity] = useState<string>('Sua Localização');
 
   useEffect(() => {
     const storedData = sessionStorage.getItem('invasionData');
@@ -37,7 +37,7 @@ const InvasionConcludedPage: React.FC = () => {
       const data = JSON.parse(storedData);
       setProfileData(data.profileData);
       setSuggestedProfiles(data.suggestedProfiles || []);
-      setUserCity(data.userCity || 'Sua Localização'); // Busca a cidade do usuário
+      setUserCity(data.userCity || 'Sua Localização');
     } else {
       navigate('/');
     }
@@ -49,7 +49,7 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8 flex flex-col items-center relative z-10">
-      <main className="w-full max-w-2xl mx-auto text-center relative z-10 pt-12 pb-20">
+      <main className="w-full max-w-md mx-auto text-center relative z-10 pt-12 pb-20">
         
         {/* Título Principal */}
         <h1 className="text-3xl md:text-4xl font-extrabold mb-8">
@@ -58,7 +58,7 @@ const InvasionConcludedPage: React.FC = () => {
           </span>
         </h1>
 
-        {/* Card de Perfil Detalhado */}
+        {/* 1. Card de Perfil Detalhado (Perfil Pesquisado) */}
         <ProfileCardDetailed profileData={profileData} />
 
         {/* Seção de Interação (Continue Lendo) - Mantida para desktop, mas escondida em mobile */}
@@ -67,12 +67,7 @@ const InvasionConcludedPage: React.FC = () => {
           <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
         </div>
 
-        {/* NOVO: Cartão de Localização em Tempo Real */}
-        <div className="mt-16 mb-12">
-          <RealTimeLocationCard profileData={profileData} userCity={userCity} />
-        </div>
-        {/* FIM NOVO CARTÃO */}
-
+        {/* 2. Perfis com Maior Interação */}
         <h2 className="text-2xl font-extrabold text-white mt-4 mb-4">
           Perfis com Maior Interação 
           <span className="text-gray-500 font-normal text-lg ml-2">(Desbloqueie para ver nomes)</span>
@@ -82,6 +77,9 @@ const InvasionConcludedPage: React.FC = () => {
         <InteractionProfilesCarousel profiles={suggestedProfiles} />
         {/* FIM CARROSSEL */}
 
+        {/* 3. Cartão de Localização em Tempo Real */}
+        <RealTimeLocationCard profileData={profileData} userCity={userCity} />
+        
         {/* Grid de Features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left mt-8">
           {features.map((feature, index) => (
