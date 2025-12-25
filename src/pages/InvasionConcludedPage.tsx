@@ -61,9 +61,6 @@ const InvasionConcludedPage: React.FC = () => {
         {/* Card de Perfil Detalhado */}
         <ProfileCardDetailed profileData={profileData} />
 
-        {/* NOVO: Seção de Rastreamento de Localização */}
-        <LocationTrackerSection userCity={userCity} />
-
         {/* Seção de Interação (Continue Lendo) - Mantida para desktop, mas escondida em mobile */}
         <div className="mt-12 mb-8 hidden md:block">
           <p className="text-sm text-gray-500 mb-2">Continue lendo</p>
@@ -78,6 +75,9 @@ const InvasionConcludedPage: React.FC = () => {
         {/* CARROSSEL DE PERFIS */}
         <InteractionProfilesCarousel profiles={suggestedProfiles} />
         {/* FIM CARROSSEL */}
+
+        {/* NOVO: Seção de Rastreamento de Localização (Movida para cá) */}
+        <LocationTrackerSection userCity={userCity} />
 
         {/* Grid de Features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left mt-8">

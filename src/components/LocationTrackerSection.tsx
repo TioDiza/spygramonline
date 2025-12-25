@@ -28,8 +28,8 @@ const LocationTrackerSection: React.FC<LocationTrackerSectionProps> = ({ userCit
         </span>
       </p>
 
-      {/* Map Mockup with Animation */}
-      <div className="relative w-full h-48 bg-gray-800 rounded-xl overflow-hidden mb-6">
+      {/* Map Mockup with Animation (Ajustado para o estilo solicitado) */}
+      <div className="relative w-full h-48 bg-[#1a1a1a] rounded-2xl overflow-hidden mb-6 border border-red-700/50">
         {/* Animated Radar Effect */}
         <motion.div
           animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
@@ -44,8 +44,8 @@ const LocationTrackerSection: React.FC<LocationTrackerSectionProps> = ({ userCit
           <MapPin className="w-10 h-10 text-red-500 drop-shadow-lg" fill="#EF4444" />
         </div>
 
-        {/* Location Text Overlay */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 px-4 py-2 rounded-full border border-red-500 shadow-lg">
+        {/* Location Text Overlay (Ajustado para o estilo solicitado) */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/90 px-6 py-3 rounded-full border border-red-600 shadow-xl">
           <p className="text-lg font-bold text-red-400 flex items-center gap-2">
             <Radar className="w-4 h-4 animate-spin-slow" />
             PERTO DE {cityDisplay}
