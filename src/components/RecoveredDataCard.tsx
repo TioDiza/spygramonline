@@ -28,7 +28,7 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.5, delay: 1.6 }}
-      className="mt-12 mb-12 p-0 text-center w-full mx-auto relative overflow-hidden" // Removido fundo, bordas e padding
+      className="mt-12 mb-12 p-0 text-center w-full mx-auto relative overflow-hidden"
     >
       <div className="relative z-10">
         
@@ -68,16 +68,18 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
           Desbloqueie agora e veja o que ele(a) estava escondendo!
         </p>
 
-        {/* Botão menor e centralizado */}
-        <ShineButton 
-          onClick={onUnlockClick} 
-          className="w-full max-w-[280px] bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 hover:ring-pink-500/50 active:ring-pink-500/50"
-          shineColorClasses="bg-pink-600"
-        >
-          <span className="text-lg font-extrabold leading-tight">
-            VER FOTOS E CONVERSAS<br/>APAGADAS
-          </span>
-        </ShineButton>
+        {/* Contêiner para forçar a centralização do botão */}
+        <div className="w-full flex justify-center">
+          <ShineButton 
+            onClick={onUnlockClick} 
+            className="w-full max-w-[280px] bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 hover:ring-pink-500/50 active:ring-pink-500/50"
+            shineColorClasses="bg-pink-600"
+          >
+            <span className="text-lg font-extrabold leading-tight">
+              VER FOTOS E CONVERSAS<br/>APAGADAS
+            </span>
+          </ShineButton>
+        </div>
       </div>
     </motion.div>
   );
