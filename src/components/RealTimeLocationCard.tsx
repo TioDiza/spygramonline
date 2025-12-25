@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ProfileData } from '../../types';
+import ProfileMapPin from './ProfileMapPin'; // Importa o novo componente
 
 interface RealTimeLocationCardProps {
   profileData: ProfileData;
@@ -54,15 +55,13 @@ const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData
           <div className="w-3/4 h-3/4 border-4 border-red-500 rounded-full opacity-50"></div>
         </motion.div>
         
-        {/* Profile Picture Marker */}
+        {/* Profile Map Pin Marker */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="w-20 h-20 rounded-full border-4 border-white overflow-hidden shadow-xl">
-            <img 
-              src={profileData.profilePicUrl} 
-              alt={profileData.username} 
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <ProfileMapPin 
+            profilePicUrl={profileData.profilePicUrl} 
+            username={profileData.username} 
+            size={50} // Tamanho ajustado para caber no mapa
+          />
         </div>
 
         {/* Location Text Overlay (Balão) */}
