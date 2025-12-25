@@ -23,7 +23,7 @@ const ShineButton: React.FC<ShineButtonProps> = ({
 
   const baseButtonClasses = `
     relative z-10 flex items-center justify-center gap-1 rounded-full border-none
-    px-6 py-3 text-lg font-bold text-white w-full mx-auto
+    px-6 py-3 text-lg font-bold text-white
     bg-gradient-to-r ${finalGradient}
     transition-all duration-300 ease-in-out
     focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black
