@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProfileData } from '../../types';
+import { ProfileData, SuggestedProfile } from '../../types';
 import { ShieldCheck, Zap, Clock, MessageSquare, Award, ChevronDown } from 'lucide-react';
 import ProfileCardDetailed from '../components/ProfileCardDetailed';
+import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
 
 const features = [
   { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
@@ -25,12 +26,14 @@ const FixedScrollPrompt: React.FC = () => (
 const InvasionConcludedPage: React.FC = () => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
 
   useEffect(() => {
     const storedData = sessionStorage.getItem('invasionData');
     if (storedData) {
       const data = JSON.parse(storedData);
       setProfileData(data.profileData);
+      setSuggestedProfiles(data.suggestedProfiles || []);
     } else {
       navigate('/');
     }
@@ -42,11 +45,9 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8 flex flex-col items-center relative z-10">
-      {/* ChristmasBackground e PurchaseNotification removidos */}
-
       <main className="w-full max-w-2xl mx-auto text-center relative z-10 pt-12 pb-20">
         
-        {/* Título Principal - Referência a 'Oferta de Natal' removida */}
+        {/* Título Principal */}
         <h1 className="text-3xl md:text-4xl font-extrabold mb-8">
           <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
             Invasão Concluída! 
@@ -62,13 +63,17 @@ const InvasionConcludedPage: React.FC = () => {
           <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
         </div>
 
-        <h2 className="text-2xl font-extrabold text-white mt-4 mb-8">
+        <h2 className="text-2xl font-extrabold text-white mt-4 mb-4">
           Perfis com Maior Interação 
           <span className="text-gray-500 font-normal text-lg ml-2">(Desbloqueie para ver nomes)</span>
         </h2>
+        
+        {/* CARROSSEL DE PERFIS */}
+        <InteractionProfilesCarousel profiles={suggestedProfiles} />
+        {/* FIM CARROSSEL */}
 
         {/* Grid de Features */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left mt-8">
           {features.map((feature, index) => (
             <div key={index} className="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
               <feature.icon className="w-6 h-6 text-purple-400 mt-1 flex-shrink-0" />
