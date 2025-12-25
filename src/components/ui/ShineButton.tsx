@@ -19,7 +19,6 @@ const ShineButton: React.FC<ShineButtonProps> = ({
   const baseButtonClasses = `
     relative z-10 flex items-center justify-center gap-1 rounded-full border-none
     px-6 py-3 text-lg font-bold text-white
-    bg-gradient-to-r from-red-600 to-pink-700
     transition-all duration-300 ease-in-out
     focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-black
     disabled:opacity-50 disabled:cursor-not-allowed
@@ -31,6 +30,11 @@ const ShineButton: React.FC<ShineButtonProps> = ({
     hover:scale-[1.02] hover:ring-4 hover:ring-pink-500/50
     active:scale-[0.98] active:ring-4 active:ring-pink-500/50
   `;
+  
+  // Se o className não contiver uma cor de fundo, usamos o padrão.
+  const defaultBgClass = className && (className.includes('bg-') || className.includes('from-')) 
+    ? '' 
+    : 'bg-gradient-to-r from-red-600 to-pink-700';
 
   return (
     <div className={cn("relative w-full", !disabled && "group", className)}>
@@ -45,8 +49,9 @@ const ShineButton: React.FC<ShineButtonProps> = ({
         disabled={disabled}
         className={cn(
           baseButtonClasses,
+          defaultBgClass, // Aplica o BG padrão se não houver BG customizado
           !disabled && interactiveClasses,
-          className // Aplica classes customizadas por último para garantir a sobrescrita do BG
+          className // Aplica classes customizadas por último para garantir a sobrescrita
         )}
       >
         <span className="text-center">{children}</span>
