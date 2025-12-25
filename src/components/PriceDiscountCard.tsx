@@ -77,6 +77,7 @@ const PriceDiscountCard: React.FC<PriceDiscountCardProps> = ({ originalPrice, di
         <ShineButton 
           onClick={onUnlockClick} 
           className="w-full bg-red-600 focus:ring-red-500 active:scale-95"
+          shineColorClasses="bg-red-600"
         >
           LIBERAR ACESSO COMPLETO AGORA
         </ShineButton>

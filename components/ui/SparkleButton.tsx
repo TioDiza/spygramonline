@@ -34,8 +34,9 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
   };
 
   return (
-    <div className={cn("relative w-full overflow-hidden")}>
-      {/* O div para o brilho desfocado (group-hover) foi removido */}
+    <div className={cn("relative w-full overflow-hidden", !disabled && "group")}>
+      {/* O div para o brilho desfocado (mantido no hover do grupo) */}
+      <div className="absolute inset-2 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
       
       <button
         onClick={handleButtonClick}
