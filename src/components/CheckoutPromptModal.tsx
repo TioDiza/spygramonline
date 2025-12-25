@@ -66,7 +66,10 @@ const CheckoutPromptModal: React.FC<CheckoutPromptModalProps> = ({ isOpen, onClo
             
             <button
               onClick={handleAcquireAccess}
-              className="w-full py-3 rounded-lg font-semibold bg-[#6b5a4c] hover:bg-[#7c6a5a] transition-colors duration-200 border border-[#8c7a6a]"
+              className="w-full py-3 rounded-full font-bold text-lg text-white 
+                         bg-gradient-to-r from-red-600 to-pink-700 
+                         hover:from-red-700 hover:to-pink-800 
+                         transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900"
             >
               Adquirir Acesso VIP
             </button>
