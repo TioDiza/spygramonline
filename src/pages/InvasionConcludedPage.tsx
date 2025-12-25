@@ -5,7 +5,8 @@ import { ShieldCheck, Zap, Clock, MessageSquare, Award, ChevronDown, MapPin } fr
 import ProfileCardDetailed from '../components/ProfileCardDetailed';
 import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
 import RealTimeLocationCard from '../components/RealTimeLocationCard';
-import DatingAppCard from '../components/DatingAppCard'; // Importa o novo componente
+import DatingAppCard from '../components/DatingAppCard';
+import CheckoutPromptModal from '../components/CheckoutPromptModal'; // Importa o novo modal
 
 const features = [
   { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
@@ -33,6 +34,10 @@ const InvasionConcludedPage: React.FC = () => {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
   const [userCity, setUserCity] = useState<string>('Sua Localização');
+  
+  // Novo estado para gerenciamento do modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalFeatureName, setModalFeatureName] = useState('');
 
   useEffect(() => {
     const storedData = sessionStorage.getItem('invasionData');
@@ -46,9 +51,14 @@ const InvasionConcludedPage: React.FC = () => {
     }
   }, [navigate]);
 
-  const handleUnlockClick = () => {
-    // Redireciona para o checkout em uma nova aba
-    window.open(CHECKOUT_URL, '_blank');
+  // Handler modificado para abrir o modal
+  const handleUnlockClick = (feature: 'localização' | 'sites de namoro' | 'acesso completo') => {
+    setModalFeatureName(feature);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   if (!profileData) {
@@ -57,6 +67,15 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8 flex flex-col items-center relative z-10">
+      
+      {/* Checkout Prompt Modal */}
+      <CheckoutPromptModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        featureName={modalFeatureName}
+        checkoutUrl={CHECKOUT_URL}
+      />
+
       <main className="w-full max-w-md lg:max-w-4xl mx-auto text-center relative z-10 pt-12 pb-20">
         
         {/* Título Principal */}
@@ -83,13 +102,11 @@ const InvasionConcludedPage: React.FC = () => {
         <RealTimeLocationCard 
           profileData={profileData} 
           userCity={userCity} 
-          onUnlockClick={handleUnlockClick} // Passa a função de clique
+          onUnlockClick={() => handleUnlockClick('localização')} // Aciona o modal
         />
         
-        {/* O contêiner do botão foi removido daqui, pois o botão agora está dentro do RealTimeLocationCard */}
-
         {/* 4. Cartão de Aplicativos de Relacionamento (NOVO) */}
-        <DatingAppCard onUnlockClick={handleUnlockClick} />
+        <DatingAppCard onUnlockClick={() => handleUnlockClick('sites de namoro')} /> // Aciona o modal
 
         {/* Grid de Features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left mt-8">
@@ -107,7 +124,7 @@ const InvasionConcludedPage: React.FC = () => {
         {/* Botão de Ação Principal */}
         <div className="w-full">
           <button
-            onClick={handleUnlockClick}
+            onClick={() => handleUnlockClick('acesso completo')} // Aciona o modal
             className="w-full py-4 px-6 text-lg font-bold text-white rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-500/50"
           >
             LIBERAR ACESSO COMPLETO AGORA
