@@ -30,6 +30,15 @@
   animation: spin-slow 5s linear infinite;
 }
 
+/* Adiciona a animação pulse-slow */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 4s infinite ease-in-out alternate;
+}
+
 /* Custom scrollbar hide utility */
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */

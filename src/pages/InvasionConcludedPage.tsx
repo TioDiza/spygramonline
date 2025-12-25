@@ -9,7 +9,8 @@ import DatingAppCard from '../components/DatingAppCard';
 import LicensePlateLocationCard from '../components/LicensePlateLocationCard';
 import CheckoutPromptModal from '../components/CheckoutPromptModal';
 import ShineButton from '../components/ui/ShineButton';
-import FeatureCarousel from '../components/FeatureCarousel'; // Importa o novo carrossel
+import FeatureCarousel from '../components/FeatureCarousel';
+import PriceDiscountCard from '../components/PriceDiscountCard'; // Importa o novo componente
 
 // Novo componente para a seção fixa
 const FixedScrollPrompt: React.FC = () => (
@@ -105,8 +106,11 @@ const InvasionConcludedPage: React.FC = () => {
         {/* 5. Cartão de Rastreamento Veicular */}
         <LicensePlateLocationCard onUnlockClick={() => handleUnlockClick('placa de carro')} />
 
-        {/* Carrossel de Features (Substitui o Grid) */}
+        {/* Carrossel de Features */}
         <FeatureCarousel />
+
+        {/* Card de Desconto (NOVO) */}
+        <PriceDiscountCard originalPrice="R$ 97,90" discountedPrice="R$ 29,90" />
 
         {/* Botão de Ação Principal */}
         <div className="w-full mt-8">
