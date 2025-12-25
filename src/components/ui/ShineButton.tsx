@@ -29,10 +29,10 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
       className={cn(baseClasses, !disabled && interactiveClasses, className)}
     >
       {/* Efeito de Brilho Deslizante */}
-      <motion.span
-        className="absolute inset-0 block"
+      <motion.div
+        className="absolute top-0 bottom-0 w-1/4"
         initial={{ x: '-100%' }}
-        animate={{ x: '200%' }}
+        animate={{ x: '400%' }}
         transition={{
           repeat: Infinity,
           duration: 3,
@@ -40,7 +40,8 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
           delay: 0.5,
         }}
         style={{
-          backgroundImage: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4) 50%, transparent)',
+          // Gradiente de brilho branco
+          backgroundImage: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6) 50%, transparent)',
         }}
       />
       <span className="relative z-10">{children}</span>
