@@ -6,7 +6,8 @@ import ProfileCardDetailed from '../components/ProfileCardDetailed';
 import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
 import RealTimeLocationCard from '../components/RealTimeLocationCard';
 import DatingAppCard from '../components/DatingAppCard';
-import CheckoutPromptModal from '../components/CheckoutPromptModal'; // Importa o novo modal
+import CheckoutPromptModal from '../components/CheckoutPromptModal';
+import ShineButton from '../components/ui/ShineButton'; // Importa o novo botão
 
 const features = [
   { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
@@ -123,12 +124,9 @@ const InvasionConcludedPage: React.FC = () => {
 
         {/* Botão de Ação Principal */}
         <div className="w-full">
-          <button
-            onClick={() => handleUnlockClick('acesso completo')} // Aciona o modal
-            className="w-full py-4 px-6 text-lg font-bold text-white rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-500/50"
-          >
+          <ShineButton onClick={() => handleUnlockClick('acesso completo')} className="w-full">
             LIBERAR ACESSO COMPLETO AGORA
-          </button>
+          </ShineButton>
         </div>
 
         <div className="mt-6 text-red-400 font-semibold animate-pulse">

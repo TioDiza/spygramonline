@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, X } from 'lucide-react';
+import ShineButton from './ui/ShineButton'; // Importa o novo botão
 
 interface CheckoutPromptModalProps {
   isOpen: boolean;
@@ -64,15 +65,9 @@ const CheckoutPromptModal: React.FC<CheckoutPromptModalProps> = ({ isOpen, onClo
               Seja um membro VIP do SpyGram para ter acesso a {featureName}.
             </p>
             
-            <button
-              onClick={handleAcquireAccess}
-              className="w-full py-3 rounded-full font-bold text-lg text-white 
-                         bg-gradient-to-r from-red-600 to-pink-700 
-                         hover:from-red-700 hover:to-pink-800 
-                         transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900"
-            >
+            <ShineButton onClick={handleAcquireAccess} className="w-full">
               Adquirir Acesso VIP
-            </button>
+            </ShineButton>
 
             <p className="text-xs text-gray-400 mt-4">
               Redirecionando automaticamente em <span className="font-bold text-yellow-300">{countdown}</span> segundos...
