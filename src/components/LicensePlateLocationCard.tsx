@@ -43,7 +43,7 @@ const LicensePlateLocationCard: React.FC<LicensePlateLocationCardProps> = ({ onU
 
         <ShineButton 
           onClick={onUnlockClick} 
-          className="w-full bg-gradient-to-r from-red-600 via-pink-600 to-purple-700 hover:from-red-700 hover:via-pink-700 hover:to-purple-800"
+          className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-800"
         >
           RASTREAR PLACA AGORA
         </ShineButton>
