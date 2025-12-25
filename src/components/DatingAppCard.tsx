@@ -12,9 +12,9 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({ onUnlockClick }) => {
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.8 }}
-      className="mt-12 mb-12 p-6 bg-gradient-to-br from-pink-900/70 to-red-900/70 rounded-2xl text-center w-full mx-auto relative overflow-hidden" // Removida a borda e sombra vermelhas
+      className="mt-12 mb-12 p-6 text-center w-full mx-auto relative overflow-hidden" // Removido fundo e arredondamento
     >
-      {/* Efeito de fundo sutil */}
+      {/* Efeito de fundo sutil (MANTIDO, mas agora é um elemento de fundo flutuante) */}
       <div className="absolute inset-0 opacity-10" style={{
         backgroundImage: 'radial-gradient(circle at center, rgba(255, 0, 0, 0.5) 0%, transparent 70%)',
       }}></div>
