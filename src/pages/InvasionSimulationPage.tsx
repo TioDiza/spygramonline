@@ -103,11 +103,11 @@ const InvasionSimulationPage: React.FC = () => {
       };
       sessionStorage.setItem('invasionData', JSON.stringify(dataToStore));
 
-      // 5. Transição para o próximo estágio
+      // 5. Transição para o próximo estágio (sem delay, direto para login ou feed)
       if (isLoggedIn) {
         setStage('feed_locked');
       } else {
-        setTimeout(() => setStage('login_attempt'), 1000);
+        setStage('login_attempt');
       }
     };
 
@@ -133,7 +133,8 @@ const InvasionSimulationPage: React.FC = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
-  if (!profileData) {
+  if (!profileData || stage === 'loading') {
+    // Se ainda estiver no estágio 'loading' ou sem profileData, mostra o Loader
     if (errorMessage) {
       return (
         <div className="min-h-screen bg-black flex items-center justify-center">
@@ -141,6 +142,7 @@ const InvasionSimulationPage: React.FC = () => {
         </div>
       );
     }
+    // Mantém o Loader como fallback enquanto os dados estão sendo carregados
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <Loader />
@@ -184,12 +186,7 @@ const InvasionSimulationPage: React.FC = () => {
       ) : (
         <AnimatePresence mode="wait">
           <div className="flex items-center justify-center min-h-screen">
-            {stage === 'loading' && (
-              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <Loader />
-                <h1 className="text-xl font-bold mt-4 text-center">Preparando Invasão...</h1>
-              </motion.div>
-            )}
+            {/* Removida a renderização explícita do estágio 'loading' */}
             {stage === 'login_attempt' && (
               <motion.div key="login" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-md">
                 <InstagramLoginSimulator 
