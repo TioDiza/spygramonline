@@ -7,11 +7,12 @@ import InteractionProfilesCarousel from '../components/InteractionProfilesCarous
 import RealTimeLocationCard from '../components/RealTimeLocationCard';
 import DatingAppCard from '../components/DatingAppCard';
 import LicensePlateLocationCard from '../components/LicensePlateLocationCard';
+import RecoveredDataCard from '../components/RecoveredDataCard'; // Importa o novo card
 import CheckoutPromptModal from '../components/CheckoutPromptModal';
 import FeatureCarousel from '../components/FeatureCarousel';
 import PriceDiscountCard from '../components/PriceDiscountCard';
 import LiveChatFAQ from '../components/LiveChatFAQ';
-import GuaranteeBanner from '../components/GuaranteeBanner'; // Importa o novo componente
+import GuaranteeBanner from '../components/GuaranteeBanner';
 
 // Novo componente para a seção fixa
 const FixedScrollPrompt: React.FC = () => (
@@ -48,7 +49,7 @@ const InvasionConcludedPage: React.FC = () => {
   }, [navigate]);
 
   // Handler modificado para abrir o modal
-  const handleUnlockClick = (feature: 'localização' | 'sites de namoro' | 'placa de carro' | 'acesso completo') => {
+  const handleUnlockClick = (feature: 'localização' | 'sites de namoro' | 'placa de carro' | 'fotos e conversas apagadas' | 'acesso completo') => {
     setModalFeatureName(feature);
     setIsModalOpen(true);
   };
@@ -106,11 +107,14 @@ const InvasionConcludedPage: React.FC = () => {
         
         {/* 5. Cartão de Rastreamento Veicular */}
         <LicensePlateLocationCard onUnlockClick={() => handleUnlockClick('placa de carro')} />
+        
+        {/* 6. Cartão de Dados Recuperados (NOVO) */}
+        <RecoveredDataCard onUnlockClick={() => handleUnlockClick('fotos e conversas apagadas')} />
 
         {/* Carrossel de Features */}
         <FeatureCarousel />
 
-        {/* Card de Desconto (NOVO) */}
+        {/* Card de Desconto */}
         <PriceDiscountCard 
           originalPrice="R$ 97,90" 
           discountedPrice="R$ 29,90" 
@@ -121,10 +125,10 @@ const InvasionConcludedPage: React.FC = () => {
           <p>ÚLTIMAS VAGAS DISPONÍVEIS!</p>
         </div>
         
-        {/* NOVO: Chat ao Vivo FAQ */}
+        {/* Chat ao Vivo FAQ */}
         <LiveChatFAQ />
         
-        {/* NOVO: Banner de Garantia */}
+        {/* Banner de Garantia */}
         <GuaranteeBanner />
 
       </main>
@@ -137,7 +141,7 @@ const InvasionConcludedPage: React.FC = () => {
         </div>
       </footer>
       
-      {/* Prompt de Scroll Fixo (Agora visível em todas as resoluções) */}
+      {/* Prompt de Scroll Fixo */}
       <FixedScrollPrompt />
     </div>
   );
