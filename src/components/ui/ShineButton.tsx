@@ -24,10 +24,10 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
     animate: {
       x: '100%',
       transition: {
-        duration: 1.6, // Reduzido para 1.6s (20% mais rápido que 2s)
+        duration: 1.6, // Duração da passagem do brilho (mantida em 1.6s)
         ease: [0, 0, 1, 1], // Linear
         repeat: Infinity,
-        repeatDelay: 3,
+        repeatDelay: 2.4, // Atraso de repetição reduzido para 2.4s (20% mais rápido)
       },
     },
   };
