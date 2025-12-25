@@ -171,10 +171,11 @@ const InvasionConcludedPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="text-center mt-12 py-4 relative z-10">
-        <div className="inline-flex items-center gap-2 text-gray-400 text-sm">
+        <div className="inline-flex items-center gap-2 text-gray-400 text-sm mb-1">
           <ShieldCheck className="w-4 h-4 text-green-500" />
           <span>Pagamento Seguro | Site Protegido</span>
         </div>
+        <p className="text-gray-500 text-xs">Todos os direitos reservados a SpyGram</p>
       </footer>
       
       {/* Prompt de Scroll Fixo */}
