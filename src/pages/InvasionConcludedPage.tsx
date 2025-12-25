@@ -4,7 +4,7 @@ import { ProfileData, SuggestedProfile } from '../../types';
 import { ShieldCheck, Zap, Clock, MessageSquare, Award, ChevronDown, MapPin } from 'lucide-react';
 import ProfileCardDetailed from '../components/ProfileCardDetailed';
 import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
-import LocationTrackerSection from '../components/LocationTrackerSection'; // Importa o novo componente
+import RealTimeLocationCard from '../components/RealTimeLocationCard'; // Importa o novo componente
 
 const features = [
   { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
@@ -67,6 +67,12 @@ const InvasionConcludedPage: React.FC = () => {
           <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
         </div>
 
+        {/* NOVO: Cartão de Localização em Tempo Real */}
+        <div className="mt-16 mb-12">
+          <RealTimeLocationCard profileData={profileData} userCity={userCity} />
+        </div>
+        {/* FIM NOVO CARTÃO */}
+
         <h2 className="text-2xl font-extrabold text-white mt-4 mb-4">
           Perfis com Maior Interação 
           <span className="text-gray-500 font-normal text-lg ml-2">(Desbloqueie para ver nomes)</span>
@@ -75,9 +81,6 @@ const InvasionConcludedPage: React.FC = () => {
         {/* CARROSSEL DE PERFIS */}
         <InteractionProfilesCarousel profiles={suggestedProfiles} />
         {/* FIM CARROSSEL */}
-
-        {/* NOVO: Seção de Rastreamento de Localização (Movida para cá) */}
-        <LocationTrackerSection userCity={userCity} />
 
         {/* Grid de Features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left mt-8">
