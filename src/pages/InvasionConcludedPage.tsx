@@ -80,17 +80,13 @@ const InvasionConcludedPage: React.FC = () => {
         {/* FIM CARROSSEL */}
 
         {/* 3. Cartão de Localização em Tempo Real */}
-        <RealTimeLocationCard profileData={profileData} userCity={userCity} />
+        <RealTimeLocationCard 
+          profileData={profileData} 
+          userCity={userCity} 
+          onUnlockClick={handleUnlockClick} // Passa a função de clique
+        />
         
-        {/* NOVO BOTÃO: Descobrir Localização */}
-        <div className="w-full max-w-xs mx-auto mt-[-20px] mb-12">
-          <button
-            onClick={handleUnlockClick}
-            className="w-full py-3 px-6 text-lg font-bold text-white rounded-xl bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-500/50"
-          >
-            DESCOBRIR LOCALIZAÇÃO
-          </button>
-        </div>
+        {/* O contêiner do botão foi removido daqui, pois o botão agora está dentro do RealTimeLocationCard */}
 
         {/* 4. Cartão de Aplicativos de Relacionamento (NOVO) */}
         <DatingAppCard onUnlockClick={handleUnlockClick} />
