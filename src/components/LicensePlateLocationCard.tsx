@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Car, MapPin, Lock } from 'lucide-react';
+import ShineButton from './ui/ShineButton'; // Importa ShineButton
 
 interface LicensePlateLocationCardProps {
   onUnlockClick: () => void;
@@ -40,12 +41,9 @@ const LicensePlateLocationCard: React.FC<LicensePlateLocationCardProps> = ({ onU
           Não deixe rastros. Saiba onde o carro está agora!
         </p>
 
-        <button
-          onClick={onUnlockClick}
-          className="w-full py-3 px-6 text-lg font-bold text-white rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-        >
+        <ShineButton onClick={onUnlockClick} className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800">
           RASTREAR PLACA AGORA
-        </button>
+        </ShineButton>
       </div>
     </motion.div>
   );

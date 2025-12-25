@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Flame, Search, Lock } from 'lucide-react';
+import ShineButton from './ui/ShineButton'; // Importa ShineButton
 
 interface DatingAppCardProps {
   onUnlockClick: () => void;
@@ -45,12 +46,9 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({ onUnlockClick }) => {
           Não viva na dúvida. Obtenha a verdade que pode mudar tudo!
         </p>
 
-        <button
-          onClick={onUnlockClick}
-          className="w-full py-3 px-6 text-lg font-bold text-white rounded-xl bg-gradient-to-r from-red-600 to-pink-700 hover:from-red-700 hover:to-pink-800 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-red-500/50"
-        >
+        <ShineButton onClick={onUnlockClick} className="w-full">
           VERIFICAR APPS DE NAMORO AGORA
-        </button>
+        </ShineButton>
       </div>
     </motion.div>
   );
