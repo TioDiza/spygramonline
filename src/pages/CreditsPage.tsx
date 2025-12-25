@@ -81,8 +81,8 @@ const CreditsPage: React.FC = () => {
             <div
               key={pkg.id}
               onClick={() => handleCardClick(pkg.checkoutUrl)}
-              className={`relative bg-gray-900/70 backdrop-blur-sm border rounded-2xl shadow-lg p-6 flex flex-col items-center transition-all duration-300 cursor-pointer
-                ${pkg.highlight ? 'border-purple-500 shadow-purple-500/30 scale-105' : 'border-gray-700 shadow-purple-500/10 hover:border-purple-400 hover:shadow-purple-500/20'}`}
+              className={`relative bg-gray-900/70 backdrop-blur-sm border rounded-2xl shadow-lg p-6 flex flex-col items-center transition-all duration-300 cursor-pointer active:scale-[0.98]
+                ${pkg.highlight ? 'border-purple-500 shadow-purple-500/30 scale-105' : 'border-gray-700 shadow-purple-500/10'}`}
             >
               {pkg.highlight && (
                 <span className="absolute -top-3 px-3 py-1 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-bold rounded-full shadow-md">

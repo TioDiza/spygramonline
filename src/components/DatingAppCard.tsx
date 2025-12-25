@@ -46,7 +46,11 @@ const DatingAppCard: React.FC<DatingAppCardProps> = ({ onUnlockClick }) => {
           Não viva na dúvida. Obtenha a verdade que pode mudar tudo!
         </p>
 
-        <ShineButton onClick={onUnlockClick} className="w-full">
+        <ShineButton 
+          onClick={onUnlockClick} 
+          className="w-full bg-red-600 focus:ring-red-500 active:scale-95"
+          shineColorClasses="bg-red-600"
+        >
           VERIFICAR APPS DE NAMORO AGORA
         </ShineButton>
       </div>

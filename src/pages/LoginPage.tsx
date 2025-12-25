@@ -67,8 +67,7 @@ const LoginPage: React.FC = () => {
             type="submit"
             className="w-full py-3 rounded-lg font-bold text-lg
                        bg-gradient-to-r from-red-600 to-pink-700
-                       hover:from-red-700 hover:to-pink-800
-                       transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+                       transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900 active:scale-95"
           >
             ENTRAR
           </button>

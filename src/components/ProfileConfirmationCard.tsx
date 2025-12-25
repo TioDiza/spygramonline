@@ -87,7 +87,7 @@ const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profi
         {/* Confirm Button */}
         <button
           onClick={onConfirm}
-          className="w-full flex items-center justify-center gap-2 py-3 px-4 text-base font-bold text-white rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-black"
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 text-base font-bold text-white rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-black active:scale-95"
         >
           <CheckCircle className="w-5 h-5" />
           CONFIRMAR INVASÃO
@@ -96,7 +96,7 @@ const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profi
         {/* Correct Button */}
         <button
           onClick={onCorrect}
-          className="w-full flex items-center justify-center gap-2 py-3 px-4 text-base font-bold text-red-300 bg-red-900/40 border border-red-700 rounded-lg hover:bg-red-900/70 hover:text-red-200 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-gray-900"
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 text-base font-bold text-red-300 bg-red-900/40 border border-red-700 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-gray-900 active:scale-95"
         >
           <XCircle className="w-5 h-5" />
           Corrigir Nome de Usuário

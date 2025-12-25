@@ -74,7 +74,11 @@ const PriceDiscountCard: React.FC<PriceDiscountCardProps> = ({ originalPrice, di
         </p>
         
         {/* Botão de CTA dentro do card */}
-        <ShineButton onClick={onUnlockClick} className="w-full">
+        <ShineButton 
+          onClick={onUnlockClick} 
+          className="w-full bg-red-600 focus:ring-red-500 active:scale-95"
+          shineColorClasses="bg-red-600"
+        >
           LIBERAR ACESSO COMPLETO AGORA
         </ShineButton>
       </div>

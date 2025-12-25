@@ -35,7 +35,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="m-1.5 px-6 py-2.5 text-white font-semibold rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 hover:from-yellow-500 hover:via-pink-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-pink-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="m-1.5 px-6 py-2.5 text-white font-semibold rounded-full bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-pink-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
           >
             {isLoading ? 'Searching...' : 'Search'}
           </button>

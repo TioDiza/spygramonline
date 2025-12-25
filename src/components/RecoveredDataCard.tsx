@@ -72,7 +72,7 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
         <div className="w-full flex justify-center">
           <ShineButton 
             onClick={onUnlockClick} 
-            className="w-full max-w-[280px] bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 hover:ring-pink-500/50 active:ring-pink-500/50"
+            className="w-full max-w-[280px] bg-pink-600 focus:ring-pink-500 active:scale-95"
             shineColorClasses="bg-pink-600"
           >
             <span className="text-lg font-extrabold leading-tight">

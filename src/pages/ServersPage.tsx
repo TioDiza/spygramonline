@@ -16,7 +16,7 @@ const ServerCard: React.FC<ServerCardProps> = ({ serverNumber, ping, onClick }) 
     <button
       onClick={onClick} // Torna o card clicável
       className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 w-full max-w-[200px] flex flex-col items-start
-                 hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-200 cursor-pointer"
+                 transition-all duration-200 cursor-pointer active:scale-[0.98]"
     >
       <div className="flex items-center gap-2 mb-2">
         <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
