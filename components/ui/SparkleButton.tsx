@@ -20,11 +20,12 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
     mx-auto
   `;
 
-  const interactiveClasses = `
-    cursor-pointer
-    hover:scale-105 hover:ring-4 hover:ring-purple-500/50
-    active:scale-100 active:ring-4 active:ring-purple-500/50
-  `;
+  // Classes interativas removidas conforme solicitado:
+  // const interactiveClasses = `
+  //   cursor-pointer
+  //   hover:scale-105 hover:ring-4 hover:ring-purple-500/50
+  //   active:scale-100 active:ring-4 active:ring-purple-500/50
+  // `;
 
   const handleButtonClick = () => {
     if (checkoutUrl) {
@@ -35,7 +36,7 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
   };
 
   return (
-    <div className={cn("relative w-full overflow-hidden", !disabled && "group")}> {/* Adicionado overflow-hidden aqui */}
+    <div className={cn("relative w-full overflow-hidden", !disabled && "group")}>
       {/* O div para o brilho desfocado */}
       <div className="absolute inset-2 bg-gradient-to-r from-pink-600 via-purple-600 to-yellow-500 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
       
@@ -44,7 +45,7 @@ const SparkleButton: React.FC<SparkleButtonProps> = ({ children, onClick, disabl
         disabled={disabled}
         className={cn(
           baseButtonClasses,
-          !disabled && interactiveClasses // Aplica classes interativas apenas se não estiver desabilitado
+          !disabled && "cursor-pointer" // Mantém apenas o cursor pointer
         )}
       >
         <Sparkles className="w-4 h-4 text-white" /> {/* Reduzido o tamanho do ícone */}
