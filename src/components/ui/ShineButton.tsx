@@ -31,13 +31,15 @@ const ShineButton: React.FC<ShineButtonProps> = ({
     active:scale-[0.98] active:ring-4 active:ring-pink-500/50
   `;
   
-  // Se o className não contiver uma cor de fundo, usamos o padrão.
-  const defaultBgClass = className && (className.includes('bg-') || className.includes('from-')) 
-    ? '' 
-    : 'bg-gradient-to-r from-red-600 to-pink-700';
+  // Determina a classe de fundo. Se o className contiver 'bg-' ou 'from-', ele é usado. Caso contrário, usamos o padrão.
+  const customBgClass = className?.split(' ').find(cls => cls.startsWith('bg-') || cls.startsWith('from-'));
+  const finalBgClass = customBgClass || 'bg-gradient-to-r from-red-600 to-pink-700';
+
+  // Remove a classe de BG customizada do className para evitar duplicação, mas mantém o restante das classes customizadas (como w-full)
+  const otherCustomClasses = className?.split(' ').filter(cls => !cls.startsWith('bg-') && !cls.startsWith('from-')).join(' ') || '';
 
   return (
-    <div className={cn("relative w-full", !disabled && "group", className)}>
+    <div className={cn("relative w-full", !disabled && "group", otherCustomClasses)}>
       {/* O div para o brilho desfocado (usando shineColorClasses) */}
       <div className={cn(
         "absolute inset-2 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt",
@@ -49,9 +51,9 @@ const ShineButton: React.FC<ShineButtonProps> = ({
         disabled={disabled}
         className={cn(
           baseButtonClasses,
-          defaultBgClass, // Aplica o BG padrão se não houver BG customizado
+          finalBgClass, // Aplica a cor de fundo (customizada ou padrão)
           !disabled && interactiveClasses,
-          className // Aplica classes customizadas por último para garantir a sobrescrita
+          otherCustomClasses // Aplica outras classes customizadas (como w-full)
         )}
       >
         <span className="text-center">{children}</span>
