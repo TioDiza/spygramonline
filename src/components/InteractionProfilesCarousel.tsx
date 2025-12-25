@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { SuggestedProfile } from '../../types';
 
@@ -6,28 +6,11 @@ interface InteractionProfilesCarouselProps {
   profiles: SuggestedProfile[];
 }
 
-// Helper function to mask usernames
-const maskUsername = (username: string) => {
-  if (username.length <= 4) return '*****';
-  return `${username.substring(0, 4)}****`;
-};
-
 const InteractionProfilesCarousel: React.FC<InteractionProfilesCarouselProps> = ({ profiles }) => {
   // Duplica perfis para criar um loop de rolagem contínuo
   const duplicatedProfiles = [...profiles, ...profiles];
   
-  // Estado para controlar o padrão de blur
-  const [offset, setOffset] = useState(0);
-
-  useEffect(() => {
-    if (profiles.length === 0) return;
-    
-    // Altera o padrão de blur a cada 2 segundos
-    const interval = setInterval(() => {
-      setOffset(prev => (prev + 1) % 3); // Alterna entre 0, 1 e 2
-    }, 2000); 
-    return () => clearInterval(interval);
-  }, [profiles.length]);
+  // Removido o estado 'offset' e o useEffect que controlava a alternância de blur.
 
   if (profiles.length === 0) return null;
 
@@ -38,12 +21,15 @@ const InteractionProfilesCarousel: React.FC<InteractionProfilesCarouselProps> = 
       transition: {
         x: {
           repeat: Infinity,
-          ease: [0, 0, 1, 1], // Corrigido: Usando array para 'linear' easing
+          ease: [0, 0, 1, 1], // Easing linear
           duration: 30, // Velocidade da rolagem
         },
       },
     },
   };
+
+  // O blur será aplicado estaticamente a todos os perfis para simular o bloqueio.
+  const isBlurred = true; 
 
   return (
     <div className="w-full overflow-hidden py-4">
@@ -53,8 +39,6 @@ const InteractionProfilesCarousel: React.FC<InteractionProfilesCarouselProps> = 
         animate="animate"
       >
         {duplicatedProfiles.map((profile, index) => {
-          // Determina o blur baseado no índice e no offset
-          const isBlurred = (index + offset) % 3 !== 0; // Alterna o blur
           
           return (
             <div 
@@ -69,7 +53,8 @@ const InteractionProfilesCarousel: React.FC<InteractionProfilesCarouselProps> = 
                 />
               </div>
               <p className={`text-xs mt-1 transition-colors duration-500 ${isBlurred ? 'text-red-400' : 'text-white'}`}>
-                {isBlurred ? '*****' : maskUsername(profile.username)}
+                {/* O nome de usuário sempre será mascarado */}
+                {'*****'} 
               </p>
             </div>
           );
