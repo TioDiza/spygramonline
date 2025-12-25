@@ -59,12 +59,13 @@ const ShineButton: React.FC<ShineButtonProps> = ({
         {/* 2. O Efeito de Reflexo Deslizante (Novo) */}
         <span className="absolute inset-0 block overflow-hidden rounded-full pointer-events-none">
           <span 
-            className="absolute top-0 left-0 w-1/3 h-full transform -skew-x-12 bg-white opacity-50 transition-all duration-1000" // Aumentei a opacidade para 50% e reduzi a largura para 1/3
+            className="absolute top-0 left-0 w-1/3 h-full transform -skew-x-12 transition-all duration-1000"
             style={{
               // Animação de deslize horizontal
-              animation: 'shine-slide 2s infinite linear', // Reduzi a duração para 2s
-              // Gradiente para simular o reflexo suave
-              backgroundImage: 'linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 100%)', // Aumentei o pico do brilho para 0.8
+              animation: 'shine-slide 2s infinite linear',
+              // Gradiente para simular o reflexo mais intenso e focado
+              backgroundImage: 'linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)',
+              opacity: 0.7, // Opacidade geral do reflexo
             }}
           ></span>
         </span>
@@ -77,7 +78,7 @@ const ShineButton: React.FC<ShineButtonProps> = ({
       <style>{`
         @keyframes shine-slide {
           0% { transform: translateX(-100%) skewX(-12deg); }
-          100% { transform: translateX(300%) skewX(-12deg); } /* Aumentei o X final para garantir que saia da tela mais rápido */
+          100% { transform: translateX(300%) skewX(-12deg); }
         }
       `}</style>
     </div>
