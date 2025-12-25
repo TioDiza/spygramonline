@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ProfileData, SuggestedProfile } from '../../types';
-import { ShieldCheck, Zap, Clock, MessageSquare, Award, ChevronDown, MapPin } from 'lucide-react';
+import { ShieldCheck, ChevronDown } from 'lucide-react';
 import ProfileCardDetailed from '../components/ProfileCardDetailed';
 import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
 import RealTimeLocationCard from '../components/RealTimeLocationCard';
 import DatingAppCard from '../components/DatingAppCard';
-import LicensePlateLocationCard from '../components/LicensePlateLocationCard'; // Importa o novo componente
+import LicensePlateLocationCard from '../components/LicensePlateLocationCard';
 import CheckoutPromptModal from '../components/CheckoutPromptModal';
 import ShineButton from '../components/ui/ShineButton';
-
-const features = [
-  { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
-  { icon: MapPin, title: 'Localização em Tempo Real', description: 'Saiba exatamente onde a pessoa está no momento da invasão.' },
-  { icon: ShieldCheck, title: '100% Seguro e Anônimo', description: 'Sua identidade é protegida. A invasão é indetectável.' },
-  { icon: Clock, title: 'Acesso Vitalício', description: 'Pague uma vez e tenha acesso ao perfil para sempre, sem mensalidades.' },
-  { icon: MessageSquare, title: 'Chat Ao Vivo', description: 'Acompanhe as conversas em tempo real e veja com quem a pessoa interage.' },
-  { icon: Award, title: 'Garantia de 7 Dias', description: 'Se não estiver satisfeito, devolvemos seu dinheiro sem burocracia.' },
-];
+import FeatureCarousel from '../components/FeatureCarousel'; // Importa o novo carrossel
 
 // Novo componente para a seção fixa
 const FixedScrollPrompt: React.FC = () => (
@@ -110,24 +102,14 @@ const InvasionConcludedPage: React.FC = () => {
         {/* 4. Cartão de Aplicativos de Relacionamento */}
         <DatingAppCard onUnlockClick={() => handleUnlockClick('sites de namoro')} /> 
         
-        {/* 5. Cartão de Rastreamento Veicular (NOVO) */}
+        {/* 5. Cartão de Rastreamento Veicular */}
         <LicensePlateLocationCard onUnlockClick={() => handleUnlockClick('placa de carro')} />
 
-        {/* Grid de Features */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left mt-8">
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
-              <feature.icon className="w-6 h-6 text-purple-400 mt-1 flex-shrink-0" />
-              <div>
-                <h3 className="font-bold text-white">{feature.title}</h3>
-                <p className="text-gray-400 text-sm">{feature.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Carrossel de Features (Substitui o Grid) */}
+        <FeatureCarousel />
 
         {/* Botão de Ação Principal */}
-        <div className="w-full">
+        <div className="w-full mt-8">
           <ShineButton onClick={() => handleUnlockClick('acesso completo')} className="w-full">
             LIBERAR ACESSO COMPLETO AGORA
           </ShineButton>
