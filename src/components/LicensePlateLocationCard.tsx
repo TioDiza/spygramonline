@@ -41,7 +41,10 @@ const LicensePlateLocationCard: React.FC<LicensePlateLocationCardProps> = ({ onU
           Não deixe rastros. Saiba onde o carro está agora!
         </p>
 
-        <ShineButton onClick={onUnlockClick} className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800">
+        <ShineButton 
+          onClick={onUnlockClick} 
+          className="w-full bg-gradient-to-r from-red-600 via-pink-600 to-purple-700 hover:from-red-700 hover:via-pink-700 hover:to-purple-800"
+        >
           RASTREAR PLACA AGORA
         </ShineButton>
       </div>
