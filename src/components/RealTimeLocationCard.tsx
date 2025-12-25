@@ -44,7 +44,7 @@ const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData
       )}
       
       {/* Map Mockup with Profile Picture Marker (Novo Mapa) */}
-      <div className="relative w-full aspect-square bg-[#1a1a1a] rounded-2xl overflow-hidden mb-6 border border-red-700/50">
+      <div className="relative w-full max-w-xs mx-auto aspect-square bg-[#1a1a1a] rounded-2xl overflow-hidden mb-6 border border-red-700/50">
         {/* Simulated Map Grid Background */}
         <div className="absolute inset-0 opacity-20" style={{
           backgroundImage: 'linear-gradient(to right, #333 1px, transparent 1px), linear-gradient(to bottom, #333 1px, transparent 1px)',
