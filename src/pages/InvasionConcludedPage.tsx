@@ -9,7 +9,8 @@ import DatingAppCard from '../components/DatingAppCard';
 import LicensePlateLocationCard from '../components/LicensePlateLocationCard';
 import CheckoutPromptModal from '../components/CheckoutPromptModal';
 import FeatureCarousel from '../components/FeatureCarousel';
-import PriceDiscountCard from '../components/PriceDiscountCard'; // Importa o novo componente
+import PriceDiscountCard from '../components/PriceDiscountCard';
+import LiveChatFAQ from '../components/LiveChatFAQ'; // Importa o novo componente
 
 // Novo componente para a seção fixa
 const FixedScrollPrompt: React.FC = () => (
@@ -118,6 +119,10 @@ const InvasionConcludedPage: React.FC = () => {
         <div className="mt-6 text-red-400 font-semibold animate-pulse">
           <p>ÚLTIMAS VAGAS DISPONÍVEIS!</p>
         </div>
+        
+        {/* NOVO: Chat ao Vivo FAQ */}
+        <LiveChatFAQ />
+
       </main>
 
       {/* Footer */}
