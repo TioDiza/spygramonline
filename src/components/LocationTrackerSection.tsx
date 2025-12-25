@@ -30,6 +30,12 @@ const LocationTrackerSection: React.FC<LocationTrackerSectionProps> = ({ userCit
 
       {/* Map Mockup with Animation (Ajustado para o estilo solicitado) */}
       <div className="relative w-full h-48 bg-[#1a1a1a] rounded-2xl overflow-hidden mb-6 border border-red-700/50">
+        {/* Simulated Map Grid Background */}
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: 'linear-gradient(to right, #333 1px, transparent 1px), linear-gradient(to bottom, #333 1px, transparent 1px)',
+          backgroundSize: '20px 20px',
+        }}></div>
+        
         {/* Animated Radar Effect */}
         <motion.div
           animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
@@ -39,9 +45,9 @@ const LocationTrackerSection: React.FC<LocationTrackerSectionProps> = ({ userCit
           <div className="w-3/4 h-3/4 border-4 border-red-500 rounded-full opacity-50"></div>
         </motion.div>
         
-        {/* Central Pin */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <MapPin className="w-10 h-10 text-red-500 drop-shadow-lg" fill="#EF4444" />
+        {/* Central Pin - Usando MapPin para corrigir o erro TS6133 */}
+        <div className="absolute top-[35%] left-1/2 transform -translate-x-1/2">
+          <MapPin className="w-8 h-8 text-red-500 drop-shadow-lg" fill="#EF4444" />
         </div>
 
         {/* Location Text Overlay (Ajustado para o estilo solicitado) */}
