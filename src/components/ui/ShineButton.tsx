@@ -54,9 +54,6 @@ const ShineButton: React.FC<ShineButtonProps> = ({
           baseButtonClasses,
           finalBgClass, // Aplica a cor de fundo (customizada ou padrão)
           !disabled && interactiveClasses
-          // Não aplicamos otherCustomClasses aqui, pois elas já estão no div pai (como w-full).
-          // Se houver classes de estilo que afetam o botão (como padding ou texto), elas devem ser passadas no className.
-          // Para simplificar, vamos garantir que o w-full seja a única classe de layout que precisamos passar.
         )}
       >
         <span className="text-center">{children}</span>
