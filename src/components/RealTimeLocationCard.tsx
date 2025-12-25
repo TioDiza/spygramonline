@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin } from 'lucide-react';
 import { ProfileData } from '../../types';
 
 interface RealTimeLocationCardProps {
@@ -8,7 +7,7 @@ interface RealTimeLocationCardProps {
   userCity: string;
 }
 
-const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData: _, userCity }) => {
+const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData, userCity }) => {
   // Se a cidade for o fallback, exibe 'SUA LOCALIZAÇÃO', caso contrário, exibe a cidade real.
   const locationText = userCity.toLowerCase() === 'sua localização' 
     ? 'SUA LOCALIZAÇÃO' 
@@ -33,13 +32,18 @@ const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData
         </span>
       </p>
 
-      {/* Map Mockup with Animation */}
+      {/* Map Mockup with Profile Picture Marker (Novo Mapa) */}
       <div className="relative w-full h-48 bg-[#1a1a1a] rounded-2xl overflow-hidden mb-6 border border-red-700/50">
         {/* Simulated Map Grid Background */}
         <div className="absolute inset-0 opacity-20" style={{
           backgroundImage: 'linear-gradient(to right, #333 1px, transparent 1px), linear-gradient(to bottom, #333 1px, transparent 1px)',
           backgroundSize: '20px 20px',
-        }}></div>
+        }}>
+          {/* Simulated Roads/Features */}
+          <div className="absolute top-1/4 left-0 w-full h-1 bg-gray-700/50 transform rotate-[-5deg]"></div>
+          <div className="absolute top-3/4 left-0 w-full h-1 bg-gray-700/50 transform rotate-[10deg]"></div>
+          <div className="absolute left-1/4 top-0 h-full w-1 bg-gray-700/50 transform rotate-[5deg]"></div>
+        </div>
         
         {/* Animated Radar Effect (Outer Ring) */}
         <motion.div
@@ -50,13 +54,19 @@ const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData
           <div className="w-3/4 h-3/4 border-4 border-red-500 rounded-full opacity-50"></div>
         </motion.div>
         
-        {/* Central Pin (Ajustado para o topo do balão) */}
-        <div className="absolute top-[30%] left-1/2 transform -translate-x-1/2">
-          <MapPin className="w-8 h-8 text-red-500 drop-shadow-lg" fill="#EF4444" />
+        {/* Profile Picture Marker */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="w-20 h-20 rounded-full border-4 border-white overflow-hidden shadow-xl">
+            <img 
+              src={profileData.profilePicUrl} 
+              alt={profileData.username} 
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
 
         {/* Location Text Overlay (Balão) */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/90 px-8 py-4 rounded-full border border-red-600 shadow-xl">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/90 px-8 py-4 rounded-full border border-red-600 shadow-xl opacity-0">
           <p className="text-xl font-bold text-red-400">
             PERTO DE {locationText}
           </p>
