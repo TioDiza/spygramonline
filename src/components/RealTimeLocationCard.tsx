@@ -13,6 +13,9 @@ const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData
   const locationText = userCity.toLowerCase() === 'sua localização' 
     ? 'SUA LOCALIZAÇÃO' 
     : userCity.toUpperCase();
+    
+  // Verifica se a cidade é válida para exibição da frase extra
+  const showFoundNearText = userCity.toLowerCase() !== 'são paulo' && userCity.toLowerCase() !== 'sua localização';
 
   return (
     <motion.div
@@ -26,13 +29,20 @@ const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData
           RASTREAMENTO DE LOCALIZAÇÃO EM TEMPO REAL
         </span>
       </h2>
-      <p className="text-gray-300 mb-8 max-w-md mx-auto text-lg font-medium">
+      <p className="text-gray-300 mb-4 max-w-md mx-auto text-lg font-medium">
         **PROVA IRREFUTÁVEL!** Nosso sistema de rastreamento de IP de última geração capturou a localização exata do alvo.
         <span className="block mt-2 text-yellow-400 font-bold">
           Desbloqueie agora e veja onde ele está neste exato momento!
         </span>
       </p>
-
+      
+      {/* Nova frase condicional */}
+      {showFoundNearText && (
+        <p className="text-sm text-gray-400 font-semibold mb-8">
+          Perfil encontrado perto de <span className="text-white font-bold">{userCity}</span>
+        </p>
+      )}
+      
       {/* Map Mockup with Profile Picture Marker (Novo Mapa) */}
       <div className="relative w-full h-48 bg-[#1a1a1a] rounded-2xl overflow-hidden mb-6 border border-red-700/50">
         {/* Simulated Map Grid Background */}
