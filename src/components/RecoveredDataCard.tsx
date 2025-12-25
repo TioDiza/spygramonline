@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Image, MessageSquare } from 'lucide-react';
+import { Image, MessageSquare, Trash2 } from 'lucide-react'; // Adicionado Trash2 para simbolizar 'apagados'
 import ShineButton from './ui/ShineButton';
 
 interface RecoveredDataCardProps {
@@ -27,33 +27,39 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
     <motion.div
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.5, delay: 1.6 }} // Atraso após o card de placa
-      className="mt-12 mb-12 p-6 text-center w-full mx-auto relative overflow-hidden bg-gray-900/50 border border-gray-700 rounded-xl"
+      transition={{ duration: 0.5, delay: 1.6 }}
+      className="mt-12 mb-12 p-6 text-center w-full mx-auto relative overflow-hidden bg-gray-900/70 border border-pink-700 rounded-2xl shadow-2xl shadow-pink-500/20"
     >
       <div className="relative z-10">
-        <div className="flex items-center justify-center gap-4 mb-4">
-          <MessageSquare className="w-10 h-10 text-pink-400 animate-pulse" />
+        
+        {/* Título e Ícones */}
+        <div className="flex items-center justify-center gap-4 mb-6">
+          <Trash2 className="w-8 h-8 text-red-500" />
           <h2 className="text-3xl font-extrabold text-white">
             <span className="bg-gradient-to-r from-pink-400 via-red-500 to-yellow-400 text-transparent bg-clip-text">
               DADOS APAGADOS RECUPERADOS
             </span>
           </h2>
-          <Image className="w-10 h-10 text-yellow-400 animate-pulse" />
         </div>
 
-        <p className="text-gray-200 mb-6 max-w-md mx-auto text-lg font-medium">
-          **IMPERDÍVEL!** Nosso sistema de recuperação de dados encontrou arquivos que o alvo pensou ter deletado para sempre.
+        <p className="text-gray-200 mb-8 max-w-md mx-auto text-lg font-medium">
+          **IMPERDÍVEL!** Nosso sistema de recuperação encontrou arquivos que o alvo pensou ter deletado para sempre.
         </p>
         
-        {/* Contadores de Dados Recuperados */}
-        <div className="flex justify-around items-center gap-4 mb-8 p-4 bg-black/50 border border-pink-700 rounded-lg">
-            <div className="flex flex-col items-center">
-                <p className="text-5xl font-extrabold text-pink-400">{photosCount}</p>
+        {/* Contadores de Dados Recuperados em Layout de Grade */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+            
+            {/* Card de Fotos */}
+            <div className="p-4 bg-black/50 border border-yellow-700 rounded-xl flex flex-col items-center transition-all duration-300 hover:scale-[1.03] cursor-default">
+                <Image className="w-12 h-12 text-yellow-400 mb-2 animate-pulse-slow" />
+                <p className="text-6xl font-extrabold text-yellow-300">{photosCount}</p>
                 <p className="text-sm text-gray-400 mt-1">Fotos Recuperadas</p>
             </div>
-            <div className="w-px h-16 bg-gray-700"></div>
-            <div className="flex flex-col items-center">
-                <p className="text-5xl font-extrabold text-yellow-400">{chatsCount}</p>
+
+            {/* Card de Conversas */}
+            <div className="p-4 bg-black/50 border border-pink-700 rounded-xl flex flex-col items-center transition-all duration-300 hover:scale-[1.03] cursor-default">
+                <MessageSquare className="w-12 h-12 text-pink-400 mb-2 animate-pulse-slow" />
+                <p className="text-6xl font-extrabold text-pink-300">{chatsCount}</p>
                 <p className="text-sm text-gray-400 mt-1">Conversas Secretas</p>
             </div>
         </div>
@@ -64,7 +70,6 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
 
         <ShineButton 
           onClick={onUnlockClick} 
-          // Sobrescreve o BG e o anel de foco (ring)
           className="w-full bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 hover:ring-pink-500/50 active:ring-pink-500/50"
           shineColorClasses="bg-pink-600"
         >
