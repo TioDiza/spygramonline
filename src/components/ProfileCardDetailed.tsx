@@ -1,20 +1,17 @@
 import React from 'react';
 import { ProfileData } from '../../types';
-import { Zap, MapPin } from 'lucide-react';
+import { Zap } from 'lucide-react';
 
 interface ProfileCardDetailedProps {
   profileData: ProfileData;
 }
 
+// Função para formatar o número, agora retornando o valor exato (sem K ou M)
 const formatNumber = (num: number) => {
-  if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-  if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
-  return num.toString();
+  return new Intl.NumberFormat('pt-BR').format(num);
 };
 
 const ProfileCardDetailed: React.FC<ProfileCardDetailedProps> = ({ profileData }) => {
-  // Mock de localização para manter a referência visual do screenshot
-  const mockLocation = 'Barroso/MG';
   
   // Usar a biografia real, ou um placeholder se não houver
   const bioLines = profileData.biography ? profileData.biography.split('\n').filter(line => line.trim() !== '') : [];
@@ -33,7 +30,7 @@ const ProfileCardDetailed: React.FC<ProfileCardDetailedProps> = ({ profileData }
           className="w-20 h-20 rounded-full object-cover border-2 border-pink-500"
         />
         <div className="flex-1 text-left">
-          <p className="text-2xl font-bold text-white">{profileData.username}</p>
+          <p className="text-2xl font-bold text-white">@{profileData.username}</p>
           <p className="text-gray-400">{profileData.fullName} 😟</p>
         </div>
       </div>
@@ -54,18 +51,12 @@ const ProfileCardDetailed: React.FC<ProfileCardDetailedProps> = ({ profileData }
         </div>
       </div>
 
-      {/* Biography/Location */}
+      {/* Biography */}
       <div className="text-sm text-gray-300 text-left space-y-1">
         {/* Primeira linha da Bio com Zap Icon */}
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 text-yellow-400" />
           <span>{bioLine1}</span>
-        </div>
-        
-        {/* Localização Mockada com MapPin Icon */}
-        <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-red-500" />
-          <span>{mockLocation}</span>
         </div>
         
         {/* Restante da Biografia */}
