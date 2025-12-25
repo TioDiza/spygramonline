@@ -24,29 +24,29 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
     animate: {
       x: '100%',
       transition: {
-        duration: 1.5, // Mais rápido
+        duration: 3, // Mais lento
         ease: [0, 0, 1, 1],
         repeat: Infinity,
-        repeatDelay: 1, // Mais frequente
+        repeatDelay: 2, // Atraso maior
       },
     },
   };
 
   return (
     <div className={cn("relative overflow-hidden rounded-full", className)}>
-      {/* Elemento de Brilho (Reflexo) - Opacidade aumentada para 80% */}
+      {/* Elemento de Brilho (Reflexo) - Opacidade reduzida e gradiente ajustado */}
       <motion.div
         className={cn(
-          "absolute inset-0 w-full h-full opacity-80", // Opacidade aumentada para 80%
+          "absolute inset-0 w-full h-full opacity-50", // Mantendo opacidade de fundo razoável
           shineColorClasses
         )}
         variants={shineVariants}
         initial="initial"
         animate="animate"
         style={{
-          // Cria o efeito de reflexo diagonal, opacidade do branco aumentada para 1.0
-          backgroundImage: `linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 1.0) 50%, transparent 100%)`,
-          width: '200%', // Garante que o reflexo cubra o botão
+          // Gradiente mais suave e largo (0.6 opacidade)
+          backgroundImage: `linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 30%, rgba(255, 255, 255, 0.6) 70%, transparent 100%)`,
+          width: '300%', // Aumenta a largura para simular uma faixa mais larga
           left: '-100%',
         }}
       />
