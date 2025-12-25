@@ -4,6 +4,7 @@ import { ProfileData, SuggestedProfile } from '../../types';
 import { ShieldCheck, Zap, Clock, MessageSquare, Award, ChevronDown, MapPin } from 'lucide-react';
 import ProfileCardDetailed from '../components/ProfileCardDetailed';
 import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
+import LocationTrackerSection from '../components/LocationTrackerSection'; // Importa o novo componente
 
 const features = [
   { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
@@ -28,6 +29,7 @@ const InvasionConcludedPage: React.FC = () => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
+  const [userCity, setUserCity] = useState<string>('Sua Localização'); // Novo estado para a cidade do usuário
 
   useEffect(() => {
     const storedData = sessionStorage.getItem('invasionData');
@@ -35,6 +37,7 @@ const InvasionConcludedPage: React.FC = () => {
       const data = JSON.parse(storedData);
       setProfileData(data.profileData);
       setSuggestedProfiles(data.suggestedProfiles || []);
+      setUserCity(data.userCity || 'Sua Localização'); // Busca a cidade do usuário
     } else {
       navigate('/');
     }
@@ -57,6 +60,9 @@ const InvasionConcludedPage: React.FC = () => {
 
         {/* Card de Perfil Detalhado */}
         <ProfileCardDetailed profileData={profileData} />
+
+        {/* NOVO: Seção de Rastreamento de Localização */}
+        <LocationTrackerSection userCity={userCity} />
 
         {/* Seção de Interação (Continue Lendo) - Mantida para desktop, mas escondida em mobile */}
         <div className="mt-12 mb-8 hidden md:block">

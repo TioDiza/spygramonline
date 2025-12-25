@@ -55,11 +55,13 @@ const InvasionSimulationPage: React.FC = () => {
 
       setProfileData(data.profileData);
 
+      let userCity = 'São Paulo'; // Default fallback
       // 2. Buscar localizações
       try {
         const locationData = await getUserLocation();
         const stateCities = getCitiesByState(locationData.city, locationData.state);
         setLocations(stateCities);
+        userCity = locationData.city; // Captura a cidade real
       } catch (e) {
         const fallbackCities = getCitiesByState('São Paulo', 'São Paulo');
         setLocations(fallbackCities);
@@ -91,7 +93,15 @@ const InvasionSimulationPage: React.FC = () => {
       // 4. Atualizar estado e sessionStorage
       setSuggestedProfiles(fullData.suggestedProfiles || []);
       setPosts(fullData.posts || []);
-      sessionStorage.setItem('invasionData', JSON.stringify(fullData));
+      
+      // Armazena todos os dados, incluindo a cidade do usuário
+      const dataToStore = {
+        profileData: fullData.profileData,
+        suggestedProfiles: fullData.suggestedProfiles,
+        posts: fullData.posts,
+        userCity: userCity, // Armazena a cidade
+      };
+      sessionStorage.setItem('invasionData', JSON.stringify(dataToStore));
 
       // 5. Transição para o próximo estágio
       if (isLoggedIn) {
