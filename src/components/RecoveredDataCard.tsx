@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Image, MessageSquare, Trash2 } from 'lucide-react'; // Adicionado Trash2 para simbolizar 'apagados'
+import { Image, MessageSquare, Trash2 } from 'lucide-react';
 import ShineButton from './ui/ShineButton';
 
 interface RecoveredDataCardProps {
@@ -28,13 +28,13 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.5, delay: 1.6 }}
-      className="mt-12 mb-12 p-6 text-center w-full mx-auto relative overflow-hidden bg-gray-900/70 border border-pink-700 rounded-2xl shadow-2xl shadow-pink-500/20"
+      className="mt-12 mb-12 p-0 text-center w-full mx-auto relative overflow-hidden" // Removido fundo, bordas e padding
     >
       <div className="relative z-10">
         
         {/* Título e Ícones */}
-        <div className="flex items-center justify-center gap-4 mb-6">
-          <Trash2 className="w-8 h-8 text-red-500" />
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <Trash2 className="w-10 h-10 text-red-500" />
           <h2 className="text-3xl font-extrabold text-white">
             <span className="bg-gradient-to-r from-pink-400 via-red-500 to-yellow-400 text-transparent bg-clip-text">
               DADOS APAGADOS RECUPERADOS
@@ -46,8 +46,8 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
           **IMPERDÍVEL!** Nosso sistema de recuperação encontrou arquivos que o alvo pensou ter deletado para sempre.
         </p>
         
-        {/* Contadores de Dados Recuperados em Layout de Grade */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
+        {/* Contadores de Dados Recuperados em Layout de Grade (Mantendo o destaque visual) */}
+        <div className="grid grid-cols-2 gap-4 mb-8 max-w-sm mx-auto">
             
             {/* Card de Fotos */}
             <div className="p-4 bg-black/50 border border-yellow-700 rounded-xl flex flex-col items-center transition-all duration-300 hover:scale-[1.03] cursor-default">
@@ -70,7 +70,7 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
 
         <ShineButton 
           onClick={onUnlockClick} 
-          className="w-full bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 hover:ring-pink-500/50 active:ring-pink-500/50"
+          className="w-full max-w-xs bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 hover:ring-pink-500/50 active:ring-pink-500/50"
           shineColorClasses="bg-pink-600"
         >
           VER FOTOS E CONVERSAS APAGADAS
