@@ -8,7 +8,6 @@ import RealTimeLocationCard from '../components/RealTimeLocationCard';
 import DatingAppCard from '../components/DatingAppCard';
 import LicensePlateLocationCard from '../components/LicensePlateLocationCard';
 import CheckoutPromptModal from '../components/CheckoutPromptModal';
-import ShineButton from '../components/ui/ShineButton';
 import FeatureCarousel from '../components/FeatureCarousel';
 import PriceDiscountCard from '../components/PriceDiscountCard'; // Importa o novo componente
 
@@ -110,14 +109,11 @@ const InvasionConcludedPage: React.FC = () => {
         <FeatureCarousel />
 
         {/* Card de Desconto (NOVO) */}
-        <PriceDiscountCard originalPrice="R$ 97,90" discountedPrice="R$ 29,90" />
-
-        {/* Botão de Ação Principal */}
-        <div className="w-full mt-8">
-          <ShineButton onClick={() => handleUnlockClick('acesso completo')} className="w-full">
-            LIBERAR ACESSO COMPLETO AGORA
-          </ShineButton>
-        </div>
+        <PriceDiscountCard 
+          originalPrice="R$ 97,90" 
+          discountedPrice="R$ 29,90" 
+          onUnlockClick={() => handleUnlockClick('acesso completo')} // Passa a função de clique
+        />
 
         <div className="mt-6 text-red-400 font-semibold animate-pulse">
           <p>ÚLTIMAS VAGAS DISPONÍVEIS!</p>

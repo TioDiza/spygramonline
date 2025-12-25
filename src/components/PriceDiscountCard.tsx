@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, Zap } from 'lucide-react';
+import ShineButton from './ui/ShineButton'; // Importa o ShineButton
 
 interface PriceDiscountCardProps {
   originalPrice: string;
   discountedPrice: string;
+  onUnlockClick: () => void; // Nova prop para o clique do botão
 }
 
-const PriceDiscountCard: React.FC<PriceDiscountCardProps> = ({ originalPrice, discountedPrice }) => {
+const PriceDiscountCard: React.FC<PriceDiscountCardProps> = ({ originalPrice, discountedPrice, onUnlockClick }) => {
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hora em segundos
 
   useEffect(() => {
@@ -59,7 +61,7 @@ const PriceDiscountCard: React.FC<PriceDiscountCardProps> = ({ originalPrice, di
         </div>
 
         {/* Contagem Regressiva */}
-        <div className="bg-black/50 border border-red-700 rounded-lg p-3 inline-flex items-center gap-3">
+        <div className="bg-black/50 border border-red-700 rounded-lg p-3 inline-flex items-center gap-3 mb-6">
           <Clock className="w-6 h-6 text-red-400" />
           <span className="text-xl font-mono font-bold text-red-300">
             {formatTime(timeLeft)}
@@ -67,9 +69,14 @@ const PriceDiscountCard: React.FC<PriceDiscountCardProps> = ({ originalPrice, di
           <span className="text-sm text-red-400">RESTANTE</span>
         </div>
 
-        <p className="text-sm text-yellow-300 mt-4 font-semibold">
+        <p className="text-sm text-yellow-300 mb-4 font-semibold">
           Esta oferta expira em breve. Garanta seu acesso completo agora!
         </p>
+        
+        {/* Botão de CTA dentro do card */}
+        <ShineButton onClick={onUnlockClick} className="w-full">
+          LIBERAR ACESSO COMPLETO AGORA
+        </ShineButton>
       </div>
     </motion.div>
   );
