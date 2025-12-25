@@ -13,6 +13,7 @@ import FeatureCarousel from '../components/FeatureCarousel';
 import PriceDiscountCard from '../components/PriceDiscountCard';
 import LiveChatFAQ from '../components/LiveChatFAQ';
 import GuaranteeBanner from '../components/GuaranteeBanner';
+import StaticFAQSection from '../components/StaticFAQSection'; // Importa o novo componente
 
 // Novo componente para a seção fixa
 const FixedScrollPrompt: React.FC = () => (
@@ -130,6 +131,9 @@ const InvasionConcludedPage: React.FC = () => {
         
         {/* Banner de Garantia */}
         <GuaranteeBanner />
+
+        {/* NOVO: Seção de Perguntas Frequentes Estáticas */}
+        <StaticFAQSection />
 
       </main>
 
