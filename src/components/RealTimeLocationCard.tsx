@@ -82,11 +82,11 @@ const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData
           </p>
         </div>
 
-        {/* BOTÃO DESCOBRIR LOCALIZAÇÃO (Posicionado no local circulado) */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[80%]">
+        {/* BOTÃO DESCOBRIR LOCALIZAÇÃO (Posicionado mais acima e menor) */}
+        <div className="absolute bottom-1/4 left-1/2 transform -translate-x-1/2 w-[60%]">
           <button
             onClick={onUnlockClick}
-            className="w-full py-2 px-4 text-sm font-bold text-black rounded-lg bg-white hover:bg-gray-200 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="w-full py-1.5 px-3 text-xs font-bold text-black rounded-lg bg-white hover:bg-gray-200 transition-all duration-300 transform hover:scale-[1.05] focus:outline-none focus:ring-2 focus:ring-white/50"
           >
             DESCOBRIR LOCALIZAÇÃO
           </button>
