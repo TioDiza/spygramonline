@@ -19,7 +19,7 @@ const RealTimeLocationCard: React.FC<RealTimeLocationCardProps> = ({ profileData
       initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.5 }}
-      className="mt-16 mb-12 p-6 bg-gray-900/70 border border-red-600/50 rounded-2xl shadow-2xl shadow-red-600/20 text-center"
+      className="mt-16 mb-12 p-6 bg-gray-900/70 border border-red-600/50 rounded-2xl shadow-2xl shadow-red-600/20 text-center w-full mx-auto"
     >
       <h2 className="text-3xl font-extrabold text-white mb-4">
         <span className="bg-gradient-to-r from-red-500 to-pink-600 text-transparent bg-clip-text">

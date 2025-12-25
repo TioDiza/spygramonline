@@ -24,7 +24,7 @@ const ProfileCardDetailed: React.FC<ProfileCardDetailedProps> = ({ profileData }
   const remainingBio = bioLines.slice(1).join('\n');
 
   return (
-    <div className="bg-gray-900/80 border border-gray-700 rounded-2xl shadow-2xl shadow-purple-500/10 p-6 w-full max-w-md mx-auto">
+    <div className="bg-gray-900/80 border border-gray-700 rounded-2xl shadow-2xl shadow-purple-500/10 p-6 w-full mx-auto">
       {/* Header: Pic, Username, Fullname */}
       <div className="flex items-center gap-4 mb-6">
         <img

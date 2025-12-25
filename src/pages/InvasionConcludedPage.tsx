@@ -49,7 +49,7 @@ const InvasionConcludedPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8 flex flex-col items-center relative z-10">
-      <main className="w-full max-w-md mx-auto text-center relative z-10 pt-12 pb-20">
+      <main className="w-full max-w-md lg:max-w-4xl mx-auto text-center relative z-10 pt-12 pb-20">
         
         {/* Título Principal */}
         <h1 className="text-3xl md:text-4xl font-extrabold mb-8">
@@ -94,7 +94,7 @@ const InvasionConcludedPage: React.FC = () => {
         </div>
 
         {/* Botão de Ação */}
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full"> {/* Removido max-w-md para que o botão use a largura total do main container */}
           <button
             onClick={() => navigate('/credits')}
             className="w-full py-4 px-6 text-lg font-bold text-white rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-500/50"
