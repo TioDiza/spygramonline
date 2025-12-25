@@ -6,12 +6,16 @@ interface InteractionProfilesCarouselProps {
   profiles: SuggestedProfile[];
 }
 
+// Helper function to mask usernames
+const maskUsername = (username: string) => {
+  if (username.length <= 4) return '*****';
+  return `${username.substring(0, 4)}****`;
+};
+
 const InteractionProfilesCarousel: React.FC<InteractionProfilesCarouselProps> = ({ profiles }) => {
   // Duplica perfis para criar um loop de rolagem contínuo
   const duplicatedProfiles = [...profiles, ...profiles];
   
-  // Removido o estado 'offset' e o useEffect que controlava a alternância de blur.
-
   if (profiles.length === 0) return null;
 
   // Configuração da animação de rolagem infinita
@@ -28,9 +32,6 @@ const InteractionProfilesCarousel: React.FC<InteractionProfilesCarouselProps> = 
     },
   };
 
-  // O blur será aplicado estaticamente a todos os perfis para simular o bloqueio.
-  const isBlurred = true; 
-
   return (
     <div className="w-full overflow-hidden py-4">
       <motion.div
@@ -39,6 +40,8 @@ const InteractionProfilesCarousel: React.FC<InteractionProfilesCarouselProps> = 
         animate="animate"
       >
         {duplicatedProfiles.map((profile, index) => {
+          // Aplica blur estático, mas deixa 1 em cada 4 perfis nítido
+          const isBlurred = (index % 4) !== 0; 
           
           return (
             <div 
@@ -53,8 +56,7 @@ const InteractionProfilesCarousel: React.FC<InteractionProfilesCarouselProps> = 
                 />
               </div>
               <p className={`text-xs mt-1 transition-colors duration-500 ${isBlurred ? 'text-red-400' : 'text-white'}`}>
-                {/* O nome de usuário sempre será mascarado */}
-                {'*****'} 
+                {isBlurred ? '*****' : maskUsername(profile.username)}
               </p>
             </div>
           );
