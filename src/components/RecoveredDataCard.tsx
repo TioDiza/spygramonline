@@ -73,7 +73,6 @@ const RecoveredDataCard: React.FC<RecoveredDataCardProps> = ({ onUnlockClick }) 
           <ShineButton 
             onClick={onUnlockClick} 
             className="w-full max-w-[280px] bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 hover:ring-pink-500/50 active:ring-pink-500/50"
-            shineColorClasses="bg-pink-600"
           >
             <span className="text-lg font-extrabold leading-tight">
               VER FOTOS E CONVERSAS<br/>APAGADAS
