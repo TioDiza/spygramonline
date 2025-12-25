@@ -3,42 +3,72 @@ import { MessageSquare, User, ShieldCheck, Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface ChatMessageProps {
-  sender: 'user' | 'admin';
+  sender: 'user' | 'admin' | 'current_user'; // Novo tipo para o usuário atual
   message: string;
   time: string;
-  username?: string; // Adiciona o nome de usuário para remetentes 'user'
+  username?: string;
 }
 
+// Mapeamento de cores para usernames simulados
+const USER_COLORS: { [key: string]: string } = {
+  'user921': 'text-yellow-400',
+  'user333': 'text-pink-400',
+  'user403': 'text-blue-400',
+  'user111': 'text-green-400',
+};
+
 const ChatMessage: React.FC<ChatMessageProps> = ({ sender, message, time, username }) => {
-  const isUser = sender === 'user';
+  const isCurrentUser = sender === 'current_user';
+  const isAdmin = sender === 'admin';
   
-  const bubbleClasses = isUser
-    ? 'bg-purple-600 text-white rounded-br-none self-end'
-    : 'bg-gray-700 text-white rounded-tl-none self-start';
-  
-  const avatar = isUser 
-    ? <User className="w-4 h-4 text-white" />
-    : <ShieldCheck className="w-4 h-4 text-green-400" />;
+  // Classes de posicionamento e bolha
+  let alignmentClasses = 'items-start';
+  let bubbleClasses = 'bg-gray-700 text-white rounded-tl-none';
+  let avatarComponent = isAdmin 
+    ? <ShieldCheck className="w-4 h-4 text-green-400" />
+    : <User className="w-4 h-4 text-white" />;
+  let nameDisplay = isAdmin ? 'Admin SpyGram' : username;
+  let nameColor = isAdmin ? 'text-green-400' : USER_COLORS[username || ''] || 'text-gray-400';
+
+  if (isCurrentUser) {
+    alignmentClasses = 'items-end';
+    bubbleClasses = 'bg-purple-600 text-white rounded-br-none';
+    avatarComponent = <User className="w-4 h-4 text-white" />; // Avatar do usuário atual
+    nameDisplay = 'Você';
+    nameColor = 'text-white';
+  }
 
   return (
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className={`flex flex-col max-w-[85%] mb-3 ${isUser ? 'items-end' : 'items-start'}`}
+      className={`flex flex-col max-w-[85%] mb-3 ${alignmentClasses}`}
     >
-      <div className={`flex items-center text-xs mb-1 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-        <div className="w-6 h-6 rounded-full bg-gray-900 flex items-center justify-center border border-gray-600 mx-2">
-          {avatar}
+      {/* Header (Nome e Avatar) - Apenas para mensagens que não são do usuário atual */}
+      {!isCurrentUser && (
+        <div className="flex items-center text-xs mb-1">
+          <div className="w-6 h-6 rounded-full bg-gray-900 flex items-center justify-center border border-gray-600 mr-2">
+            {avatarComponent}
+          </div>
+          <span className={`font-semibold ${nameColor}`}>
+            {nameDisplay}
+          </span>
         </div>
-        <span className="text-gray-400 font-semibold">
-          {isUser ? username : 'Admin SpyGram'}
-        </span>
+      )}
+      
+      {/* Bolha da Mensagem */}
+      <div className="flex items-end gap-2">
+        {/* Tempo à esquerda para mensagens à esquerda */}
+        {!isCurrentUser && <span className="text-xs text-gray-500">{time}</span>}
+        
+        <div className={`px-4 py-2 rounded-xl text-sm shadow-md ${bubbleClasses}`}>
+          {message}
+        </div>
+        
+        {/* Tempo à direita para mensagens à direita */}
+        {isCurrentUser && <span className="text-xs text-gray-500">{time}</span>}
       </div>
-      <div className={`px-4 py-2 rounded-xl text-sm shadow-md ${bubbleClasses}`}>
-        {message}
-      </div>
-      <span className="text-xs text-gray-500 mt-1 mx-2">{time}</span>
     </motion.div>
   );
 };
@@ -55,7 +85,7 @@ const LiveChatFAQ: React.FC = () => {
     { sender: 'admin', message: 'Absolutamente seguro. Utilizamos criptografia de ponta e servidores proxy anônimos. Sua identidade é 100% protegida.', time: '14:35' },
     { sender: 'user', username: 'user403', message: 'E se eu não gostar do que encontrar?', time: '14:36' },
     { sender: 'admin', message: 'Oferecemos uma garantia de 7 dias. Se não estiver satisfeito, basta solicitar o reembolso total.', time: '14:37' },
-    { sender: 'user', username: 'user333', message: 'Perfeito! Vou comprar agora.', time: '14:38' },
+    { sender: 'current_user', message: 'Perfeito! Vou comprar agora.', time: '14:38' }, // Mensagem do usuário atual (à direita)
   ];
 
   const commonQuestions = [
