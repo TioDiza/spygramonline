@@ -5,6 +5,7 @@ import { ShieldCheck, Zap, Clock, MessageSquare, Award, ChevronDown, MapPin } fr
 import ProfileCardDetailed from '../components/ProfileCardDetailed';
 import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
 import RealTimeLocationCard from '../components/RealTimeLocationCard';
+import DatingAppCard from '../components/DatingAppCard'; // Importa o novo componente
 
 const features = [
   { icon: Zap, title: 'Acesso Imediato', description: 'Visualize o perfil completo assim que o pagamento for confirmado.' },
@@ -43,6 +44,10 @@ const InvasionConcludedPage: React.FC = () => {
     }
   }, [navigate]);
 
+  const handleUnlockClick = () => {
+    navigate('/credits');
+  };
+
   if (!profileData) {
     return null;
   }
@@ -61,8 +66,6 @@ const InvasionConcludedPage: React.FC = () => {
         {/* 1. Card de Perfil Detalhado (Perfil Pesquisado) */}
         <ProfileCardDetailed profileData={profileData} />
 
-        {/* A seção estática 'Continue lendo' foi removida daqui. */}
-
         {/* 2. Perfis com Maior Interação */}
         <h2 className="text-2xl font-extrabold text-white mt-4 mb-4">
           Perfis com Maior Interação 
@@ -76,6 +79,9 @@ const InvasionConcludedPage: React.FC = () => {
         {/* 3. Cartão de Localização em Tempo Real */}
         <RealTimeLocationCard profileData={profileData} userCity={userCity} />
         
+        {/* 4. Cartão de Aplicativos de Relacionamento (NOVO) */}
+        <DatingAppCard onUnlockClick={handleUnlockClick} />
+
         {/* Grid de Features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left mt-8">
           {features.map((feature, index) => (
@@ -92,7 +98,7 @@ const InvasionConcludedPage: React.FC = () => {
         {/* Botão de Ação */}
         <div className="w-full">
           <button
-            onClick={() => navigate('/credits')}
+            onClick={handleUnlockClick}
             className="w-full py-4 px-6 text-lg font-bold text-white rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-500/50"
           >
             LIBERAR ACESSO COMPLETO AGORA
