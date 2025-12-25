@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ProfileData, SuggestedProfile } from '../../types';
-import { ShieldCheck, ChevronDown } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import ProfileCardDetailed from '../components/ProfileCardDetailed';
 import InteractionProfilesCarousel from '../components/InteractionProfilesCarousel';
 import RealTimeLocationCard from '../components/RealTimeLocationCard';
@@ -14,16 +14,6 @@ import PriceDiscountCard from '../components/PriceDiscountCard';
 import LiveChatFAQ from '../components/LiveChatFAQ';
 import GuaranteeBanner from '../components/GuaranteeBanner';
 import StaticFAQSection from '../components/StaticFAQSection'; // Importa o novo componente
-
-// Novo componente para a seção fixa
-const FixedScrollPrompt: React.FC = () => (
-  <div className="fixed bottom-0 left-0 right-0 z-20 p-4 bg-black/80 backdrop-blur-sm border-t border-gray-800">
-    <div className="text-center">
-      <p className="text-sm text-gray-500 mb-1">Continue lendo</p>
-      <ChevronDown className="w-6 h-6 text-gray-500 mx-auto animate-bounce-slow" />
-    </div>
-  </div>
-);
 
 const CHECKOUT_URL = 'https://go.perfectpay.com.br/PPU38CPUD1S';
 
@@ -74,7 +64,7 @@ const InvasionConcludedPage: React.FC = () => {
         checkoutUrl={CHECKOUT_URL}
       />
 
-      <main className="w-full max-w-md lg:max-w-4xl mx-auto text-center relative z-10 pt-12 pb-20">
+      <main className="w-full max-w-md lg:max-w-4xl mx-auto text-center relative z-10 pt-12 pb-4"> {/* Reduzido pb-20 para pb-4 */}
         
         {/* Título Principal */}
         <h1 className="text-3xl md:text-4xl font-extrabold mb-8">
@@ -132,21 +122,20 @@ const InvasionConcludedPage: React.FC = () => {
         {/* Banner de Garantia */}
         <GuaranteeBanner />
 
-        {/* NOVO: Seção de Perguntas Frequentes Estáticas */}
+        {/* Seção de Perguntas Frequentes Estáticas */}
         <StaticFAQSection />
 
-      </main>
+        {/* Rodapé movido para dentro do main, logo após a FAQ */}
+        <footer className="text-center mt-12 py-4 relative z-10">
+          <div className="inline-flex items-center gap-2 text-gray-400 text-sm">
+            <ShieldCheck className="w-4 h-4 text-green-500" />
+            <span>Pagamento Seguro | Site Protegido</span>
+          </div>
+        </footer>
 
-      {/* Footer */}
-      <footer className="text-center mt-12 py-4 relative z-10">
-        <div className="inline-flex items-center gap-2 text-gray-400 text-sm">
-          <ShieldCheck className="w-4 h-4 text-green-500" />
-          <span>Pagamento Seguro | Site Protegido</span>
-        </div>
-      </footer>
+      </main>
       
-      {/* Prompt de Scroll Fixo */}
-      <FixedScrollPrompt />
+      {/* O FixedScrollPrompt e sua definição foram removidos */}
     </div>
   );
 };
