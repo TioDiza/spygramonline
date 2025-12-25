@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { MessageSquare, User, ShieldCheck, Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -73,10 +73,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ sender, message, time, userna
   );
 };
 
-const LiveChatFAQ: React.FC = () => {
-  const chatEndRef = useRef<HTMLDivElement>(null);
-
-  const messages: ChatMessageProps[] = [
+const INITIAL_CONVERSATION: ChatMessageProps[] = [
     { sender: 'user', username: 'user921', message: 'O acesso é realmente vitalício?', time: '14:30' },
     { sender: 'admin', message: 'Sim! O acesso é permanente. Você paga uma única vez e tem acesso ao perfil invadido para sempre.', time: '14:31' },
     { sender: 'user', username: 'user333', message: 'Aceita PIX? Preciso de acesso rápido.', time: '14:32' },
@@ -85,28 +82,96 @@ const LiveChatFAQ: React.FC = () => {
     { sender: 'admin', message: 'Absolutamente seguro. Utilizamos criptografia de ponta e servidores proxy anônimos. Sua identidade é 100% protegida.', time: '14:35' },
     { sender: 'user', username: 'user403', message: 'E se eu não gostar do que encontrar?', time: '14:36' },
     { sender: 'admin', message: 'Oferecemos uma garantia de 7 dias. Se não estiver satisfeito, basta solicitar o reembolso total.', time: '14:37' },
-    { sender: 'current_user', message: 'Perfeito! Vou comprar agora.', time: '14:38' }, // Mensagem do usuário atual (à direita)
-  ];
+];
 
-  const commonQuestions = [
-    'Aceita PIX?',
-    'É seguro comprar?',
-    'O acesso é imediato?',
-  ];
+const LiveChatFAQ: React.FC = () => {
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  const [displayedMessages, setDisplayedMessages] = useState<ChatMessageProps[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [conversationFinished, setConversationFinished] = useState(false);
+
+  // Efeito para simular a conversa inicial
+  useEffect(() => {
+    let index = 0;
+    let timer: NodeJS.Timeout;
+
+    const addMessage = () => {
+      if (index < INITIAL_CONVERSATION.length) {
+        const msg = INITIAL_CONVERSATION[index];
+        
+        // Simula o admin digitando antes de responder
+        if (msg.sender === 'admin') {
+          setIsTyping(true);
+          setTimeout(() => {
+            setIsTyping(false);
+            setDisplayedMessages(prev => [...prev, msg]);
+            index++;
+            timer = setTimeout(addMessage, 1500); // Próxima mensagem após 1.5s
+          }, 1000); // Admin digita por 1s
+        } else {
+          setDisplayedMessages(prev => [...prev, msg]);
+          index++;
+          timer = setTimeout(addMessage, 1500); // Próxima mensagem após 1.5s
+        }
+      } else {
+        setConversationFinished(true);
+      }
+    };
+
+    // Inicia a conversa após um pequeno atraso
+    timer = setTimeout(addMessage, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Efeito para rolar automaticamente para o final do chat
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [displayedMessages]);
 
-  // Função simulada para lidar com o clique nas perguntas
-  const handleQuestionClick = (question: string) => {
-    // Simula o envio da pergunta e a resposta do admin
-    console.log(`Pergunta simulada: ${question}`);
-    // Aqui você poderia adicionar lógica para simular a resposta, mas por enquanto, apenas logamos.
-  };
+  const handleQuestionClick = useCallback((question: string) => {
+    if (!conversationFinished) return; // Não permite interação antes da conversa inicial terminar
+
+    const now = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    
+    // 1. Adiciona a pergunta do usuário
+    const userQuestion: ChatMessageProps = {
+      sender: 'current_user',
+      message: question,
+      time: now,
+    };
+    setDisplayedMessages(prev => [...prev, userQuestion]);
+
+    // 2. Simula a resposta do admin
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+      let responseMessage = 'Obrigado pela sua pergunta! Para mais detalhes, clique no botão de acesso completo.';
+      
+      if (question.includes('PIX')) {
+        responseMessage = 'Sim, aceitamos PIX! É a forma mais rápida de liberar seu acesso imediatamente.';
+      } else if (question.includes('seguro')) {
+        responseMessage = 'É 100% seguro. Sua transação é protegida e sua identidade é anônima.';
+      } else if (question.includes('imediato')) {
+        responseMessage = 'O acesso é liberado em menos de 5 minutos após a confirmação do pagamento.';
+      }
+
+      const adminResponse: ChatMessageProps = {
+        sender: 'admin',
+        message: responseMessage,
+        time: now,
+      };
+      setDisplayedMessages(prev => [...prev, adminResponse]);
+    }, 2000); // Admin responde após 2 segundos
+  }, [conversationFinished]);
+
+  const commonQuestions = [
+    'Aceita PIX?',
+    'É seguro comprar?',
+    'O acesso é imediato?',
+  ];
 
   return (
     <div className="mt-12 w-full max-w-md mx-auto">
@@ -119,14 +184,16 @@ const LiveChatFAQ: React.FC = () => {
       
       {/* Área de Mensagens */}
       <div className="bg-gray-900/70 border border-gray-700 rounded-xl p-4 h-[400px] overflow-y-auto flex flex-col">
-        {messages.map((msg, index) => (
+        {displayedMessages.map((msg, index) => (
           <ChatMessage key={index} {...msg} />
         ))}
         
         {/* Mensagem de status do Admin */}
-        <div className="text-center text-xs text-gray-500 mt-4">
-          Admin SpyGram está digitando...
-        </div>
+        {isTyping && (
+          <div className="text-center text-xs text-gray-500 mt-4">
+            Admin SpyGram está digitando...
+          </div>
+        )}
         
         {/* Ponto de rolagem automática */}
         <div ref={chatEndRef} />
@@ -151,7 +218,12 @@ const LiveChatFAQ: React.FC = () => {
           <button
             key={index}
             onClick={() => handleQuestionClick(question)}
-            className="px-3 py-1 text-xs font-medium text-gray-300 bg-gray-800 border border-gray-700 rounded-full hover:bg-gray-700 transition-colors"
+            disabled={!conversationFinished} // Desabilita enquanto a conversa inicial não termina
+            className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+              conversationFinished 
+                ? 'text-gray-300 bg-gray-800 border border-gray-700 hover:bg-gray-700'
+                : 'text-gray-500 bg-gray-900 border border-gray-800 cursor-not-allowed'
+            }`}
           >
             {question}
           </button>
