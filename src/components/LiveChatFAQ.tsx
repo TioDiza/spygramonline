@@ -6,9 +6,10 @@ interface ChatMessageProps {
   sender: 'user' | 'admin';
   message: string;
   time: string;
+  username?: string; // Adiciona o nome de usuário para remetentes 'user'
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ sender, message, time }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ sender, message, time, username }) => {
   const isUser = sender === 'user';
   
   const bubbleClasses = isUser
@@ -31,7 +32,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ sender, message, time }) => {
           {avatar}
         </div>
         <span className="text-gray-400 font-semibold">
-          {isUser ? 'Você' : 'Admin SpyGram'}
+          {isUser ? username : 'Admin SpyGram'}
         </span>
       </div>
       <div className={`px-4 py-2 rounded-xl text-sm shadow-md ${bubbleClasses}`}>
@@ -46,12 +47,15 @@ const LiveChatFAQ: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const messages: ChatMessageProps[] = [
-    { sender: 'user', message: 'O acesso é realmente vitalício?', time: '14:30' },
+    { sender: 'user', username: 'user921', message: 'O acesso é realmente vitalício?', time: '14:30' },
     { sender: 'admin', message: 'Sim! O acesso é permanente. Você paga uma única vez e tem acesso ao perfil invadido para sempre.', time: '14:31' },
-    { sender: 'user', message: 'É seguro? Posso ser rastreado?', time: '14:32' },
-    { sender: 'admin', message: 'Absolutamente seguro. Utilizamos criptografia de ponta e servidores proxy anônimos. Sua identidade é 100% protegida.', time: '14:33' },
-    { sender: 'user', message: 'E se eu não gostar do que encontrar?', time: '14:34' },
-    { sender: 'admin', message: 'Oferecemos uma garantia de 7 dias. Se não estiver satisfeito, basta solicitar o reembolso total.', time: '14:35' },
+    { sender: 'user', username: 'user333', message: 'Aceita PIX? Preciso de acesso rápido.', time: '14:32' },
+    { sender: 'admin', message: 'Com certeza! Aceitamos PIX, Cartão de Crédito e Boleto. O acesso é liberado imediatamente após a confirmação do pagamento.', time: '14:33' },
+    { sender: 'user', username: 'user921', message: 'É seguro? Posso ser rastreado?', time: '14:34' },
+    { sender: 'admin', message: 'Absolutamente seguro. Utilizamos criptografia de ponta e servidores proxy anônimos. Sua identidade é 100% protegida.', time: '14:35' },
+    { sender: 'user', username: 'user403', message: 'E se eu não gostar do que encontrar?', time: '14:36' },
+    { sender: 'admin', message: 'Oferecemos uma garantia de 7 dias. Se não estiver satisfeito, basta solicitar o reembolso total.', time: '14:37' },
+    { sender: 'user', username: 'user333', message: 'Perfeito! Vou comprar agora.', time: '14:38' },
   ];
 
   const commonQuestions = [
