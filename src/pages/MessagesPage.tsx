@@ -140,7 +140,8 @@ const MessagesPage: React.FC = () => {
               time={msg.time}
               unread={msg.unread}
               locked={msg.locked}
-              onClick={index === 0 && !msg.locked ? () => handleChatClick(msg) : handleLockedClick}
+              // Permite que os dois primeiros chats (index 0 e 1) sejam clicáveis se não estiverem bloqueados
+              onClick={(!msg.locked && (index === 0 || index === 1)) ? () => handleChatClick(msg) : handleLockedClick}
             />
           ))}
         </div>
