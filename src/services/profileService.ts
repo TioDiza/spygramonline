@@ -5,7 +5,10 @@ const REQUEST_TIMEOUT = 30000; // 30 segundos
 
 // Adiciona um proxy para evitar erros de CORS ao carregar imagens do Instagram
 const getProxiedUrl = (url: string | undefined): string => {
-  if (!url) return '';
+  if (!url || url.trim() === '') {
+    // Retorna um fallback de imagem genérica se a URL for inválida
+    return '/perfil.jpg'; 
+  }
   // Se a URL já for de um proxy conhecido, retorna como está
   if (url.includes('workers.dev') || url.includes('vercel.app') || url.includes('images.weserv.nl')) {
     return url;
@@ -65,7 +68,7 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
 
     let profileSource: any = null;
 
-    // Itera sobre os resultados para encontrar o melhor conjunto de dados
+    // Itera sobre os results para encontrar o melhor conjunto de dados
     if (data.results && Array.isArray(data.results)) {
       for (const result of data.results) {
         if (result.data && result.data.username) {
