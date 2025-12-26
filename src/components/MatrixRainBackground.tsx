@@ -4,7 +4,7 @@ import { cn } from '../lib/utils';
 const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+=-[]{}|;:,.<>?/~`';
 const COLUMN_COUNT = 40; 
 const FONT_SIZE = 16; 
-const RAIN_LENGTH = 50; 
+const RAIN_LENGTH = 100; // Aumentado para garantir que cubra a tela
 
 const getRandomString = (length: number) => {
   let result = '';
@@ -29,19 +29,21 @@ const MatrixRainBackground: React.FC = () => {
     <>
       <style>{`
         @keyframes matrix-fall {
-          0% { transform: translateY(-100%); }
+          /* Começa com o topo da coluna fora da tela (acima) */
+          0% { transform: translateY(-100%); } 
+          /* Termina quando o topo da coluna atinge o final da tela (100vh) */
           100% { transform: translateY(100vh); }
         }
         .matrix-column {
           position: absolute;
-          top: -100vh; /* Start above the viewport */
+          top: 0; /* Posição inicial no topo do container fixo */
           font-size: ${FONT_SIZE}px;
           line-height: ${FONT_SIZE}px;
           white-space: pre;
           animation-name: matrix-fall;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
-          opacity: 0.3; /* General opacity for background effect */
+          opacity: 0.3; 
         }
       `}</style>
       <div className="fixed inset-0 overflow-hidden z-0 bg-black">
@@ -53,8 +55,6 @@ const MatrixRainBackground: React.FC = () => {
               left: `${(index / COLUMN_COUNT) * 100}%`,
               animationDuration: `${col.duration}s`,
               animationDelay: `${col.delay}s`,
-              // Randomize the starting position slightly
-              transform: `translateY(${Math.random() * -50}vh)`,
             }}
           >
             {col.text}
