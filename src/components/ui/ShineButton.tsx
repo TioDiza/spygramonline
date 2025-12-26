@@ -18,7 +18,8 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
   `;
 
   return (
-    <div className={cn("relative w-full overflow-hidden group rounded-full")}>
+    // O div externo recebe a largura (w-full) e o arredondamento para cortar o brilho
+    <div className={cn("relative w-full overflow-hidden group rounded-full", className)}>
       {/* Efeito de Brilho (Shine) */}
       <div 
         className={cn(
@@ -28,12 +29,13 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
         )}
       ></div>
       
-      {/* Botão Principal - Aplica o className aqui para cor e largura */}
+      {/* Botão Principal - Adiciona w-full para preencher o contêiner */}
       <button
         onClick={onClick}
         className={cn(
           baseClasses,
-          className // Aplica classes de cor e largura aqui
+          "w-full", // Garante que o botão preencha a largura do div pai
+          className // Aplica classes de cor aqui
         )}
       >
         <span className="relative z-20">{children}</span>
