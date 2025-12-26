@@ -20,7 +20,6 @@ import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
 import { ProfileData, SuggestedProfile, FeedPost } from './types';
 import MatrixRainBackground from './src/components/MatrixRainBackground';
-import BinaryTextReveal from './src/components/BinaryTextReveal'; // Importa o novo componente
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -208,7 +207,12 @@ const MainAppContent: React.FC = () => {
             />
           </div>
           
-          <BinaryTextReveal /> {/* Novo componente de animação binária */}
+          {/* Texto original restaurado */}
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-4">
+            <span className="inline-block bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 text-transparent bg-clip-text">
+              SPYGRAM
+            </span>
+          </h1>
 
           <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
             <span className="text-white">ACESSE O </span>
