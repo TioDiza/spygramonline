@@ -17,6 +17,28 @@ const getProxiedUrl = (url: string | undefined): string => {
   return `https://proxt-insta.projetinho-solo.workers.dev/?url=${encodeURIComponent(url)}`;
 };
 
+/**
+ * Proxy de imagens para avatares (versão leve)
+ * Usa weserv.nl com qualidade/tamanho reduzido para carregar mais rápido
+ */
+const getProxiedUrlLight = (imageUrl: string | undefined): string => {
+    if (!imageUrl || imageUrl.trim() === '') {
+        return '/perfil.jpg';
+    }
+    // Não aplicar proxy a URLs locais
+    if (imageUrl.startsWith('/') || imageUrl.startsWith('../')) {
+        return imageUrl;
+    }
+    // Se já tem proxy, retornar como está
+    if (imageUrl.includes('images.weserv.nl') || imageUrl.includes('proxt-insta.projetinho-solo.workers.dev')) {
+        return imageUrl;
+    }
+    // Usar weserv.nl com tamanho pequeno (80px) e qualidade baixa (50) para avatares
+    const urlWithoutProtocol = imageUrl.replace(/^https?:\/\//, '');
+    return `https://images.weserv.nl/?url=${encodeURIComponent(urlWithoutProtocol)}&w=80&h=80&fit=cover&q=50`;
+};
+
+
 const fetchWithTimeout = async (url: string, timeout = REQUEST_TIMEOUT): Promise<any> => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -133,7 +155,8 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
     if (suggestionsData && suggestionsData.lista_perfis_publicos && Array.isArray(suggestionsData.lista_perfis_publicos)) {
       suggestions = suggestionsData.lista_perfis_publicos.map((s: any) => ({
         username: s.username,
-        profile_pic_url: getProxiedUrl(s.profile_pic_url),
+        // Usa o proxy leve para avatares
+        profile_pic_url: getProxiedUrlLight(s.profile_pic_url),
       }));
     }
   } catch (error) {
@@ -152,10 +175,12 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
             de_usuario: {
                 username: item.de_usuario?.username || '',
                 full_name: item.de_usuario?.full_name || '',
-                profile_pic_url: getProxiedUrl(item.de_usuario?.profile_pic_url),
+                // Usa o proxy leve para avatares dos posts
+                profile_pic_url: getProxiedUrlLight(item.de_usuario?.profile_pic_url),
             },
             post: {
                 id: item.post?.id || '',
+                // Usa o proxy normal para imagens de posts (maior resolução)
                 image_url: getProxiedUrl(item.post?.image_url),
                 video_url: item.post?.video_url ? getProxiedUrl(item.post.video_url) : undefined,
                 is_video: item.post?.is_video || false,
