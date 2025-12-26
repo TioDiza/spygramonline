@@ -12,14 +12,14 @@ import MessagesPage from '@/src/pages/MessagesPage';
 import ChatPage from '@/src/pages/ChatPage';
 import ProgressBar from '@/src/components/ProgressBar';
 import InvasionSimulationPage from '@/src/pages/InvasionSimulationPage';
-import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage'; // Importa a nova página
+import InvasionConcludedPage from '@/src/pages/InvasionConcludedPage';
 import ProfileConfirmationCard from '@/src/components/ProfileConfirmationCard';
 import { MIN_LOADING_DURATION } from './constants';
 import { fetchProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
 import { ProfileData, SuggestedProfile, FeedPost } from './types';
-import MatrixRainBackground from './src/components/MatrixRainBackground';
+import BackgroundLayout from './src/components/BackgroundLayout'; // Import BackgroundLayout
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -132,7 +132,7 @@ const MainAppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-black">
       <ProgressBar progress={progressBarProgress} isVisible={isLoading} />
-      <div className="relative z-20 text-white font-sans flex flex-col items-center p-4 sm:p-8 w-full">
+      <div className="relative z-20 text-white font-sans flex flex-col items-center px-4 sm:px-8 pt-12 pb-8 w-full"> {/* Ajustado padding */}
         <style>{`
           @keyframes fade-in {
             from { opacity: 0; transform: translateY(20px); }
@@ -196,14 +196,15 @@ const MainAppContent: React.FC = () => {
           }
         `}</style>
         
-        <header className="text-center mb-12 relative w-full max-w-xl">
+        <header className="text-center mb-8 relative w-full max-w-xl"> {/* Ajustado margin */}
           <div className="relative group mx-auto w-fit mb-4">
             <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
             
             <img
               src="/spygram_transparentebranco.png"
               alt="SpyGram Logo"
-              className="h-24 md:h-32 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
+              className="h-20 md:h-32 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance" 
+              /* Ajustado tamanho mobile */
             />
           </div>
           
@@ -258,25 +259,16 @@ const MainAppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Router>
-      <MatrixRainBackground /> {/* Adiciona o background aqui */}
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<MainAppContent />} />
-          <Route path="/invasion-simulation" element={<InvasionSimulationPage />} />
-          <Route 
-            path="/invasion-concluded" 
-            element={
-              <ProtectedRoute>
-                <InvasionConcludedPage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route path="/login" element={<LoginPage />} />
+          {/* Rotas que DEVEM ter o background */}
+          <Route path="/" element={<BackgroundLayout><MainAppContent /></BackgroundLayout>} />
+          <Route path="/login" element={<BackgroundLayout><LoginPage /></BackgroundLayout>} />
           <Route 
             path="/servers" 
             element={
               <ProtectedRoute>
-                <ServersPage />
+                <BackgroundLayout><ServersPage /></BackgroundLayout>
               </ProtectedRoute>
             } 
           />
@@ -284,10 +276,21 @@ const App: React.FC = () => {
             path="/credits" 
             element={
               <ProtectedRoute>
-                <CreditsPage />
+                <BackgroundLayout><CreditsPage /></BackgroundLayout>
               </ProtectedRoute>
             } 
           />
+          <Route 
+            path="/invasion-concluded" 
+            element={
+              <ProtectedRoute>
+                <BackgroundLayout><InvasionConcludedPage /></BackgroundLayout>
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Rotas que NÃO DEVEM ter o background (Instagram Mockups) */}
+          <Route path="/invasion-simulation" element={<InvasionSimulationPage />} />
           <Route 
             path="/messages" 
             element={
