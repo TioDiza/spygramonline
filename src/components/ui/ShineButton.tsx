@@ -10,7 +10,7 @@ interface ShineButtonProps {
 
 const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className, shineColorClasses = 'bg-purple-600' }) => {
   const baseClasses = `
-    relative z-10 flex items-center justify-center rounded-lg
+    relative z-10 flex items-center justify-center rounded-xl
     px-6 py-3 text-lg font-bold text-white
     transition-all duration-300 ease-in-out
     focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-offset-black
@@ -22,7 +22,7 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
       {/* Efeito de Brilho (Shine) */}
       <div 
         className={cn(
-          "absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-1000 animate-pulse-slow",
+          "absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-1000 animate-pulse-slow rounded-xl", // Adicionado rounded-xl aqui
           shineColorClasses,
           "blur-xl" // Adiciona um blur forte para o efeito de brilho
         )}
