@@ -19,6 +19,7 @@ import { fetchProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
 import { ProfileData, SuggestedProfile, FeedPost } from './types';
+import MatrixRainBackground from './src/components/MatrixRainBackground'; // Importa o novo componente
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -118,7 +119,7 @@ const MainAppContent: React.FC = () => {
 
   if (confirmedProfileData) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <div className="min-h-screen bg-black flex items-center justify-center p-4 relative z-10">
         <ProfileConfirmationCard
           profileData={confirmedProfileData}
           onConfirm={handleConfirmInvasion}
@@ -250,6 +251,7 @@ const MainAppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Router>
+      <MatrixRainBackground /> {/* Adiciona o background aqui */}
       <AuthProvider>
         <Routes>
           <Route path="/" element={<MainAppContent />} />
