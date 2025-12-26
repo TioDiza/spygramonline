@@ -18,23 +18,22 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
   `;
 
   return (
-    <div className={cn("relative w-full overflow-hidden group", className)}>
+    <div className={cn("relative w-full overflow-hidden group")}>
       {/* Efeito de Brilho (Shine) */}
       <div 
         className={cn(
-          "absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-1000 animate-pulse-slow rounded-full", // Alterado para rounded-full
+          "absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-1000 animate-pulse-slow rounded-full",
           shineColorClasses,
-          "blur-xl" // Adiciona um blur forte para o efeito de brilho
+          "blur-xl"
         )}
       ></div>
       
-      {/* Botão Principal */}
+      {/* Botão Principal - Aplica o className aqui para cor e largura */}
       <button
         onClick={onClick}
         className={cn(
           baseClasses,
-          // Garante que o background do botão seja aplicado via className, se fornecido
-          className
+          className // Aplica classes de cor e largura aqui
         )}
       >
         <span className="relative z-20">{children}</span>
