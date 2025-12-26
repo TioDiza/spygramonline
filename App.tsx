@@ -19,7 +19,8 @@ import { fetchProfileData } from './src/services/profileService';
 import { AuthProvider } from './src/context/AuthContext';
 import ProtectedRoute from './src/components/ProtectedRoute';
 import { ProfileData, SuggestedProfile, FeedPost } from './types';
-import MatrixRainBackground from './src/components/MatrixRainBackground'; // Importa o novo componente
+import MatrixRainBackground from './src/components/MatrixRainBackground';
+import BinaryTextReveal from './src/components/BinaryTextReveal'; // Importa o novo componente
 
 // Componente principal que contém a lógica de pesquisa e roteamento
 const MainAppContent: React.FC = () => {
@@ -196,16 +197,18 @@ const MainAppContent: React.FC = () => {
           }
         `}</style>
         
-        <header className="text-center mb-4 relative w-full max-w-xl">
+        <header className="text-center mb-12 relative w-full max-w-xl">
           <div className="relative group mx-auto w-fit mb-4">
             <div className="absolute -inset-0.5 blur animate-tilt animate-blob animate-logo-background-pulse logo-radial-background"></div>
             
             <img
               src="/spygram_transparentebranco.png"
               alt="SpyGram Logo"
-              className="h-48 md:h-64 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
+              className="h-24 md:h-32 relative z-10 animate-logo-float-pulse rounded-full animate-logo-entrance"
             />
           </div>
+          
+          <BinaryTextReveal /> {/* Novo componente de animação binária */}
 
           <p className="text-center text-xl md:text-2xl font-bold mt-4 animate-fade-in">
             <span className="text-white">ACESSE O </span>
