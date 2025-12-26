@@ -35,14 +35,15 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
         className={cn(
           baseClasses,
           "w-full", // Garante que o botão preencha a largura do div pai
-          className // Aplica classes de cor aqui
+          className // Aplica classes de cor aqui (ex: bg-red-600)
         )}
       >
         {/* NOVO: Efeito de Reflexo em Movimento */}
         <div className="absolute inset-0 overflow-hidden rounded-full">
           <div 
+            // Reduzindo o blur para 5px para evitar vazamento excessivo
             className="absolute top-0 left-0 w-1/2 h-full bg-white/30 opacity-50 animate-shine-sweep"
-            style={{ filter: 'blur(10px)' }} // Adiciona um blur para suavizar o reflexo
+            style={{ filter: 'blur(5px)' }} 
           ></div>
         </div>
         
