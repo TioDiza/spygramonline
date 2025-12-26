@@ -3,9 +3,9 @@ import { cn } from '../lib/utils';
 
 const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+=-[]{}|;:,.<>?/~`';
 const SPYGRAM = 'SPYGRAM';
-const COLUMN_COUNT = 40; 
+const COLUMN_COUNT = 25; // Reduzido para diminuir a densidade
 const FONT_SIZE = 16; 
-const RAIN_LENGTH = 100; // Garante que cubra a tela
+const RAIN_LENGTH = 100; 
 
 // Helper function to generate a single styled column as an array of React nodes
 const generateStyledColumn = (columnIndex: number) => {
@@ -42,8 +42,9 @@ const MatrixRainBackground: React.FC = () => {
   const columnData = useMemo(() => {
     return Array(COLUMN_COUNT).fill(0).map((_, index) => ({
       content: generateStyledColumn(index),
-      duration: Math.random() * 10 + 5, // 5s to 15s duration
-      delay: Math.random() * -10, // Negative delay to start off-screen
+      // Aumentado o intervalo de duração para 10s a 25s (mais lento)
+      duration: Math.random() * 15 + 10, 
+      delay: Math.random() * -10, 
     }));
   }, []);
 
@@ -58,14 +59,14 @@ const MatrixRainBackground: React.FC = () => {
           position: absolute;
           top: 0; 
           font-size: ${FONT_SIZE}px;
-          line-height: ${FONT_SIZE}px; /* Garante que cada caractere ocupe exatamente uma linha */
+          line-height: ${FONT_SIZE}px;
           white-space: pre;
           animation-name: matrix-fall;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
           opacity: 0.8; 
-          display: flex; /* Adicionado para empilhar os spans verticalmente */
-          flex-direction: column; /* Adicionado para empilhar os spans verticalmente */
+          display: flex;
+          flex-direction: column;
         }
       `}</style>
       <div className="fixed inset-0 overflow-hidden z-0 bg-black">
