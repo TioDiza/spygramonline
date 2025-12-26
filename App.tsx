@@ -119,7 +119,7 @@ const MainAppContent: React.FC = () => {
 
   if (confirmedProfileData) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4 relative z-10">
+      <div className="min-h-screen flex items-center justify-center p-4 relative z-10">
         <ProfileConfirmationCard
           profileData={confirmedProfileData}
           onConfirm={handleConfirmInvasion}

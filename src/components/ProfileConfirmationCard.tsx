@@ -22,7 +22,7 @@ const ProfileConfirmationCard: React.FC<ProfileConfirmationCardProps> = ({ profi
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.9, opacity: 0 }}
       transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-      className="w-full max-w-lg mx-auto p-6 bg-black/80 backdrop-blur-md border border-purple-500 rounded-2xl shadow-2xl shadow-purple-500/20 text-white"
+      className="w-full max-w-sm mx-auto p-6 bg-black/80 backdrop-blur-md border border-purple-500 rounded-2xl shadow-2xl shadow-purple-500/20 text-white"
     >
       <div className="text-center mb-6">
         <ShieldAlert className="w-12 h-12 text-red-500 mx-auto mb-3" />
