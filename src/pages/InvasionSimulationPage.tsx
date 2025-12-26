@@ -19,6 +19,22 @@ import { fetchFullInvasionData } from '../services/profileService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
+// Mock de posts para garantir que o feed não fique vazio se a API falhar
+const MOCK_POSTS: FeedPost[] = [
+  {
+    de_usuario: { username: 'mock_user_1', full_name: 'Mock User 1', profile_pic_url: '/perfil.jpg' },
+    post: { id: 'mock1', image_url: '/perfil.jpg', is_video: false, caption: 'Conteúdo bloqueado. Acesso Premium Requerido.', like_count: 123, comment_count: 45 }
+  },
+  {
+    de_usuario: { username: 'mock_user_2', full_name: 'Mock User 2', profile_pic_url: '/perfil.jpg' },
+    post: { id: 'mock2', image_url: '/perfil.jpg', is_video: false, caption: 'Conteúdo bloqueado. Acesso Premium Requerido.', like_count: 456, comment_count: 78 }
+  },
+  {
+    de_usuario: { username: 'mock_user_3', full_name: 'Mock User 3', profile_pic_url: '/perfil.jpg' },
+    post: { id: 'mock3', image_url: '/perfil.jpg', is_video: false, caption: 'Conteúdo bloqueado. Acesso Premium Requerido.', like_count: 789, comment_count: 12 }
+  },
+];
+
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -74,11 +90,12 @@ const InvasionSimulationPage: React.FC = () => {
       if (!hasFullData) {
         const { suggestions, posts } = await fetchFullInvasionData(data.profileData.username);
         
+        // Se a API retornar dados, use-os
         if (suggestions.length > 0 || posts.length > 0) {
           fullData.suggestedProfiles = suggestions;
           fullData.posts = posts;
         } else {
-          // Usar fallback se a API retornar vazio
+          // Se a API retornar vazio, use mocks para preencher o feed e stories
           console.log("API não retornou sugestões/posts, usando fallback.");
           const shuffledNames = [...MOCK_SUGGESTION_NAMES].sort(() => 0.5 - Math.random());
           const mockSuggestions: SuggestedProfile[] = shuffledNames.slice(0, 15).map(name => ({
@@ -86,13 +103,14 @@ const InvasionSimulationPage: React.FC = () => {
             profile_pic_url: '/perfil.jpg',
           }));
           fullData.suggestedProfiles = mockSuggestions;
-          fullData.posts = [];
+          // Usar MOCK_POSTS para garantir que o feed não fique vazio
+          fullData.posts = MOCK_POSTS; 
         }
       }
       
       // 4. Atualizar estado e sessionStorage
       setSuggestedProfiles(fullData.suggestedProfiles || []);
-      setPosts(fullData.posts || []);
+      setPosts(fullData.posts || MOCK_POSTS); // Garante que posts não seja undefined
       
       // Armazena todos os dados, incluindo a cidade do usuário
       const dataToStore = {
