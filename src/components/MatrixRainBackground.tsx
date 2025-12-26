@@ -58,12 +58,14 @@ const MatrixRainBackground: React.FC = () => {
           position: absolute;
           top: 0; 
           font-size: ${FONT_SIZE}px;
-          line-height: ${FONT_SIZE}px;
+          line-height: ${FONT_SIZE}px; /* Garante que cada caractere ocupe exatamente uma linha */
           white-space: pre;
           animation-name: matrix-fall;
           animation-timing-function: linear;
           animation-iteration-count: infinite;
           opacity: 0.8; 
+          display: flex; /* Adicionado para empilhar os spans verticalmente */
+          flex-direction: column; /* Adicionado para empilhar os spans verticalmente */
         }
       `}</style>
       <div className="fixed inset-0 overflow-hidden z-0 bg-black">
