@@ -64,8 +64,8 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       throw new Error(data?.error || 'Não foi possível carregar os dados do perfil.');
     }
 
-    // Refinando a extração: prioriza 'data', mas usa o objeto raiz se 'data' for nulo ou não existir.
-    const profileSource = data.data || data;
+    // Refinando a extração: Tenta 'data', depois 'perfil_completo', depois o objeto raiz
+    const profileSource = data.data || data.perfil_completo || data;
     
     if (!profileSource || !profileSource.username) {
       throw new Error('Dados do perfil principal não encontrados na resposta da API.');
