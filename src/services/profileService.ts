@@ -49,8 +49,8 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
   }
 
   const cleanUsername = username.replace(/^@+/, '').trim();
-  // CORREÇÃO: Usando o endpoint 'perfil' que é mais rápido e retorna os dados completos do perfil.
-  const url = `${API_BASE_URL}/first?tipo=perfil&username=${encodeURIComponent(cleanUsername)}`;
+  // ATUALIZADO: Usando o novo endpoint /field?campo=perfil_completo
+  const url = `${API_BASE_URL}/field?campo=perfil_completo&username=${encodeURIComponent(cleanUsername)}`;
   console.log(`[profileService] Buscando perfil rápido de: ${url}`);
 
   try {
@@ -83,8 +83,7 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       isPrivate: profileSource.is_private || false,
     };
 
-    // O endpoint 'perfil' não retorna sugestões ou posts, então retornamos arrays vazios.
-    // Os posts e sugestões serão carregados em uma etapa posterior, se necessário.
+    // O endpoint de perfil completo não retorna sugestões ou posts, então retornamos arrays vazios.
     const suggestions: SuggestedProfile[] = [];
     const posts: FeedPost[] = [];
 
@@ -102,28 +101,34 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
 
 export const fetchFullInvasionData = async (username: string): Promise<{ suggestions: SuggestedProfile[], posts: FeedPost[] }> => {
   const cleanUsername = username.replace(/^@+/, '').trim();
-  const url = `${API_BASE_URL}/first?tipo=busca_completa&username=${encodeURIComponent(cleanUsername)}`;
-  console.log(`[profileService] Buscando dados completos de: ${url}`);
+  
+  let suggestions: SuggestedProfile[] = [];
+  let posts: FeedPost[] = [];
+
+  // 1. Buscar Perfis Sugeridos
+  const suggestionsUrl = `${API_BASE_URL}/field?campo=perfis_sugeridos&username=${encodeURIComponent(cleanUsername)}`;
+  console.log(`[profileService] Buscando sugestões de: ${suggestionsUrl}`);
 
   try {
-    const data = await fetchWithTimeout(url);
-    console.log(`[profileService] Dados completos recebidos para ${cleanUsername}:`, data);
-
-    if (!data || data.error) {
-      throw new Error(data?.error || 'Não foi possível carregar os dados completos.');
-    }
-
-    let suggestions: SuggestedProfile[] = [];
-    if (data.lista_perfis_publicos && Array.isArray(data.lista_perfis_publicos)) {
-      suggestions = data.lista_perfis_publicos.map((s: any) => ({
+    const suggestionsData = await fetchWithTimeout(suggestionsUrl);
+    if (suggestionsData && suggestionsData.lista_perfis_publicos && Array.isArray(suggestionsData.lista_perfis_publicos)) {
+      suggestions = suggestionsData.lista_perfis_publicos.map((s: any) => ({
         username: s.username,
         profile_pic_url: getProxiedUrl(s.profile_pic_url),
       }));
     }
+  } catch (error) {
+    console.error(`[profileService] Erro ao buscar sugestões:`, error);
+  }
 
-    let posts: FeedPost[] = [];
-    if (data.posts && Array.isArray(data.posts)) {
-        posts = data.posts.map((item: any) => ({
+  // 2. Buscar Lista de Posts
+  const postsUrl = `${API_BASE_URL}/field?campo=lista_posts&username=${encodeURIComponent(cleanUsername)}`;
+  console.log(`[profileService] Buscando posts de: ${postsUrl}`);
+
+  try {
+    const postsData = await fetchWithTimeout(postsUrl);
+    if (postsData && postsData.posts && Array.isArray(postsData.posts)) {
+        posts = postsData.posts.map((item: any) => ({
             de_usuario: {
                 username: item.de_usuario?.username || '',
                 full_name: item.de_usuario?.full_name || '',
@@ -140,12 +145,9 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
             }
         }));
     }
-    
-    return { suggestions, posts };
-
   } catch (error) {
-    console.error(`[profileService] Erro ao buscar dados completos para ${cleanUsername}:`, error);
-    // Retorna arrays vazios em caso de falha para que o app possa usar dados de fallback
-    return { suggestions: [], posts: [] };
+    console.error(`[profileService] Erro ao buscar posts:`, error);
   }
+    
+  return { suggestions, posts };
 };
