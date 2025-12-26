@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './ChatPage.css';
@@ -51,7 +51,7 @@ const DIALOGUES: { [key: string]: ChatMessage[] } = {
 const ChatPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id: userId } = useParams<{ id: string }>();
+  // useParams foi removido pois o ID é obtido via location.state
   
   // Extrai o usuário do chat dos dados de navegação
   const chatUser = location.state?.user as Message | undefined;
@@ -119,7 +119,6 @@ const ChatPage: React.FC = () => {
 
     const isSent = msg.type === 'sent';
     // Regex para emojis (simplificado para evitar problemas de unicode no parser)
-    // Removido \p{Emoji} e substituído por uma regex mais simples e compatível
     const isEmoji = msg.content.match(/^(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udf00-\uffff]|\ud83d[\udc00-\uffff]|\ud83e[\udc00-\uffff])[\s\ufe0f]*$/) && msg.content.length < 10 && !msg.isAudio;
     
     return (
