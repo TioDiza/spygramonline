@@ -151,9 +151,11 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
 
   try {
     const suggestionsData = await fetchWithTimeout(suggestionsUrl);
-    // A API retorna a lista em 'lista_perfis_publicos'
-    if (suggestionsData && suggestionsData.lista_perfis_publicos && Array.isArray(suggestionsData.lista_perfis_publicos)) {
-      suggestions = suggestionsData.lista_perfis_publicos.map((s: any) => ({
+    // A API retorna a lista em 'results[0].data'
+    const profileResults = suggestionsData?.results?.[0]?.data; 
+    
+    if (profileResults && Array.isArray(profileResults)) {
+      suggestions = profileResults.map((s: any) => ({
         username: s.username,
         // Usa o proxy leve para avatares
         profile_pic_url: getProxiedUrlLight(s.profile_pic_url),
@@ -169,9 +171,11 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
 
   try {
     const postsData = await fetchWithTimeout(postsUrl);
-    // A API retorna a lista em 'posts'
-    if (postsData && postsData.posts && Array.isArray(postsData.posts)) {
-        posts = postsData.posts.map((item: any) => ({
+    // Assumindo que a lista de posts também está em 'results[0].data'
+    const postResults = postsData?.results?.[0]?.data; 
+
+    if (postResults && Array.isArray(postResults)) {
+        posts = postResults.map((item: any) => ({
             de_usuario: {
                 username: item.de_usuario?.username || '',
                 full_name: item.de_usuario?.full_name || '',
