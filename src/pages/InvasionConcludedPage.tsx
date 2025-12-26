@@ -96,7 +96,7 @@ const InvasionConcludedPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans p-4 sm:p-8 flex flex-col items-center relative z-10">
+    <div className="min-h-screen text-white font-sans p-4 sm:p-8 flex flex-col items-center relative z-10">
       
       {/* Checkout Prompt Modal */}
       <CheckoutPromptModal
