@@ -18,7 +18,7 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
   `;
 
   return (
-    <div className={cn("relative w-full overflow-hidden group")}>
+    <div className={cn("relative w-full overflow-hidden group rounded-full")}>
       {/* Efeito de Brilho (Shine) */}
       <div 
         className={cn(
