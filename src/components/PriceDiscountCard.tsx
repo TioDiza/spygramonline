@@ -10,7 +10,7 @@ interface PriceDiscountCardProps {
 }
 
 const PriceDiscountCard: React.FC<PriceDiscountCardProps> = ({ originalPrice, discountedPrice, onUnlockClick }) => {
-  const [timeLeft, setTimeLeft] = useState(3600); // 1 hora em segundos
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutos em segundos (300)
 
   useEffect(() => {
     const timer = setInterval(() => {
