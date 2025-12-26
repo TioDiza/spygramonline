@@ -49,7 +49,6 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
   }
 
   const cleanUsername = username.replace(/^@+/, '').trim();
-  // ATUALIZADO: Usando o novo endpoint /field?campo=perfil_completo
   const url = `${API_BASE_URL}/field?campo=perfil_completo&username=${encodeURIComponent(cleanUsername)}`;
   console.log(`[profileService] Buscando perfil rápido de: ${url}`);
 
@@ -64,8 +63,24 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       throw new Error(data?.error || 'Não foi possível carregar os dados do perfil.');
     }
 
-    // Refinando a extração: Tenta 'data', depois 'perfil_completo', depois o objeto raiz
-    const profileSource = data.data || data.perfil_completo || data;
+    let profileSource: any = null;
+
+    // Itera sobre os resultados para encontrar o melhor conjunto de dados
+    if (data.results && Array.isArray(data.results)) {
+      for (const result of data.results) {
+        if (result.data && result.data.username) {
+          // Prioriza resultados que não são genéricos (ex: 'Usuário Instagram')
+          if (result.data.full_name && result.data.full_name !== 'Usuário Instagram') {
+            profileSource = result.data;
+            break; // Encontrou uma boa fonte, para a busca
+          }
+          // Usa o primeiro resultado válido como fallback
+          if (!profileSource) {
+             profileSource = result.data;
+          }
+        }
+      }
+    }
     
     if (!profileSource || !profileSource.username) {
       throw new Error('Dados do perfil principal não encontrados na resposta da API.');
@@ -73,7 +88,7 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
 
     const profile: ProfileData = {
       username: profileSource.username,
-      fullName: profileSource.full_name || profileSource.full_name_or_name || '', // Adicionando fallback para nome completo
+      fullName: profileSource.full_name || profileSource.full_name_or_name || '',
       profilePicUrl: getProxiedUrl(profileSource.profile_pic_url),
       biography: profileSource.biography || '',
       followers: profileSource.follower_count || 0,
