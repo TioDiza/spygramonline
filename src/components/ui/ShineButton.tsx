@@ -20,16 +20,16 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
   return (
     // O div externo recebe a largura (w-full) e o arredondamento para cortar o brilho
     <div className={cn("relative w-full overflow-hidden group rounded-full", className)}>
-      {/* Efeito de Brilho (Shine) */}
+      {/* Efeito de Brilho Desfocado (Glow) - Mantido, mas sem animação de pulso */}
       <div 
         className={cn(
-          "absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-1000 animate-pulse-slow rounded-full",
+          "absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-1000 rounded-full",
           shineColorClasses,
           "blur-xl"
         )}
       ></div>
       
-      {/* Botão Principal - Adiciona w-full para preencher o contêiner */}
+      {/* Botão Principal */}
       <button
         onClick={onClick}
         className={cn(
@@ -38,6 +38,14 @@ const ShineButton: React.FC<ShineButtonProps> = ({ children, onClick, className,
           className // Aplica classes de cor aqui
         )}
       >
+        {/* NOVO: Efeito de Reflexo em Movimento */}
+        <div className="absolute inset-0 overflow-hidden rounded-full">
+          <div 
+            className="absolute top-0 left-0 w-1/2 h-full bg-white/30 opacity-50 animate-shine-sweep"
+            style={{ filter: 'blur(10px)' }} // Adiciona um blur para suavizar o reflexo
+          ></div>
+        </div>
+        
         <span className="relative z-20">{children}</span>
       </button>
     </div>

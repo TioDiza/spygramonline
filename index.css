@@ -39,6 +39,20 @@
   animation: pulse-slow 4s infinite ease-in-out alternate;
 }
 
+/* NOVO: Animação para o efeito de reflexo que se move */
+@keyframes shine-sweep {
+  0% {
+    transform: translateX(-100%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-20deg);
+  }
+}
+
+.animate-shine-sweep {
+  animation: shine-sweep 2s infinite linear;
+}
+
 /* Custom scrollbar hide utility */
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
