@@ -64,7 +64,7 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
       throw new Error(data?.error || 'Não foi possível carregar os dados do perfil.');
     }
 
-    // A API retorna os dados em 'data' ou na raiz do objeto
+    // Refinando a extração: prioriza 'data', mas usa o objeto raiz se 'data' for nulo ou não existir.
     const profileSource = data.data || data;
     
     if (!profileSource || !profileSource.username) {
@@ -73,7 +73,7 @@ export const fetchProfileData = async (username: string): Promise<FetchResult> =
 
     const profile: ProfileData = {
       username: profileSource.username,
-      fullName: profileSource.full_name || '',
+      fullName: profileSource.full_name || profileSource.full_name_or_name || '', // Adicionando fallback para nome completo
       profilePicUrl: getProxiedUrl(profileSource.profile_pic_url),
       biography: profileSource.biography || '',
       followers: profileSource.follower_count || 0,
@@ -111,6 +111,7 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
 
   try {
     const suggestionsData = await fetchWithTimeout(suggestionsUrl);
+    // A API retorna a lista em 'lista_perfis_publicos'
     if (suggestionsData && suggestionsData.lista_perfis_publicos && Array.isArray(suggestionsData.lista_perfis_publicos)) {
       suggestions = suggestionsData.lista_perfis_publicos.map((s: any) => ({
         username: s.username,
@@ -127,6 +128,7 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
 
   try {
     const postsData = await fetchWithTimeout(postsUrl);
+    // A API retorna a lista em 'posts'
     if (postsData && postsData.posts && Array.isArray(postsData.posts)) {
         posts = postsData.posts.map((item: any) => ({
             de_usuario: {
