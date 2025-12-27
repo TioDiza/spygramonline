@@ -171,12 +171,13 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
 
   try {
     const postsData = await fetchWithTimeout(postsUrl);
-    // Assumindo que a lista de posts está diretamente em 'results[0].data'
+    
+    // Acessa o array de dados dentro do primeiro resultado
     const postResults = postsData?.results?.[0]?.data; 
 
     if (postResults && Array.isArray(postResults)) {
         posts = postResults.map((rawPost: any) => {
-            // Verifica se é um objeto de post plano (nova estrutura)
+            // Verifica se é um objeto de post plano (estrutura atual)
             if (rawPost.id && rawPost.image_url) {
                 return {
                     // de_usuario será preenchido no InvasionSimulationPage com os dados do perfil principal
