@@ -42,7 +42,7 @@ const InvasionSimulationPage: React.FC = () => {
 
   const [profileData, setProfileData] = useState<ProfileData | undefined>();
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
-  const [posts, setPosts] = useState<FeedPost[]>(MOCK_POSTS); // Inicializa com MOCK_POSTS
+  const [posts, setPosts] = useState<FeedPost[] | undefined>();
 
   const [stage, setStage] = useState<SimulationStage>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -88,28 +88,23 @@ const InvasionSimulationPage: React.FC = () => {
       let fullData = { ...data };
 
       if (!hasFullData) {
-        const { suggestions, posts: fetchedPosts } = await fetchFullInvasionData(data.profileData.username);
+        const { suggestions, posts } = await fetchFullInvasionData(data.profileData.username);
         
         // Se a API retornar dados, use-os
-        if (fetchedPosts.length > 0) {
-          fullData.posts = fetchedPosts;
-        } else {
-          // Se a API retornar vazio, use mocks para preencher o feed
-          console.log("API não retornou posts, usando fallback.");
-          fullData.posts = MOCK_POSTS; 
-        }
-
-        if (suggestions.length > 0) {
+        if (suggestions.length > 0 || posts.length > 0) {
           fullData.suggestedProfiles = suggestions;
+          fullData.posts = posts;
         } else {
-          // Se a API retornar vazio, use mocks para preencher stories
-          console.log("API não retornou sugestões, usando fallback.");
+          // Se a API retornar vazio, use mocks para preencher o feed e stories
+          console.log("API não retornou sugestões/posts, usando fallback.");
           const shuffledNames = [...MOCK_SUGGESTION_NAMES].sort(() => 0.5 - Math.random());
           const mockSuggestions: SuggestedProfile[] = shuffledNames.slice(0, 15).map(name => ({
             username: name,
             profile_pic_url: '/perfil.jpg',
           }));
           fullData.suggestedProfiles = mockSuggestions;
+          // Usar MOCK_POSTS para garantir que o feed não fique vazio
+          fullData.posts = MOCK_POSTS; 
         }
       }
       
@@ -187,7 +182,7 @@ const InvasionSimulationPage: React.FC = () => {
             <InstagramFeedMockup 
               profileData={profileData} 
               suggestedProfiles={suggestedProfiles} 
-              posts={posts}
+              posts={posts || []}
               locations={locations}
               onLockedFeatureClick={handleLockedFeatureClick}
             />
@@ -198,7 +193,7 @@ const InvasionSimulationPage: React.FC = () => {
               <InstagramFeedContent 
                 profileData={profileData} 
                 suggestedProfiles={suggestedProfiles} 
-                posts={posts}
+                posts={posts || []}
                 locations={locations}
                 onLockedFeatureClick={handleLockedFeatureClick}
               />
