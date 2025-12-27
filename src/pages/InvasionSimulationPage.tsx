@@ -92,7 +92,7 @@ const InvasionSimulationPage: React.FC = () => {
       if (fetchedSuggestions.length === 0 || fetchedPosts.length === 0) {
         const { suggestions, posts: apiPosts } = await fetchFullInvasionData(targetProfileData.username);
         
-        // Se a API retornou posts, usamos eles. Caso contrário, mantemos o que já tínhamos (que pode ser vazio).
+        // Se a API retornou posts, usamos eles.
         if (apiPosts.length > 0) {
             fetchedPosts = apiPosts;
         }
@@ -102,10 +102,15 @@ const InvasionSimulationPage: React.FC = () => {
         }
       }
       
-      // Fallback: Se os posts ainda estiverem vazios, usa mocks
-      if (fetchedPosts.length === 0) {
-          console.log("Posts vazios após fetch/session, usando fallback MOCK_POSTS.");
+      // 4. FILTRO DE SEGURANÇA: Garante que nenhum post seja do usuário alvo
+      const filteredPosts = fetchedPosts.filter(p => p.de_usuario.username !== targetProfileData.username);
+      
+      // Fallback: Se os posts ainda estiverem vazios após o filtro, usa mocks
+      if (filteredPosts.length === 0) {
+          console.log("Posts vazios após fetch/session/filtro, usando fallback MOCK_POSTS.");
           fetchedPosts = MOCK_POSTS;
+      } else {
+          fetchedPosts = filteredPosts;
       }
       
       // Fallback: Se as sugestões ainda estiverem vazias, usa mocks
@@ -118,8 +123,7 @@ const InvasionSimulationPage: React.FC = () => {
           }));
       }
       
-      // 4. Atualizar estado e sessionStorage
-      // Não precisamos mais remapear os posts, pois fetchFullInvasionData agora retorna apenas posts sugeridos
+      // 5. Atualizar estado e sessionStorage
       const finalPosts = fetchedPosts; 
       
       setSuggestedProfiles(fetchedSuggestions);
@@ -134,7 +138,7 @@ const InvasionSimulationPage: React.FC = () => {
       };
       sessionStorage.setItem('invasionData', JSON.stringify(dataToStore));
 
-      // 5. Transição para o próximo estágio
+      // 6. Transição para o próximo estágio
       if (isLoggedIn) {
         setStage('feed_locked');
       } else {
