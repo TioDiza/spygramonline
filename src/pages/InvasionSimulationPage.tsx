@@ -69,7 +69,8 @@ const InvasionSimulationPage: React.FC = () => {
         return;
       }
 
-      setProfileData(data.profileData);
+      const targetProfileData = data.profileData;
+      setProfileData(targetProfileData);
 
       let userCity = 'São Paulo'; // Default fallback
       // 2. Buscar localizações
@@ -89,7 +90,7 @@ const InvasionSimulationPage: React.FC = () => {
 
       // Só busca na API se os dados estiverem faltando ou se for a primeira vez (posts e suggestions vazios)
       if (fetchedSuggestions.length === 0 || fetchedPosts.length === 0) {
-        const { suggestions, posts: apiPosts } = await fetchFullInvasionData(data.profileData.username);
+        const { suggestions, posts: apiPosts } = await fetchFullInvasionData(targetProfileData.username);
         
         // Se a API retornou posts, usamos eles. Caso contrário, mantemos o que já tínhamos (que pode ser vazio).
         if (apiPosts.length > 0) {
@@ -118,22 +119,30 @@ const InvasionSimulationPage: React.FC = () => {
       }
       
       // 4. Atualizar estado e sessionStorage
-      // Garante que os posts tenham os dados corretos do usuário alvo (de_usuario)
-      const finalPosts = fetchedPosts.map((p: FeedPost) => ({
-          ...p,
-          de_usuario: {
-              username: data.profileData.username,
-              full_name: data.profileData.fullName,
-              profile_pic_url: data.profileData.profilePicUrl,
+      // Garante que os posts do usuário alvo tenham os dados corretos do perfil principal.
+      // Posts de usuários sugeridos já devem vir com seus próprios dados de 'de_usuario' preenchidos pelo service.
+      const finalPosts = fetchedPosts.map((p: FeedPost) => {
+          // Se o post não tem um full_name preenchido, assumimos que é um post do usuário alvo
+          // e preenchemos com os dados do perfil principal.
+          if (!p.de_usuario.full_name || p.de_usuario.username === targetProfileData.username) {
+              return {
+                  ...p,
+                  de_usuario: {
+                      username: targetProfileData.username,
+                      full_name: targetProfileData.fullName,
+                      profile_pic_url: targetProfileData.profilePicUrl,
+                  }
+              };
           }
-      }));
+          return p; // Post de usuário sugerido, mantém os dados originais
+      });
       
       setSuggestedProfiles(fetchedSuggestions);
       setPosts(finalPosts); // Use finalPosts
       
       // Armazena todos os dados, incluindo a cidade do usuário
       const dataToStore = {
-        profileData: data.profileData,
+        profileData: targetProfileData,
         suggestedProfiles: fetchedSuggestions,
         posts: finalPosts, // Store finalPosts
         userCity: userCity, // Armazena a cidade

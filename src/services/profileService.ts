@@ -68,6 +68,48 @@ const fetchWithTimeout = async (url: string, timeout = REQUEST_TIMEOUT): Promise
     }
 };
 
+/**
+ * Função auxiliar para buscar posts de um único usuário e formatá-los.
+ */
+const fetchPostsForUser = async (username: string, profilePicUrl: string, fullName: string): Promise<FeedPost[]> => {
+    const postsUrl = `${API_BASE_URL}/field?campo=lista_posts&username=${encodeURIComponent(username)}`;
+    console.log(`[profileService] Buscando posts de: ${postsUrl}`);
+    
+    try {
+        const postsData = await fetchWithTimeout(postsUrl, 15000); // Timeout menor para posts
+        const postResults = postsData?.results?.[0]?.data; 
+
+        if (postResults && Array.isArray(postResults)) {
+            return postResults.map((rawPost: any) => {
+                // Verifica se é um objeto de post plano (estrutura atual)
+                if (rawPost.id && rawPost.image_url) {
+                    return {
+                        de_usuario: {
+                            username: username,
+                            full_name: fullName,
+                            profile_pic_url: getProxiedUrlLight(profilePicUrl),
+                        },
+                        post: {
+                            id: rawPost.id || '',
+                            image_url: getProxiedUrl(rawPost.image_url),
+                            video_url: rawPost.video_url ? getProxiedUrl(rawPost.video_url) : undefined,
+                            is_video: rawPost.is_video || false,
+                            caption: rawPost.caption || '',
+                            like_count: rawPost.like_count || 0,
+                            comment_count: rawPost.comment_count || 0,
+                        }
+                    } as FeedPost;
+                }
+                return null;
+            }).filter((p): p is FeedPost => p !== null);
+        }
+    } catch (error) {
+        console.error(`[profileService] Erro ao buscar posts para ${username}:`, error);
+    }
+    return [];
+};
+
+
 export const fetchProfileData = async (username: string): Promise<FetchResult> => {
   if (!username) {
     throw new Error('O nome de usuário não pode estar vazio.');
@@ -151,13 +193,11 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
 
   try {
     const suggestionsData = await fetchWithTimeout(suggestionsUrl);
-    // A API retorna a lista em 'results[0].data'
     const profileResults = suggestionsData?.results?.[0]?.data; 
     
     if (profileResults && Array.isArray(profileResults)) {
       suggestions = profileResults.map((s: any) => ({
         username: s.username,
-        // Usa o proxy leve para avatares
         profile_pic_url: getProxiedUrlLight(s.profile_pic_url),
       }));
     }
@@ -165,65 +205,45 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
     console.error(`[profileService] Erro ao buscar sugestões:`, error);
   }
 
-  // 2. Buscar Lista de Posts
-  const postsUrl = `${API_BASE_URL}/field?campo=lista_posts&username=${encodeURIComponent(cleanUsername)}`;
-  console.log(`[profileService] Buscando posts de: ${postsUrl}`);
+  // 2. Buscar Posts do Usuário Alvo
+  const targetPosts = await fetchPostsForUser(cleanUsername, '/perfil.jpg', ''); // Usaremos os dados reais do perfil na simulação
 
-  try {
-    const postsData = await fetchWithTimeout(postsUrl);
-    
-    // Acessa o array de dados dentro do primeiro resultado
-    const postResults = postsData?.results?.[0]?.data; 
+  // 3. Buscar Posts de 2 Usuários Sugeridos Aleatórios (para misturar no feed)
+  const suggestedUsernamesToFetch = suggestions
+    .sort(() => 0.5 - Math.random()) // Embaralha
+    .slice(0, 2); // Pega os 2 primeiros
 
-    if (postResults && Array.isArray(postResults)) {
-        posts = postResults.map((rawPost: any) => {
-            // Verifica se é um objeto de post plano (estrutura atual)
-            if (rawPost.id && rawPost.image_url) {
-                return {
-                    // de_usuario será preenchido no InvasionSimulationPage com os dados do perfil principal
-                    de_usuario: {
-                        username: cleanUsername,
-                        full_name: '', // Placeholder
-                        profile_pic_url: '/perfil.jpg', // Placeholder
-                    },
-                    post: {
-                        id: rawPost.id || '',
-                        image_url: getProxiedUrl(rawPost.image_url),
-                        video_url: rawPost.video_url ? getProxiedUrl(rawPost.video_url) : undefined,
-                        is_video: rawPost.is_video || false,
-                        caption: rawPost.caption || '',
-                        like_count: rawPost.like_count || 0,
-                        comment_count: rawPost.comment_count || 0,
-                    }
-                } as FeedPost;
-            }
-            
-            // Fallback para a estrutura antiga (se houver)
-            if (rawPost.post && rawPost.de_usuario) {
-                return {
-                    de_usuario: {
-                        username: rawPost.de_usuario.username || '',
-                        full_name: rawPost.de_usuario.full_name || '',
-                        profile_pic_url: getProxiedUrlLight(rawPost.de_usuario.profile_pic_url),
-                    },
-                    post: {
-                        id: rawPost.post.id || '',
-                        image_url: getProxiedUrl(rawPost.post.image_url),
-                        video_url: rawPost.post.video_url ? getProxiedUrl(rawPost.post.video_url) : undefined,
-                        is_video: rawPost.post.is_video || false,
-                        caption: rawPost.post.caption || '',
-                        like_count: rawPost.post.like_count || 0,
-                        comment_count: rawPost.post.comment_count || 0,
-                    }
-                } as FeedPost;
-            }
-            
-            return null;
-        }).filter((p): p is FeedPost => p !== null);
+  const suggestedPostsPromises = suggestedUsernamesToFetch.map(s => 
+    fetchPostsForUser(s.username, s.profile_pic_url, s.username)
+  );
+
+  const suggestedPostsResults = await Promise.all(suggestedPostsPromises);
+  const allSuggestedPosts = suggestedPostsResults.flat();
+
+  // 4. Combinar posts: 2 do alvo, 1 sugerido, 2 do alvo, 1 sugerido, etc.
+  const combinedPosts: FeedPost[] = [];
+  let targetIndex = 0;
+  let suggestedIndex = 0;
+
+  while (targetIndex < targetPosts.length || suggestedIndex < allSuggestedPosts.length) {
+    // Adiciona 2 posts do alvo
+    for (let i = 0; i < 2 && targetIndex < targetPosts.length; i++) {
+      combinedPosts.push(targetPosts[targetIndex++]);
     }
-  } catch (error) {
-    console.error(`[profileService] Erro ao buscar posts:`, error);
+    
+    // Adiciona 1 post sugerido
+    if (suggestedIndex < allSuggestedPosts.length) {
+      combinedPosts.push(allSuggestedPosts[suggestedIndex++]);
+    }
   }
+  
+  // Se o feed ainda estiver muito pequeno, adiciona mais posts sugeridos
+  if (combinedPosts.length < 5 && allSuggestedPosts.length > suggestedIndex) {
+      combinedPosts.push(...allSuggestedPosts.slice(suggestedIndex, 5 - combinedPosts.length));
+  }
+
+  // 5. Retorna a lista combinada e as sugestões
+  posts = combinedPosts;
     
   return { suggestions, posts };
 };
