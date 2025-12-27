@@ -15,7 +15,7 @@ import { getUserLocation, getCitiesByState } from '../services/geolocationServic
 import LockedFeatureModal from '../components/LockedFeatureModal';
 import { useAuth } from '../context/AuthContext';
 import { MOCK_SUGGESTION_NAMES } from '../../constants';
-import { fetchFullInvasionData, fetchTargetUserPosts } from '../services/profileService';
+import { fetchFullInvasionData } from '../services/profileService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
@@ -66,13 +66,10 @@ const InvasionSimulationPage: React.FC = () => {
         setLocations(fallbackCities);
       }
 
-      // Buscar sugestões e posts do alvo em paralelo
-      const [suggestionsData, targetPosts] = await Promise.all([
-        fetchFullInvasionData(targetProfileData.username),
-        fetchTargetUserPosts(targetProfileData.username, targetProfileData)
-      ]);
+      // Busca sugestões e posts do alvo em paralelo com a nova função
+      const { suggestions, posts: targetPosts } = await fetchFullInvasionData(targetProfileData.username, targetProfileData);
 
-      let fetchedSuggestions = suggestionsData.suggestions;
+      let fetchedSuggestions = suggestions;
       
       // Fallback para sugestões se a API falhar
       if (fetchedSuggestions.length === 0) {
