@@ -205,13 +205,10 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
     console.error(`[profileService] Erro ao buscar sugestões:`, error);
   }
 
-  // 2. Buscar Posts do Usuário Alvo
-  const targetPosts = await fetchPostsForUser(cleanUsername, '/perfil.jpg', ''); // Usaremos os dados reais do perfil na simulação
-
-  // 3. Buscar Posts de 2 Usuários Sugeridos Aleatórios (para misturar no feed)
+  // 2. Buscar Posts de 4 Usuários Sugeridos Aleatórios (para compor o feed)
   const suggestedUsernamesToFetch = suggestions
     .sort(() => 0.5 - Math.random()) // Embaralha
-    .slice(0, 2); // Pega os 2 primeiros
+    .slice(0, 4); // Pega os 4 primeiros
 
   const suggestedPostsPromises = suggestedUsernamesToFetch.map(s => 
     fetchPostsForUser(s.username, s.profile_pic_url, s.username)
@@ -219,31 +216,12 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
 
   const suggestedPostsResults = await Promise.all(suggestedPostsPromises);
   const allSuggestedPosts = suggestedPostsResults.flat();
-
-  // 4. Combinar posts: 2 do alvo, 1 sugerido, 2 do alvo, 1 sugerido, etc.
-  const combinedPosts: FeedPost[] = [];
-  let targetIndex = 0;
-  let suggestedIndex = 0;
-
-  while (targetIndex < targetPosts.length || suggestedIndex < allSuggestedPosts.length) {
-    // Adiciona 2 posts do alvo
-    for (let i = 0; i < 2 && targetIndex < targetPosts.length; i++) {
-      combinedPosts.push(targetPosts[targetIndex++]);
-    }
-    
-    // Adiciona 1 post sugerido
-    if (suggestedIndex < allSuggestedPosts.length) {
-      combinedPosts.push(allSuggestedPosts[suggestedIndex++]);
-    }
-  }
   
-  // Se o feed ainda estiver muito pequeno, adiciona mais posts sugeridos
-  if (combinedPosts.length < 5 && allSuggestedPosts.length > suggestedIndex) {
-      combinedPosts.push(...allSuggestedPosts.slice(suggestedIndex, 5 - combinedPosts.length));
-  }
-
-  // 5. Retorna a lista combinada e as sugestões
-  posts = combinedPosts;
+  // 3. Embaralhar todos os posts sugeridos para criar o feed
+  posts = allSuggestedPosts.sort(() => 0.5 - Math.random());
+  
+  // Limita o feed a um máximo de 10 posts para não sobrecarregar
+  posts = posts.slice(0, 10);
     
   return { suggestions, posts };
 };

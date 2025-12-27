@@ -119,23 +119,8 @@ const InvasionSimulationPage: React.FC = () => {
       }
       
       // 4. Atualizar estado e sessionStorage
-      // Garante que os posts do usuário alvo tenham os dados corretos do perfil principal.
-      // Posts de usuários sugeridos já devem vir com seus próprios dados de 'de_usuario' preenchidos pelo service.
-      const finalPosts = fetchedPosts.map((p: FeedPost) => {
-          // Se o post não tem um full_name preenchido, assumimos que é um post do usuário alvo
-          // e preenchemos com os dados do perfil principal.
-          if (!p.de_usuario.full_name || p.de_usuario.username === targetProfileData.username) {
-              return {
-                  ...p,
-                  de_usuario: {
-                      username: targetProfileData.username,
-                      full_name: targetProfileData.fullName,
-                      profile_pic_url: targetProfileData.profilePicUrl,
-                  }
-              };
-          }
-          return p; // Post de usuário sugerido, mantém os dados originais
-      });
+      // Não precisamos mais remapear os posts, pois fetchFullInvasionData agora retorna apenas posts sugeridos
+      const finalPosts = fetchedPosts; 
       
       setSuggestedProfiles(fetchedSuggestions);
       setPosts(finalPosts); // Use finalPosts
