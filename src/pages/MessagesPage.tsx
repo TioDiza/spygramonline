@@ -7,6 +7,7 @@ import DirectStoryItem from '../components/DirectStoryItem';
 import MessageItem from '../components/MessageItem';
 import './MessagesPage.css';
 import { ProfileData, SuggestedProfile } from '../../types';
+import { getCitiesByState } from '../services/geolocationService'; // Importa a função de cidades
 
 // Interfaces para os dados da página
 export interface Story {
@@ -26,6 +27,12 @@ export interface Message {
   avatar: string;
 }
 
+// Helper function to mask usernames
+const maskUsername = (username: string) => {
+  if (username.length <= 4) return username;
+  return `${username.substring(0, 3).toLowerCase()}****`;
+};
+
 const MessagesPage: React.FC = () => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
@@ -38,36 +45,54 @@ const MessagesPage: React.FC = () => {
       const data = JSON.parse(storedData);
       setProfileData(data.profileData);
 
-      const suggestedProfiles = data.suggestedProfiles || [];
-
-      // Cria stories a partir dos perfis sugeridos
+      const suggestedProfiles: SuggestedProfile[] = data.suggestedProfiles || [];
+      const userCity: string = data.userCity || 'São Paulo';
+      
+      // Gera uma lista de cidades para usar nas mensagens bloqueadas
+      const allCities = getCitiesByState(userCity, 'São Paulo'); // Usando SP como fallback de estado
+      
+      // 1. Cria Stories (usando os primeiros 4 perfis sugeridos)
       const suggestedStories: Story[] = suggestedProfiles.slice(0, 4).map((profile: SuggestedProfile, index: number) => ({
         id: profile.username,
-        name: `${profile.username.substring(0, 4)}*******`,
+        name: maskUsername(profile.username),
         note: ['Preguiça Hoje 🥱🥱', 'Coração Partido (Ao Vivo)', 'O vontde fudê a 3 😈', '📍💦 São Paulo'][index % 4],
         avatar: profile.profile_pic_url,
       }));
       setStories(suggestedStories);
 
-      // Cria mensagens a partir dos mesmos perfis
-      const suggestedMessages: Message[] = suggestedProfiles.slice(0, 4).map((profile: SuggestedProfile, index: number) => ({
-        id: profile.username,
-        name: `${profile.username.substring(0, 4)}*******`,
-        message: ['Oi delícia, adivinha o que vc esq...', 'Encaminhou um reel de jonas.milgrau', 'Blz depois a gente se fala', 'Reagiu com 👍 à sua mensagem'][index % 4],
-        time: ['Agora', '33 min', '2 h', '6 h'][index % 4],
-        unread: index < 2,
-        locked: false,
-        avatar: profile.profile_pic_url,
-      }));
-      
-      const otherMessages: Message[] = [
-        { id: 'user-5', name: '𝕭𝖗𝖚****', message: '4 novas mensagens', time: '22 h', unread: true, locked: false, avatar: 'https://i.pravatar.cc/150?u=bru' },
-        { id: 'user-6', name: '*****', message: 'Enviado segunda-feira', time: '3 d', unread: false, locked: true, avatar: '' },
-        { id: 'user-7', name: '*****', message: 'Delícia você 😈 😈', time: '4 d', unread: false, locked: true, avatar: '' },
-        { id: 'user-8', name: '*****', message: 'Curtiu sua mensagem', time: '4 d', unread: false, locked: true, avatar: '' },
-      ];
+      // 2. Cria Mensagens (usando até 10 perfis sugeridos)
+      const suggestedMessages: Message[] = suggestedProfiles.slice(0, 10).map((profile: SuggestedProfile, index: number) => {
+        const isLocked = index >= 2; // Os dois primeiros chats são desbloqueados
+        
+        let messageContent: string;
+        let time: string;
+        let unread: boolean;
 
-      setMessages([...suggestedMessages, ...otherMessages]);
+        if (isLocked) {
+          // Mensagens bloqueadas simulam localização ou conteúdo genérico
+          const city = allCities[index % allCities.length];
+          messageContent = index % 2 === 0 ? `${city}` : '4 novas mensagens';
+          time = ['22 h', '3 d', '4 d', '1 sem'][index % 4];
+          unread = index % 3 === 0;
+        } else {
+          // Mensagens desbloqueadas (os dois primeiros)
+          messageContent = ['Oi delícia, adivinha o que vc esq...', 'Encaminhou um reel de jonas.milgrau'][index];
+          time = ['Agora', '33 min'][index];
+          unread = true;
+        }
+
+        return {
+          id: profile.username,
+          name: maskUsername(profile.username),
+          message: messageContent,
+          time: time,
+          unread: unread,
+          locked: isLocked,
+          avatar: profile.profile_pic_url,
+        };
+      });
+      
+      setMessages(suggestedMessages);
 
     } else {
       console.warn("Nenhum dado de invasão encontrado. Usando dados de fallback.");
