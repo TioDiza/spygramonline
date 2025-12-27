@@ -84,33 +84,42 @@ const InvasionSimulationPage: React.FC = () => {
       }
 
       // 3. Buscar dados completos (sugestões e posts) se necessário
-      const hasFullData = (data.suggestedProfiles && data.suggestedProfiles.length > 0) || (data.posts && data.posts.length > 0);
-      let fullData = { ...data };
+      let fetchedSuggestions: SuggestedProfile[] = data.suggestedProfiles || [];
+      let fetchedPosts: FeedPost[] = data.posts || [];
 
-      if (!hasFullData) {
-        const { suggestions, posts } = await fetchFullInvasionData(data.profileData.username);
+      // Só busca na API se os dados estiverem faltando ou se for a primeira vez (posts e suggestions vazios)
+      if (fetchedSuggestions.length === 0 || fetchedPosts.length === 0) {
+        const { suggestions, posts: apiPosts } = await fetchFullInvasionData(data.profileData.username);
         
-        // Se a API retornar dados, use-os
-        if (suggestions.length > 0 || posts.length > 0) {
-          fullData.suggestedProfiles = suggestions;
-          fullData.posts = posts;
-        } else {
-          // Se a API retornar vazio, use mocks para preencher o feed e stories
-          console.log("API não retornou sugestões/posts, usando fallback.");
+        // Se a API retornou posts, usamos eles. Caso contrário, mantemos o que já tínhamos (que pode ser vazio).
+        if (apiPosts.length > 0) {
+            fetchedPosts = apiPosts;
+        }
+        // Se a API retornou sugestões, usamos elas.
+        if (suggestions.length > 0) {
+            fetchedSuggestions = suggestions;
+        }
+      }
+      
+      // Fallback: Se os posts ainda estiverem vazios, usa mocks
+      if (fetchedPosts.length === 0) {
+          console.log("Posts vazios após fetch/session, usando fallback MOCK_POSTS.");
+          fetchedPosts = MOCK_POSTS;
+      }
+      
+      // Fallback: Se as sugestões ainda estiverem vazias, usa mocks
+      if (fetchedSuggestions.length === 0) {
+          console.log("Sugestões vazias após fetch/session, usando fallback mocks.");
           const shuffledNames = [...MOCK_SUGGESTION_NAMES].sort(() => 0.5 - Math.random());
-          const mockSuggestions: SuggestedProfile[] = shuffledNames.slice(0, 15).map(name => ({
+          fetchedSuggestions = shuffledNames.slice(0, 15).map(name => ({
             username: name,
             profile_pic_url: '/perfil.jpg',
           }));
-          fullData.suggestedProfiles = mockSuggestions;
-          // Usar MOCK_POSTS para garantir que o feed não fique vazio
-          fullData.posts = MOCK_POSTS; 
-        }
       }
       
       // 4. Atualizar estado e sessionStorage
       // Garante que os posts tenham os dados corretos do usuário alvo (de_usuario)
-      const finalPosts = (fullData.posts || MOCK_POSTS).map((p: FeedPost) => ({
+      const finalPosts = fetchedPosts.map((p: FeedPost) => ({
           ...p,
           de_usuario: {
               username: data.profileData.username,
@@ -119,19 +128,19 @@ const InvasionSimulationPage: React.FC = () => {
           }
       }));
       
-      setSuggestedProfiles(fullData.suggestedProfiles || []);
+      setSuggestedProfiles(fetchedSuggestions);
       setPosts(finalPosts); // Use finalPosts
       
       // Armazena todos os dados, incluindo a cidade do usuário
       const dataToStore = {
-        profileData: fullData.profileData,
-        suggestedProfiles: fullData.suggestedProfiles,
+        profileData: data.profileData,
+        suggestedProfiles: fetchedSuggestions,
         posts: finalPosts, // Store finalPosts
         userCity: userCity, // Armazena a cidade
       };
       sessionStorage.setItem('invasionData', JSON.stringify(dataToStore));
 
-      // 5. Transição para o próximo estágio (sem delay, direto para login ou feed)
+      // 5. Transição para o próximo estágio
       if (isLoggedIn) {
         setStage('feed_locked');
       } else {
@@ -214,7 +223,6 @@ const InvasionSimulationPage: React.FC = () => {
       ) : (
         <AnimatePresence mode="wait">
           <div className="flex items-center justify-center min-h-screen">
-            {/* Removida a renderização explícita do estágio 'loading' */}
             {stage === 'login_attempt' && (
               <motion.div key="login" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-md">
                 <InstagramLoginSimulator 
