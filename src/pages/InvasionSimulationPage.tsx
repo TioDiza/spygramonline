@@ -109,14 +109,24 @@ const InvasionSimulationPage: React.FC = () => {
       }
       
       // 4. Atualizar estado e sessionStorage
+      // Garante que os posts tenham os dados corretos do usuário alvo (de_usuario)
+      const finalPosts = (fullData.posts || MOCK_POSTS).map((p: FeedPost) => ({
+          ...p,
+          de_usuario: {
+              username: data.profileData.username,
+              full_name: data.profileData.fullName,
+              profile_pic_url: data.profileData.profilePicUrl,
+          }
+      }));
+      
       setSuggestedProfiles(fullData.suggestedProfiles || []);
-      setPosts(fullData.posts || MOCK_POSTS); // Garante que posts não seja undefined
+      setPosts(finalPosts); // Use finalPosts
       
       // Armazena todos os dados, incluindo a cidade do usuário
       const dataToStore = {
         profileData: fullData.profileData,
         suggestedProfiles: fullData.suggestedProfiles,
-        posts: fullData.posts,
+        posts: finalPosts, // Store finalPosts
         userCity: userCity, // Armazena a cidade
       };
       sessionStorage.setItem('invasionData', JSON.stringify(dataToStore));
@@ -132,7 +142,7 @@ const InvasionSimulationPage: React.FC = () => {
     if (stage === 'loading') {
       loadAllDataAndProceed();
     }
-  }, [location.state, navigate, stage, isLoggedIn]);
+  }, [location.state, navigate, stage, isLoggedIn, login]);
 
   const handleLoginSuccess = useCallback(() => {
     login(); // Define o usuário como logado no contexto

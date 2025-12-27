@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert } from 'lucide-react';
+import ShineButton from './ui/ShineButton'; // Importar ShineButton
 
 interface LockedFeatureModalProps {
   isOpen: boolean;
@@ -42,12 +43,14 @@ const LockedFeatureModal: React.FC<LockedFeatureModalProps> = ({ isOpen, onClose
               Seja um membro VIP do SpyGram para ter acesso a {featureName}.
             </p>
             
-            <button
+            <ShineButton
               onClick={handleUpgrade}
-              className="w-full py-3 rounded-lg font-semibold bg-[#6b5a4c]/80 hover:bg-[#7c6a5a] transition-colors duration-200 border border-[#8c7a6a]"
+              // Ajustando as cores para o tema do modal (marrom/amarelo)
+              className="w-full bg-[#6b5a4c] focus:ring-[#6b5a4c] active:scale-95"
+              shineColorClasses="bg-yellow-400" 
             >
               Adquirir Acesso VIP
-            </button>
+            </ShineButton>
           </motion.div>
         </motion.div>
       )}

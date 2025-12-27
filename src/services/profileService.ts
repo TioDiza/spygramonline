@@ -171,28 +171,54 @@ export const fetchFullInvasionData = async (username: string): Promise<{ suggest
 
   try {
     const postsData = await fetchWithTimeout(postsUrl);
-    // Assumindo que a lista de posts também está em 'results[0].data'
+    // Assumindo que a lista de posts está diretamente em 'results[0].data'
     const postResults = postsData?.results?.[0]?.data; 
 
     if (postResults && Array.isArray(postResults)) {
-        posts = postResults.map((item: any) => ({
-            de_usuario: {
-                username: item.de_usuario?.username || '',
-                full_name: item.de_usuario?.full_name || '',
-                // Usa o proxy leve para avatares dos posts
-                profile_pic_url: getProxiedUrlLight(item.de_usuario?.profile_pic_url),
-            },
-            post: {
-                id: item.post?.id || '',
-                // Usa o proxy normal para imagens de posts (maior resolução)
-                image_url: getProxiedUrl(item.post?.image_url),
-                video_url: item.post?.video_url ? getProxiedUrl(item.post.video_url) : undefined,
-                is_video: item.post?.is_video || false,
-                caption: item.post?.caption || '',
-                like_count: item.post?.like_count || 0,
-                comment_count: item.post?.comment_count || 0,
+        posts = postResults.map((rawPost: any) => {
+            // Verifica se é um objeto de post plano (nova estrutura)
+            if (rawPost.id && rawPost.image_url) {
+                return {
+                    // de_usuario será preenchido no InvasionSimulationPage com os dados do perfil principal
+                    de_usuario: {
+                        username: cleanUsername,
+                        full_name: '', // Placeholder
+                        profile_pic_url: '/perfil.jpg', // Placeholder
+                    },
+                    post: {
+                        id: rawPost.id || '',
+                        image_url: getProxiedUrl(rawPost.image_url),
+                        video_url: rawPost.video_url ? getProxiedUrl(rawPost.video_url) : undefined,
+                        is_video: rawPost.is_video || false,
+                        caption: rawPost.caption || '',
+                        like_count: rawPost.like_count || 0,
+                        comment_count: rawPost.comment_count || 0,
+                    }
+                } as FeedPost;
             }
-        }));
+            
+            // Fallback para a estrutura antiga (se houver)
+            if (rawPost.post && rawPost.de_usuario) {
+                return {
+                    de_usuario: {
+                        username: rawPost.de_usuario.username || '',
+                        full_name: rawPost.de_usuario.full_name || '',
+                        profile_pic_url: getProxiedUrlLight(rawPost.de_usuario.profile_pic_url),
+                    },
+                    post: {
+                        id: rawPost.post.id || '',
+                        image_url: getProxiedUrl(rawPost.post.image_url),
+                        video_url: rawPost.post.video_url ? getProxiedUrl(rawPost.post.video_url) : undefined,
+                        is_video: rawPost.post.is_video || false,
+                        caption: rawPost.post.caption || '',
+                        like_count: rawPost.post.like_count || 0,
+                        comment_count: rawPost.post.comment_count || 0,
+                    }
+                } as FeedPost;
+            }
+            
+            return null;
+        }).filter((p): p is FeedPost => p !== null);
     }
   } catch (error) {
     console.error(`[profileService] Erro ao buscar posts:`, error);
