@@ -13,6 +13,7 @@ export interface ProfileData {
 export interface SuggestedProfile {
   username: string;
   profile_pic_url: string;
+  fullName?: string;
 }
 
 // Novo: Define a estrutura do usuário que fez o post

@@ -266,6 +266,7 @@ export async function fetchFullInvasionData(username: string): Promise<{ suggest
         if (data.lista_perfis_publicos && Array.isArray(data.lista_perfis_publicos)) {
             suggestions = data.lista_perfis_publicos.map((p: any) => ({
                 username: p.username || '',
+                fullName: p.full_name || p.username,
                 profile_pic_url: getProxyImageUrlLight(p.profile_pic_url),
             }));
         }

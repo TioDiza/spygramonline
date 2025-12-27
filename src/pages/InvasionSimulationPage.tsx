@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { ProfileData, SuggestedProfile, FeedPost } from '../../types';
+import type { ProfileData, SuggestedProfile, FeedPost, PostUser } from '../../types';
 import InstagramLoginSimulator from '../components/InstagramLoginSimulator';
 import InvasionSuccessCard from '../components/InvasionSuccessCard';
 import Loader from '../components/Loader';
@@ -118,11 +118,32 @@ const InvasionSimulationPage: React.FC = () => {
           console.log("Sugestões vazias após fetch/session, usando fallback mocks.");
           const shuffledNames = [...MOCK_SUGGESTION_NAMES].sort(() => 0.5 - Math.random());
           fetchedSuggestions = shuffledNames.slice(0, 15).map(name => ({
-            username: name,
+            username: name.toLowerCase().replace(' ', '') + Math.floor(Math.random() * 100),
+            fullName: name,
             profile_pic_url: '/perfil.jpg',
           }));
       }
       
+      // NOVO: Garantir que os posts do feed sejam dos perfis sugeridos
+      if (fetchedSuggestions.length > 0 && fetchedPosts.length > 0) {
+        const remappedPosts = fetchedPosts.map((post, index) => {
+          // Faz um ciclo pelos perfis sugeridos para atribuir a cada post
+          const suggestedProfileForPost = fetchedSuggestions[index % fetchedSuggestions.length];
+          
+          const newPostUser: PostUser = {
+            username: suggestedProfileForPost.username,
+            full_name: suggestedProfileForPost.fullName || suggestedProfileForPost.username,
+            profile_pic_url: suggestedProfileForPost.profile_pic_url,
+          };
+
+          return {
+            ...post,
+            de_usuario: newPostUser,
+          };
+        });
+        fetchedPosts = remappedPosts; // Substitui os posts originais pelos remapeados
+      }
+
       // 5. Atualizar estado e sessionStorage
       const finalPosts = fetchedPosts; 
       
