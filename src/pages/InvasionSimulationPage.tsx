@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { ProfileData, SuggestedProfile, FeedPost, PostUser } from '../../types';
+import type { ProfileData, SuggestedProfile, FeedPost } from '../../types';
 import InstagramLoginSimulator from '../components/InstagramLoginSimulator';
 import InvasionSuccessCard from '../components/InvasionSuccessCard';
 import Loader from '../components/Loader';
@@ -15,30 +15,14 @@ import { getUserLocation, getCitiesByState } from '../services/geolocationServic
 import LockedFeatureModal from '../components/LockedFeatureModal';
 import { useAuth } from '../context/AuthContext';
 import { MOCK_SUGGESTION_NAMES } from '../../constants';
-import { fetchFullInvasionData } from '../services/profileService';
+import { fetchFullInvasionData, fetchTargetUserPosts } from '../services/profileService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
-
-// Mock de posts para garantir que o feed não fique vazio se a API falhar
-const MOCK_POSTS: FeedPost[] = [
-  {
-    de_usuario: { username: 'mock_user_1', full_name: 'Mock User 1', profile_pic_url: '/perfil.jpg' },
-    post: { id: 'mock1', image_url: '/perfil.jpg', is_video: false, caption: 'Conteúdo bloqueado. Acesso Premium Requerido.', like_count: 123, comment_count: 45 }
-  },
-  {
-    de_usuario: { username: 'mock_user_2', full_name: 'Mock User 2', profile_pic_url: '/perfil.jpg' },
-    post: { id: 'mock2', image_url: '/perfil.jpg', is_video: false, caption: 'Conteúdo bloqueado. Acesso Premium Requerido.', like_count: 456, comment_count: 78 }
-  },
-  {
-    de_usuario: { username: 'mock_user_3', full_name: 'Mock User 3', profile_pic_url: '/perfil.jpg' },
-    post: { id: 'mock3', image_url: '/perfil.jpg', is_video: false, caption: 'Conteúdo bloqueado. Acesso Premium Requerido.', like_count: 789, comment_count: 12 }
-  },
-];
 
 const InvasionSimulationPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, login } = useAuth(); // Importa a função login
+  const { isLoggedIn, login } = useAuth();
 
   const [profileData, setProfileData] = useState<ProfileData | undefined>();
   const [suggestedProfiles, setSuggestedProfiles] = useState<SuggestedProfile[]>([]);
@@ -53,7 +37,6 @@ const InvasionSimulationPage: React.FC = () => {
   useEffect(() => {
     const loadAllDataAndProceed = async () => {
       let data;
-      // 1. Obter dados básicos do perfil
       if (location.state?.profileData) {
         data = location.state;
       } else {
@@ -72,50 +55,28 @@ const InvasionSimulationPage: React.FC = () => {
       const targetProfileData = data.profileData;
       setProfileData(targetProfileData);
 
-      let userCity = 'São Paulo'; // Default fallback
-      // 2. Buscar localizações
+      let userCity = 'São Paulo';
       try {
         const locationData = await getUserLocation();
         const stateCities = getCitiesByState(locationData.city, locationData.state);
         setLocations(stateCities);
-        userCity = locationData.city; // Captura a cidade real
+        userCity = locationData.city;
       } catch (e) {
         const fallbackCities = getCitiesByState('São Paulo', 'São Paulo');
         setLocations(fallbackCities);
       }
 
-      // 3. Buscar dados completos (sugestões e posts) se necessário
-      let fetchedSuggestions: SuggestedProfile[] = data.suggestedProfiles || [];
-      let fetchedPosts: FeedPost[] = data.posts || [];
+      // Buscar sugestões e posts do alvo em paralelo
+      const [suggestionsData, targetPosts] = await Promise.all([
+        fetchFullInvasionData(targetProfileData.username),
+        fetchTargetUserPosts(targetProfileData.username, targetProfileData)
+      ]);
 
-      // Só busca na API se os dados estiverem faltando ou se for a primeira vez (posts e suggestions vazios)
-      if (fetchedSuggestions.length === 0 || fetchedPosts.length === 0) {
-        const { suggestions, posts: apiPosts } = await fetchFullInvasionData(targetProfileData.username);
-        
-        // Se a API retornou posts, usamos eles.
-        if (apiPosts.length > 0) {
-            fetchedPosts = apiPosts;
-        }
-        // Se a API retornou sugestões, usamos elas.
-        if (suggestions.length > 0) {
-            fetchedSuggestions = suggestions;
-        }
-      }
+      let fetchedSuggestions = suggestionsData.suggestions;
       
-      // 4. FILTRO DE SEGURANÇA: Garante que nenhum post seja do usuário alvo
-      const filteredPosts = fetchedPosts.filter(p => p.de_usuario.username !== targetProfileData.username);
-      
-      // Fallback: Se os posts ainda estiverem vazios após o filtro, usa mocks
-      if (filteredPosts.length === 0) {
-          console.log("Posts vazios após fetch/session/filtro, usando fallback MOCK_POSTS.");
-          fetchedPosts = MOCK_POSTS;
-      } else {
-          fetchedPosts = filteredPosts;
-      }
-      
-      // Fallback: Se as sugestões ainda estiverem vazias, usa mocks
+      // Fallback para sugestões se a API falhar
       if (fetchedSuggestions.length === 0) {
-          console.log("Sugestões vazias após fetch/session, usando fallback mocks.");
+          console.log("Sugestões vazias, usando fallback mocks.");
           const shuffledNames = [...MOCK_SUGGESTION_NAMES].sort(() => 0.5 - Math.random());
           fetchedSuggestions = shuffledNames.slice(0, 15).map(name => ({
             username: name.toLowerCase().replace(' ', '') + Math.floor(Math.random() * 100),
@@ -124,42 +85,17 @@ const InvasionSimulationPage: React.FC = () => {
           }));
       }
       
-      // NOVO: Garantir que os posts do feed sejam dos perfis sugeridos
-      if (fetchedSuggestions.length > 0 && fetchedPosts.length > 0) {
-        const remappedPosts = fetchedPosts.map((post, index) => {
-          // Faz um ciclo pelos perfis sugeridos para atribuir a cada post
-          const suggestedProfileForPost = fetchedSuggestions[index % fetchedSuggestions.length];
-          
-          const newPostUser: PostUser = {
-            username: suggestedProfileForPost.username,
-            full_name: suggestedProfileForPost.fullName || suggestedProfileForPost.username,
-            profile_pic_url: suggestedProfileForPost.profile_pic_url,
-          };
-
-          return {
-            ...post,
-            de_usuario: newPostUser,
-          };
-        });
-        fetchedPosts = remappedPosts; // Substitui os posts originais pelos remapeados
-      }
-
-      // 5. Atualizar estado e sessionStorage
-      const finalPosts = fetchedPosts; 
-      
       setSuggestedProfiles(fetchedSuggestions);
-      setPosts(finalPosts); // Use finalPosts
+      setPosts(targetPosts); // Define os posts do alvo (pode ser um array vazio)
       
-      // Armazena todos os dados, incluindo a cidade do usuário
       const dataToStore = {
         profileData: targetProfileData,
         suggestedProfiles: fetchedSuggestions,
-        posts: finalPosts, // Store finalPosts
-        userCity: userCity, // Armazena a cidade
+        posts: targetPosts,
+        userCity: userCity,
       };
       sessionStorage.setItem('invasionData', JSON.stringify(dataToStore));
 
-      // 6. Transição para o próximo estágio
       if (isLoggedIn) {
         setStage('feed_locked');
       } else {
@@ -170,10 +106,10 @@ const InvasionSimulationPage: React.FC = () => {
     if (stage === 'loading') {
       loadAllDataAndProceed();
     }
-  }, [location.state, navigate, stage, isLoggedIn, login]);
+  }, [location.state, navigate, stage, isLoggedIn]);
 
   const handleLoginSuccess = useCallback(() => {
-    login(); // Define o usuário como logado no contexto
+    login();
     setStage('success_card');
     toast.success(`Acesso concedido ao perfil @${profileData?.username}!`);
     
@@ -190,7 +126,6 @@ const InvasionSimulationPage: React.FC = () => {
   const closeModal = () => setIsModalOpen(false);
 
   if (!profileData || stage === 'loading') {
-    // Se ainda estiver no estágio 'loading' ou sem profileData, mostra o Loader
     if (errorMessage) {
       return (
         <div className="min-h-screen bg-black flex items-center justify-center">
@@ -198,7 +133,6 @@ const InvasionSimulationPage: React.FC = () => {
         </div>
       );
     }
-    // Mantém o Loader como fallback enquanto os dados estão sendo carregados
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <Loader />
