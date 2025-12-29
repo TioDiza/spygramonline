@@ -1,6 +1,7 @@
 import type { ProfileData, SuggestedProfile, FetchResult, FeedPost, PostUser, Post } from '../../types';
+import { BACKEND_API_BASE_URL } from '../../constants';
 
-const API_BASE_URL = 'https://api-instagram-ofc.vercel.app/api';
+const API_BASE_URL = BACKEND_API_BASE_URL; // Usa a URL do proxy para evitar CORS e 404
 const REQUEST_TIMEOUT = 30000; // 30 seconds
 const MAX_RETRY_TIME = 40000; // 40 seconds for parallel retry
 
