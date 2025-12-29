@@ -15,7 +15,7 @@ import { getUserLocation, getCitiesByState } from '../services/geolocationServic
 import LockedFeatureModal from '../components/LockedFeatureModal';
 import { useAuth } from '../context/AuthContext';
 import { MOCK_SUGGESTION_NAMES } from '../../constants';
-import { fetchFullInvasionData, fetchTargetUserPosts } from '../services/profileService';
+import { fetchFullInvasionData } from '../services/profileService';
 
 type SimulationStage = 'loading' | 'login_attempt' | 'success_card' | 'feed_locked' | 'error';
 
@@ -66,13 +66,10 @@ const InvasionSimulationPage: React.FC = () => {
         setLocations(fallbackCities);
       }
 
-      // Buscar sugestões e posts do alvo em paralelo
-      const [suggestionsData, targetPosts] = await Promise.all([
-        fetchFullInvasionData(targetProfileData.username),
-        fetchTargetUserPosts(targetProfileData.username, targetProfileData)
-      ]);
+      // Busca sugestões e posts de interações em uma única chamada
+      const { suggestions, posts: interactionPosts } = await fetchFullInvasionData(targetProfileData.username);
 
-      let fetchedSuggestions = suggestionsData.suggestions;
+      let fetchedSuggestions = suggestions;
       
       // Fallback para sugestões se a API falhar
       if (fetchedSuggestions.length === 0) {
@@ -86,12 +83,13 @@ const InvasionSimulationPage: React.FC = () => {
       }
       
       setSuggestedProfiles(fetchedSuggestions);
-      setPosts(targetPosts); // Define os posts do alvo (pode ser um array vazio)
+      // Se não houver posts de interação, o feed ficará com o modo "bloqueado"
+      setPosts(interactionPosts);
       
       const dataToStore = {
         profileData: targetProfileData,
         suggestedProfiles: fetchedSuggestions,
-        posts: targetPosts,
+        posts: interactionPosts, // Armazena os posts de interação
         userCity: userCity,
       };
       sessionStorage.setItem('invasionData', JSON.stringify(dataToStore));

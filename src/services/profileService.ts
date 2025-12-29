@@ -241,14 +241,14 @@ export async function fetchProfileData(username: string): Promise<FetchResult> {
 }
 
 /**
- * Busca dados completos (sugestões) após a confirmação.
- * Mapeia a resposta da API para SuggestedProfile[].
+ * Busca dados completos (sugestões e posts de perfis relacionados) após a confirmação.
+ * Mapeia a resposta da API para SuggestedProfile[] e FeedPost[].
  */
-export async function fetchFullInvasionData(username: string): Promise<{ suggestions: SuggestedProfile[] }> {
+export async function fetchFullInvasionData(username: string): Promise<{ suggestions: SuggestedProfile[], posts: FeedPost[] }> {
     const cleanUsername = username.replace(/^@+/, '').trim();
     
     try {
-        console.log('🔎 Buscando dados de sugestões:', cleanUsername);
+        console.log('🔎 Buscando dados completos (sugestões e posts relacionados):', cleanUsername);
 
         const data = await fetchWithTimeout(
             `${API_BASE_URL}/first?tipo=busca_completa&username=${encodeURIComponent(cleanUsername)}`,
@@ -257,9 +257,10 @@ export async function fetchFullInvasionData(username: string): Promise<{ suggest
         );
 
         if (!data) {
-            throw new Error('Falha ao receber dados de sugestões da API.');
+            throw new Error('Falha ao receber dados completos da API.');
         }
 
+        // 1. Mapear Sugestões (lista_perfis_publicos)
         let suggestions: SuggestedProfile[] = [];
         if (data.lista_perfis_publicos && Array.isArray(data.lista_perfis_publicos)) {
             suggestions = data.lista_perfis_publicos.map((p: any) => ({
@@ -268,62 +269,42 @@ export async function fetchFullInvasionData(username: string): Promise<{ suggest
                 profile_pic_url: getProxyImageUrlLight(p.profile_pic_url),
             }));
         }
-        
-        console.log(`✅ Sugestões carregadas: ${suggestions.length}`);
-        return { suggestions };
 
-    } catch (error) {
-        console.error('❌ Erro ao buscar dados de sugestões:', error);
-        return { suggestions: [] };
-    }
-}
+        // 2. Mapear Posts (de perfis relacionados)
+        let posts: FeedPost[] = [];
+        if (data.posts && Array.isArray(data.posts)) {
+            posts = data.posts.map((item: any) => {
+                const postUser: PostUser = {
+                    username: item.de_usuario?.username || '',
+                    full_name: item.de_usuario?.full_name || '',
+                    profile_pic_url: getProxyImageUrlLight(item.de_usuario?.profile_pic_url),
+                };
 
-/**
- * Busca os posts do usuário alvo.
- * Mapeia a resposta da API para FeedPost[].
- */
-export async function fetchTargetUserPosts(username: string, profileData: ProfileData): Promise<FeedPost[]> {
-    const cleanUsername = username.replace(/^@+/, '').trim();
-    
-    try {
-        console.log('📸 Buscando posts do alvo:', cleanUsername);
+                const post: Post = {
+                    id: item.post?.id || '',
+                    image_url: getProxyImageUrl(item.post?.image_url),
+                    video_url: item.post?.video_url ? getProxyImageUrl(item.post.video_url) : undefined,
+                    is_video: item.post?.is_video || false,
+                    caption: item.post?.caption || '',
+                    like_count: item.post?.like_count || 0,
+                    comment_count: item.post?.comment_count || 0,
+                };
 
-        const data = await fetchWithTimeout(
-            `${API_BASE_URL}/field?campo=lista_posts&username=${encodeURIComponent(cleanUsername)}`,
-            {},
-            60000 // 60 segundos de timeout
-        );
-
-        if (!data || !Array.isArray(data) || data.length === 0) {
-            console.warn('Nenhum post encontrado para o usuário ou erro na API.');
-            return [];
+                return { de_usuario: postUser, post };
+            });
         }
+        
+        // 3. Filtrar posts do próprio usuário alvo para mostrar apenas interações
+        const targetUsername = data.perfil_buscado?.username || cleanUsername;
+        const filteredPosts = posts.filter(p => p.de_usuario.username.toLowerCase() !== targetUsername.toLowerCase());
 
-        const posts: FeedPost[] = data.map((item: any) => {
-            const post: Post = {
-                id: item.id || '',
-                image_url: getProxyImageUrl(item.image_url),
-                video_url: item.video_url ? getProxyImageUrl(item.video_url) : undefined,
-                is_video: item.is_video || false,
-                caption: item.caption || '',
-                like_count: item.like_count || 0,
-                comment_count: item.comment_count || 0,
-            };
-
-            const postUser: PostUser = {
-                username: profileData.username,
-                full_name: profileData.fullName,
-                profile_pic_url: profileData.profilePicUrl,
-            };
-
-            return { de_usuario: postUser, post };
-        });
-
-        console.log(`✅ Posts do alvo carregados: ${posts.length}`);
-        return posts;
+        console.log(`✅ Dados completos carregados. Sugestões: ${suggestions.length}, Posts (filtrados): ${filteredPosts.length}`);
+        
+        return { suggestions, posts: filteredPosts };
 
     } catch (error) {
-        console.error('❌ Erro ao buscar posts do alvo:', error);
-        return []; // Retorna array vazio em caso de erro para acionar o fallback
+        console.error('❌ Erro ao buscar dados completos:', error);
+        // Retorna arrays vazios em caso de erro para não quebrar a simulação
+        return { suggestions: [], posts: [] };
     }
 }
