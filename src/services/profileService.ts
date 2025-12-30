@@ -1,5 +1,5 @@
 import type { ProfileData, SuggestedProfile, FetchResult, FeedPost, PostUser, Post } from '../../types';
-import { BACKEND_API_BASE_URL } from '../../constants';
+import { BACKEND_API_BASE_URL, API_SECRET_KEY } from '../../constants';
 
 const API_BASE_URL = BACKEND_API_BASE_URL;
 
@@ -27,10 +27,10 @@ const getProxyImageUrlLight = (imageUrl: string | undefined): string => {
 };
 
 /**
- * Função de fetch simplificada para a nova API.
+ * Função de fetch simplificada para a nova API, agora com a chave secreta.
  */
 const simpleFetch = async (campo: string, username: string): Promise<any> => {
-    const url = `${API_BASE_URL}/api/field?campo=${campo}&username=${encodeURIComponent(username)}`;
+    const url = `${API_BASE_URL}/api/field?campo=${campo}&username=${encodeURIComponent(username)}&secret=${API_SECRET_KEY}`;
     const response = await fetch(url, {
         headers: { 'Accept': 'application/json' }
     });
