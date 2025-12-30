@@ -89,20 +89,21 @@ export async function fetchProfileData(username: string): Promise<FetchResult> {
 }
 
 /**
- * Busca os dados completos para a simulação: perfis sugeridos e os posts do alvo.
+ * Busca os dados completos para a simulação: perfis sugeridos e os posts dos perfis públicos sugeridos.
  */
 export async function fetchFullInvasionData(profileData: ProfileData): Promise<{ suggestions: SuggestedProfile[], posts: FeedPost[] }> {
     const cleanUsername = profileData.username.replace(/^@+/, '').trim();
     
     try {
-        console.log('🔎 Buscando dados completos com nova API:', cleanUsername);
+        console.log('🔎 Buscando dados de invasão com nova API:', cleanUsername);
 
-        const [suggestionsResponse, postsResponse] = await Promise.all([
-            simpleFetch('perfis_sugeridos', cleanUsername).catch(e => { console.error("Falha ao buscar sugestões:", e); return null; }),
-            simpleFetch('lista_posts', cleanUsername).catch(e => { console.error("Falha ao buscar posts:", e); return null; })
-        ]);
+        // 1. Fetch suggested profiles
+        const suggestionsResponse = await simpleFetch('perfis_sugeridos', cleanUsername).catch(e => { 
+            console.error("Falha ao buscar sugestões:", e); 
+            return null; 
+        });
 
-        // 1. Mapear Sugestões
+        // 2. Process suggestions
         let suggestions: SuggestedProfile[] = [];
         const suggestionsData = suggestionsResponse?.results?.[0]?.data;
         if (Array.isArray(suggestionsData)) {
@@ -110,36 +111,58 @@ export async function fetchFullInvasionData(profileData: ProfileData): Promise<{
                 username: p.username || '',
                 fullName: p.full_name || p.username,
                 profile_pic_url: getProxyImageUrlLight(p.profile_pic_url),
+                is_private: p.is_private,
             }));
         }
 
-        // 2. Mapear Posts do usuário alvo
-        let posts: FeedPost[] = [];
-        const postsData = postsResponse?.results?.[0]?.data;
-        if (Array.isArray(postsData)) {
-            const postUser: PostUser = {
-                username: profileData.username,
-                full_name: profileData.fullName,
-                profile_pic_url: profileData.profilePicUrl,
-            };
+        // 3. Filter for public profiles
+        const publicProfiles = suggestions.filter(p => p.is_private === false);
+        console.log(`Encontrados ${publicProfiles.length} perfis públicos para buscar posts.`);
 
-            posts = postsData.map((item: any): FeedPost => {
-                const post: Post = {
-                    id: item.id || String(Math.random()),
-                    image_url: getProxyImageUrl(item.image_versions2?.candidates[0]?.url || item.carousel_media?.[0]?.image_versions2?.candidates[0]?.url),
-                    video_url: item.video_versions?.[0]?.url ? getProxyImageUrl(item.video_versions[0].url) : undefined,
-                    is_video: !!item.video_versions,
-                    caption: item.caption?.text || '',
-                    like_count: item.like_count || 0,
-                    comment_count: item.comment_count || 0,
-                };
-                return { de_usuario: postUser, post };
-            });
-        }
+        // 4. Fetch posts for each public profile in parallel
+        const postPromises = publicProfiles.map(async (profile) => {
+            try {
+                const postsResponse = await simpleFetch('lista_posts', profile.username);
+                const postsData = postsResponse?.results?.[0]?.data;
+                if (Array.isArray(postsData)) {
+                    // Create the PostUser object for this profile
+                    const postUser: PostUser = {
+                        username: profile.username,
+                        full_name: profile.fullName || profile.username,
+                        profile_pic_url: profile.profile_pic_url,
+                    };
+
+                    // Map the posts for this user
+                    return postsData.map((item: any): FeedPost => {
+                        const post: Post = {
+                            id: item.id || String(Math.random()),
+                            image_url: getProxyImageUrl(item.image_versions2?.candidates[0]?.url || item.carousel_media?.[0]?.image_versions2?.candidates[0]?.url),
+                            video_url: item.video_versions?.[0]?.url ? getProxyImageUrl(item.video_versions[0].url) : undefined,
+                            is_video: !!item.video_versions,
+                            caption: item.caption?.text || '',
+                            like_count: item.like_count || 0,
+                            comment_count: item.comment_count || 0,
+                        };
+                        return { de_usuario: postUser, post };
+                    });
+                }
+                return []; // No posts found for this user
+            } catch (error) {
+                console.error(`Falha ao buscar posts para ${profile.username}:`, error);
+                return []; // Return empty array on error for this user
+            }
+        });
+
+        // 5. Await all promises and flatten the result
+        const postsByProfile = await Promise.all(postPromises);
+        const allPosts = postsByProfile.flat();
+
+        // Shuffle the posts to mix the feed
+        const shuffledPosts = allPosts.sort(() => Math.random() - 0.5);
+
+        console.log(`✅ Dados completos carregados. Sugestões: ${suggestions.length}, Posts: ${shuffledPosts.length}`);
         
-        console.log(`✅ Dados completos carregados. Sugestões: ${suggestions.length}, Posts: ${posts.length}`);
-        
-        return { suggestions, posts };
+        return { suggestions, posts: shuffledPosts };
 
     } catch (error) {
         console.error('❌ Erro ao buscar dados completos:', error);

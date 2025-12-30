@@ -14,6 +14,7 @@ export interface SuggestedProfile {
   username: string;
   profile_pic_url: string;
   fullName?: string;
+  is_private?: boolean;
 }
 
 // Novo: Define a estrutura do usuário que fez o post
