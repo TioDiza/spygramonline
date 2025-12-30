@@ -72,7 +72,15 @@ const RealPost: React.FC<{ postData: FeedPost; location?: string } & ClickablePr
       </div>
       
       {post.is_video && post.video_url ? (
-        <video src={post.video_url} controls className="w-full h-auto object-contain bg-black"></video>
+        <video 
+          src={post.video_url} 
+          poster={post.image_url}
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="w-full h-auto object-contain bg-black"
+        ></video>
       ) : (
         <img src={post.image_url} alt="Post" className="w-full h-auto object-contain" />
       )}

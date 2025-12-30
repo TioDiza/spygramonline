@@ -8,20 +8,26 @@ const API_BASE_URL = BACKEND_API_BASE_URL;
 // ===================================
 
 /**
- * Proxy de imagens para evitar CORS.
+ * Proxy de imagens para evitar CORS, se ainda não tiver proxy.
  */
 const getProxyImageUrl = (imageUrl: string | undefined): string => {
     if (!imageUrl || imageUrl.trim() === '') return '/perfil.jpg';
-    if (imageUrl.startsWith('/') || imageUrl.startsWith('data:')) return imageUrl;
+    // Se for uma URL local, data URI ou já estiver com proxy, retorna como está.
+    if (imageUrl.startsWith('/') || imageUrl.startsWith('data:') || imageUrl.includes('workers.dev') || imageUrl.includes('weserv.nl')) {
+        return imageUrl;
+    }
     return `https://proxt-insta.projetinho-solo.workers.dev/?url=${encodeURIComponent(imageUrl)}`;
 };
 
 /**
- * Proxy de imagens leve para avatares.
+ * Proxy de imagens leve para avatares, se ainda não tiver proxy.
  */
 const getProxyImageUrlLight = (imageUrl: string | undefined): string => {
     if (!imageUrl || imageUrl.trim() === '') return '/perfil.jpg';
-    if (imageUrl.startsWith('/') || imageUrl.startsWith('data:')) return imageUrl;
+    // Se for uma URL local, data URI ou já estiver com proxy, retorna como está.
+    if (imageUrl.startsWith('/') || imageUrl.startsWith('data:') || imageUrl.includes('workers.dev') || imageUrl.includes('weserv.nl')) {
+        return imageUrl;
+    }
     const urlWithoutProtocol = imageUrl.replace(/^https?:\/\//, '');
     return `https://images.weserv.nl/?url=${encodeURIComponent(urlWithoutProtocol)}&w=80&h=80&fit=cover&q=50`;
 };
