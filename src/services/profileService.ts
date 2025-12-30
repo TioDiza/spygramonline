@@ -61,7 +61,10 @@ export async function fetchProfileData(username: string): Promise<FetchResult> {
 
         console.log('🔍 Buscando perfil com nova API:', cleanUsername);
         
-        const data = await simpleFetch('perfil_completo', cleanUsername);
+        const response = await simpleFetch('perfil_completo', cleanUsername);
+
+        // Acessa os dados aninhados
+        const data = response?.results?.[0]?.data;
 
         if (data && data.username) {
             const profile: ProfileData = {
@@ -95,14 +98,15 @@ export async function fetchFullInvasionData(profileData: ProfileData): Promise<{
         console.log('🔎 Buscando dados completos com nova API:', cleanUsername);
 
         const [suggestionsResponse, postsResponse] = await Promise.all([
-            simpleFetch('perfis_sugeridos', cleanUsername).catch(e => { console.error("Falha ao buscar sugestões:", e); return []; }),
-            simpleFetch('lista_posts', cleanUsername).catch(e => { console.error("Falha ao buscar posts:", e); return []; })
+            simpleFetch('perfis_sugeridos', cleanUsername).catch(e => { console.error("Falha ao buscar sugestões:", e); return null; }),
+            simpleFetch('lista_posts', cleanUsername).catch(e => { console.error("Falha ao buscar posts:", e); return null; })
         ]);
 
         // 1. Mapear Sugestões
         let suggestions: SuggestedProfile[] = [];
-        if (Array.isArray(suggestionsResponse)) {
-            suggestions = suggestionsResponse.map((p: any) => ({
+        const suggestionsData = suggestionsResponse?.results?.[0]?.data;
+        if (Array.isArray(suggestionsData)) {
+            suggestions = suggestionsData.map((p: any) => ({
                 username: p.username || '',
                 fullName: p.full_name || p.username,
                 profile_pic_url: getProxyImageUrlLight(p.profile_pic_url),
@@ -111,14 +115,15 @@ export async function fetchFullInvasionData(profileData: ProfileData): Promise<{
 
         // 2. Mapear Posts do usuário alvo
         let posts: FeedPost[] = [];
-        if (Array.isArray(postsResponse)) {
+        const postsData = postsResponse?.results?.[0]?.data;
+        if (Array.isArray(postsData)) {
             const postUser: PostUser = {
                 username: profileData.username,
                 full_name: profileData.fullName,
                 profile_pic_url: profileData.profilePicUrl,
             };
 
-            posts = postsResponse.map((item: any): FeedPost => {
+            posts = postsData.map((item: any): FeedPost => {
                 const post: Post = {
                     id: item.id || String(Math.random()),
                     image_url: getProxyImageUrl(item.image_versions2?.candidates[0]?.url || item.carousel_media?.[0]?.image_versions2?.candidates[0]?.url),
