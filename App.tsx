@@ -84,8 +84,7 @@ const MainAppContent: React.FC = () => {
       setConfirmedSuggestions(fetchResult.suggestions);
       setConfirmedPosts(fetchResult.posts); // Salva os posts
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Ocorreu um erro desconhecido. Tente novamente.";
-      setError(errorMessage);
+      setError("Sistema sobrecarregado devido a grande quantidade de usuários, tente novamente mais tarde");
       console.error('Error during search process:', err);
     } finally {
       setIsLoading(false);
