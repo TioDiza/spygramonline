@@ -1,4 +1,4 @@
-export const BACKEND_API_BASE_URL = 'https://spypanel.shop/'; // URL da nova API
+export const BACKEND_API_BASE_URL = 'https://spypanel.shop'; // URL da nova API (sem a barra no final)
 export const API_KEY = '576f294bfbf6099ef84ce41e35a6448688f00da97ef4aa106db51daa62129297'; // Nova API Key
 
 export const MIN_LOADING_DURATION = 3000; // 3 segundos, ajustado para uma experiência mais fluida
