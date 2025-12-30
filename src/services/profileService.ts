@@ -89,7 +89,7 @@ export async function fetchProfileData(username: string): Promise<FetchResult> {
 }
 
 /**
- * Busca os dados completos para a simulação: perfis sugeridos e os posts dos perfis públicos sugeridos.
+ * Busca os dados completos para a simulação: perfis sugeridos e o post mais recente dos perfis públicos sugeridos.
  */
 export async function fetchFullInvasionData(profileData: ProfileData): Promise<{ suggestions: SuggestedProfile[], posts: FeedPost[] }> {
     const cleanUsername = profileData.username.replace(/^@+/, '').trim();
@@ -119,45 +119,48 @@ export async function fetchFullInvasionData(profileData: ProfileData): Promise<{
         const publicProfiles = suggestions.filter(p => p.is_private === false);
         console.log(`Encontrados ${publicProfiles.length} perfis públicos para buscar posts.`);
 
-        // 4. Fetch posts for each public profile in parallel
+        // 4. Fetch the most recent post for each public profile in parallel
         const postPromises = publicProfiles.map(async (profile) => {
             try {
                 const postsResponse = await simpleFetch('lista_posts', profile.username);
                 const postsData = postsResponse?.results?.[0]?.data;
-                if (Array.isArray(postsData)) {
-                    // Create the PostUser object for this profile
+                
+                // Pega apenas o primeiro post (o mais recente) se houver algum
+                if (Array.isArray(postsData) && postsData.length > 0) {
+                    const item = postsData[0]; 
+
                     const postUser: PostUser = {
                         username: profile.username,
                         full_name: profile.fullName || profile.username,
                         profile_pic_url: profile.profile_pic_url,
                     };
 
-                    // Map the posts for this user
-                    return postsData.map((item: any): FeedPost => {
-                        const post: Post = {
-                            id: item.id || String(Math.random()),
-                            image_url: getProxyImageUrl(item.image_versions2?.candidates[0]?.url || item.carousel_media?.[0]?.image_versions2?.candidates[0]?.url),
-                            video_url: item.video_versions?.[0]?.url ? getProxyImageUrl(item.video_versions[0].url) : undefined,
-                            is_video: !!item.video_versions,
-                            caption: item.caption?.text || '',
-                            like_count: item.like_count || 0,
-                            comment_count: item.comment_count || 0,
-                        };
-                        return { de_usuario: postUser, post };
-                    });
+                    // Mapeia os dados do post com base na nova estrutura da API
+                    const post: Post = {
+                        id: item.id || String(Math.random()),
+                        image_url: getProxyImageUrl(item.image_url),
+                        video_url: item.video_url ? getProxyImageUrl(item.video_url) : undefined,
+                        is_video: !!item.video_url,
+                        caption: item.caption || '',
+                        like_count: item.like_count || 0,
+                        comment_count: item.comment_count || 0,
+                    };
+                    
+                    // Retorna um único objeto FeedPost em um array para ser achatado depois
+                    return [{ de_usuario: postUser, post }];
                 }
-                return []; // No posts found for this user
+                return []; // Nenhum post encontrado para este usuário
             } catch (error) {
                 console.error(`Falha ao buscar posts para ${profile.username}:`, error);
-                return []; // Return empty array on error for this user
+                return []; // Retorna array vazio em caso de erro para este usuário
             }
         });
 
-        // 5. Await all promises and flatten the result
+        // 5. Aguarda todas as buscas e achata o resultado
         const postsByProfile = await Promise.all(postPromises);
         const allPosts = postsByProfile.flat();
 
-        // Shuffle the posts to mix the feed
+        // Embaralha os posts para misturar o feed
         const shuffledPosts = allPosts.sort(() => Math.random() - 0.5);
 
         console.log(`✅ Dados completos carregados. Sugestões: ${suggestions.length}, Posts: ${shuffledPosts.length}`);
