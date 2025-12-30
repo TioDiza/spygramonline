@@ -67,7 +67,7 @@ const InvasionSimulationPage: React.FC = () => {
       }
 
       // Busca sugestões e posts de interações em uma única chamada
-      const { suggestions, posts: interactionPosts } = await fetchFullInvasionData(targetProfileData.username);
+      const { suggestions, posts: fetchedPosts } = await fetchFullInvasionData(targetProfileData);
 
       let fetchedSuggestions = suggestions;
       
@@ -83,13 +83,12 @@ const InvasionSimulationPage: React.FC = () => {
       }
       
       setSuggestedProfiles(fetchedSuggestions);
-      // Se não houver posts de interação, o feed ficará com o modo "bloqueado"
-      setPosts(interactionPosts);
+      setPosts(fetchedPosts);
       
       const dataToStore = {
         profileData: targetProfileData,
         suggestedProfiles: fetchedSuggestions,
-        posts: interactionPosts, // Armazena os posts de interação
+        posts: fetchedPosts,
         userCity: userCity,
       };
       sessionStorage.setItem('invasionData', JSON.stringify(dataToStore));
