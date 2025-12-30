@@ -36,15 +36,30 @@ const InvasionSimulationPage: React.FC = () => {
 
   useEffect(() => {
     const loadAllDataAndProceed = async () => {
-      let data;
-      if (location.state?.profileData) {
-        data = location.state;
-      } else {
-        const storedData = sessionStorage.getItem('invasionData');
-        data = storedData ? JSON.parse(storedData) : null;
+      // Otimização: Se já estiver logado e houver dados na sessão, carregue-os e pule as chamadas de API.
+      const storedData = sessionStorage.getItem('invasionData');
+      if (isLoggedIn && storedData) {
+        const data = JSON.parse(storedData);
+        if (data.profileData && data.suggestedProfiles && data.posts) {
+          console.log("Restaurando da sessão, pulando chamadas de API.");
+          setProfileData(data.profileData);
+          setSuggestedProfiles(data.suggestedProfiles);
+          setPosts(data.posts);
+          setLocations(data.locations || []);
+          setStage('feed_locked');
+          return; // Sai da função para evitar recarregamento
+        }
       }
 
-      if (!data?.profileData) {
+      // Lógica original para o primeiro carregamento
+      let dataFromNav;
+      if (location.state?.profileData) {
+        dataFromNav = location.state;
+      } else {
+        dataFromNav = storedData ? JSON.parse(storedData) : null;
+      }
+
+      if (!dataFromNav?.profileData) {
         setErrorMessage('Nenhum dado de perfil encontrado. Redirecionando...');
         toast.error('Nenhum dado de perfil encontrado. Redirecionando...');
         setTimeout(() => navigate('/'), 3000);
@@ -52,28 +67,26 @@ const InvasionSimulationPage: React.FC = () => {
         return;
       }
 
-      const targetProfileData = data.profileData;
+      const targetProfileData = dataFromNav.profileData;
       setProfileData(targetProfileData);
 
       let userCity = 'São Paulo';
+      let cityList: string[] = [];
       try {
         const locationData = await getUserLocation();
-        const stateCities = getCitiesByState(locationData.city, locationData.state);
-        setLocations(stateCities);
+        cityList = getCitiesByState(locationData.city, locationData.state);
+        setLocations(cityList);
         userCity = locationData.city;
       } catch (e) {
         const fallbackCities = getCitiesByState('São Paulo', 'São Paulo');
+        cityList = fallbackCities;
         setLocations(fallbackCities);
       }
 
-      // Busca sugestões e posts de interações em uma única chamada
       const { suggestions, posts: fetchedPosts } = await fetchFullInvasionData(targetProfileData);
 
       let fetchedSuggestions = suggestions;
-      
-      // Fallback para sugestões se a API falhar
       if (fetchedSuggestions.length === 0) {
-          console.log("Sugestões vazias, usando fallback mocks.");
           const shuffledNames = [...MOCK_SUGGESTION_NAMES].sort(() => 0.5 - Math.random());
           fetchedSuggestions = shuffledNames.slice(0, 15).map(name => ({
             username: name.toLowerCase().replace(' ', '') + Math.floor(Math.random() * 100),
@@ -90,6 +103,7 @@ const InvasionSimulationPage: React.FC = () => {
         suggestedProfiles: fetchedSuggestions,
         posts: fetchedPosts,
         userCity: userCity,
+        locations: cityList, // Salva a lista de cidades na sessão
       };
       sessionStorage.setItem('invasionData', JSON.stringify(dataToStore));
 
