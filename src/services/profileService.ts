@@ -1,5 +1,5 @@
 import type { ProfileData, SuggestedProfile, FetchResult, FeedPost, PostUser, Post } from '../../types';
-import { BACKEND_API_BASE_URL } from '../../constants';
+import { BACKEND_API_BASE_URL, API_KEY } from '../../constants';
 
 const API_BASE_URL = BACKEND_API_BASE_URL; // Usa a URL do proxy para evitar CORS e 404
 const REQUEST_TIMEOUT = 30000; // 30 seconds
@@ -66,6 +66,7 @@ const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout 
             signal: controller.signal,
             headers: {
                 'Accept': 'application/json',
+                'X-API-KEY': API_KEY, // Adiciona a API Key
                 ...options.headers
             }
         });
@@ -119,6 +120,7 @@ async function fetchWithParallelRetry(url: string, options: RequestInit = {}, ma
                         ...options,
                         headers: {
                             'Accept': 'application/json',
+                            'X-API-KEY': API_KEY, // Adiciona a API Key
                             ...options.headers
                         }
                     });
