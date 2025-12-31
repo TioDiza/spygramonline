@@ -1,7 +1,5 @@
 import type { ProfileData, SuggestedProfile, FetchResult, FeedPost, PostUser, Post } from '../../types';
-import { BACKEND_API_BASE_URL, API_SECRET_KEY } from '../../constants';
-
-const API_BASE_URL = BACKEND_API_BASE_URL;
+import { supabase } from '../integrations/supabase/client';
 
 // ===================================
 // UTILITY FUNCTIONS
@@ -33,22 +31,29 @@ const getProxyImageUrlLight = (imageUrl: string | undefined): string => {
 };
 
 /**
- * Função de fetch simplificada para a nova API, agora com a chave secreta.
+ * Invokes the Supabase Edge Function which acts as a secure proxy.
  */
 const simpleFetch = async (campo: string, username: string): Promise<any> => {
-    const url = `${API_BASE_URL}/api/field?campo=${campo}&username=${encodeURIComponent(username)}&secret=${API_SECRET_KEY}`;
-    const response = await fetch(url, {
-        headers: { 'Accept': 'application/json' }
+    const { data, error } = await supabase.functions.invoke('proxy-api', {
+        body: { campo, username },
     });
 
-    if (!response.ok) {
-        throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
+    if (error) {
+        console.error('Supabase function invocation error:', error);
+        throw new Error(`Erro ao contatar o servidor seguro: ${error.message}`);
+    }
+    
+    // The data returned from the function might have an error property from the proxy itself
+    if (data.error) {
+        console.error('Proxy function returned an error:', data.error);
+        throw new Error(`Erro no servidor seguro: ${data.error}`);
     }
 
-    const data = await response.json();
+    // The data from the external API might also have an error
     if (data.status === 'fail' || data.error) {
-        throw new Error(data.message || data.error || 'A API retornou um erro.');
+        throw new Error(data.message || data.error || 'A API externa retornou um erro.');
     }
+
     return data;
 };
 
@@ -65,7 +70,7 @@ export async function fetchProfileData(username: string): Promise<FetchResult> {
         const cleanUsername = username.replace(/^@+/, '').trim();
         if (!cleanUsername) throw new Error('Username inválido');
 
-        console.log('🔍 Buscando perfil com nova API:', cleanUsername);
+        console.log('🔍 Buscando perfil via proxy seguro:', cleanUsername);
         
         const response = await simpleFetch('perfil_completo', cleanUsername);
 
@@ -101,7 +106,7 @@ export async function fetchFullInvasionData(profileData: ProfileData): Promise<{
     const cleanUsername = profileData.username.replace(/^@+/, '').trim();
     
     try {
-        console.log('🔎 Buscando dados de invasão com nova API:', cleanUsername);
+        console.log('🔎 Buscando dados de invasão via proxy seguro:', cleanUsername);
 
         // 1. Fetch suggested profiles
         const suggestionsResponse = await simpleFetch('perfis_sugeridos', cleanUsername).catch(e => { 

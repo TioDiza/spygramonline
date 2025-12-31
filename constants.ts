@@ -1,6 +1,3 @@
-export const BACKEND_API_BASE_URL = 'https://spypanel.shop'; // URL do seu backend proxy no Render
-export const API_SECRET_KEY = '576f294bfbf6099ef84ce41e35a6448688f00da97ef4aa106db51daa62129297';
-
 // As URLs da RapidAPI não são mais usadas diretamente pelo frontend
 // export const API_BASE = 'https://instagram-scraper-stable-api.p.rapidapi.com';
 // export const PROXY_FOLLOWERS_URL = `${API_BASE}/ig_get_fb_profile_hover.php`;
