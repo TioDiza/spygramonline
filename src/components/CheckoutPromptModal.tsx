@@ -67,11 +67,10 @@ const CheckoutPromptModal: React.FC<CheckoutPromptModalProps> = ({ isOpen, onClo
             
             <ShineButton 
               onClick={handleAcquireAccess} 
-              className="w-full"
-              // Ajustando as cores do botão para o tema do modal (marrom/amarelo)
-              shineColorClasses="bg-yellow-500" 
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold transition-colors"
+              shineColorClasses="bg-yellow-300" 
             >
-              Adquirir Acesso VIP
+              DESBLOQUEAR ACESSO VIP AGORA
             </ShineButton>
 
             <p className="text-xs text-gray-400 mt-4">
