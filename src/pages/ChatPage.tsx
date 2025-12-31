@@ -20,11 +20,15 @@ interface ChatMessage {
   isImage?: boolean;
   imageUrl?: string;
   isHeart?: boolean;
+  isStory?: boolean;
+  storyAuthor?: string;
+  storyAvatarUrl?: string;
+  storyImageUrl?: string;
 }
 
 // Define os diálogos mockados
 const DIALOGUES: { [key: string]: ChatMessage[] } = {
-  // Diálogo Padrão (para o primeiro chat) - ATUALIZADO
+  // Diálogo Padrão (para o primeiro chat)
   DEFAULT_CHAT: [
     { id: 1, type: 'date', content: '3 dias atrás, 11:12' },
     { id: 2, type: 'received', content: 'Oi minha delícia' },
@@ -62,17 +66,26 @@ const DIALOGUES: { [key: string]: ChatMessage[] } = {
     { id: 34, type: 'received', content: 'Oi delícia, adivinha o que vc esqueceu aqui? kkkk' },
   ],
   
-  // Diálogo para o segundo chat (Encaminhou um reel)
+  // Diálogo para o segundo chat (ATUALIZADO)
   SECOND_CHAT: [
-    { id: 1, type: 'date', content: 'HOJE, 14:20' },
-    { id: 2, type: 'received', content: 'Encaminhou um reel de jonas.milgrau' },
-    { id: 3, type: 'sent', content: 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk' },
-    { id: 4, type: 'received', content: 'São João del-Rei' },
-    { id: 5, type: 'sent', content: 'Dboa, amanhã ou terça', reaction: '👍' },
-    { id: 6, type: 'date', content: 'ONTEM, 21:34' },
-    { id: 7, type: 'received', content: 'Amor' },
-    { id: 8, type: 'received', content: 'Ta podendo falar?' },
-    { id: 9, type: 'sent', content: 'Oii bb', replyTo: 'Amor', replyLabel: 'Você respondeu' },
+    { id: 1, type: 'received', content: '', isStory: true, storyAuthor: 'tinhooficial', storyAvatarUrl: '/perfil.jpg', storyImageUrl: '/perfil.jpg', reaction: '😂' },
+    { id: 2, type: 'date', content: '25 DE NOV, 15:22' },
+    { id: 3, type: 'received', content: '', isStory: true, storyAuthor: 'ikarozets', storyAvatarUrl: '/perfil.jpg', storyImageUrl: '/perfil.jpg' },
+    { id: 4, type: 'date', content: '27 DE NOV, 20:15' },
+    { id: 5, type: 'received', content: '', isStory: true, storyAuthor: 'tettrem', storyAvatarUrl: '/perfil.jpg', storyImageUrl: '/perfil.jpg', reaction: '🥲' },
+    { id: 6, type: 'sent', content: 'Esse achei triste' },
+    { id: 7, type: 'date', content: '29 DE NOV, 14:08' },
+    { id: 8, type: 'sent', content: '', isStory: true, storyAuthor: 'signodaputaria', storyAvatarUrl: '/perfil.jpg', storyImageUrl: '/perfil.jpg' },
+    { id: 9, type: 'received', content: '', isStory: true, storyAuthor: 'tettrem', storyAvatarUrl: '/perfil.jpg', storyImageUrl: '/perfil.jpg' },
+    { id: 10, type: 'date', content: 'ONTEM, 18:45' },
+    { id: 11, type: 'sent', content: '', isStory: true, storyAuthor: 'safadodesejo', storyAvatarUrl: '/perfil.jpg', storyImageUrl: '/perfil.jpg', reaction: '😂' },
+    { id: 12, type: 'sent', content: 'kkkkkkkkkkkk' },
+    { id: 13, type: 'received', content: 'Áudio', isAudio: true, audioDuration: '0:23', reaction: '😂' },
+    { id: 14, type: 'date', content: 'ONTEM 22:11' },
+    { id: 15, type: 'received', content: '', isStory: true, storyAuthor: 'morimura', storyAvatarUrl: '/perfil.jpg', storyImageUrl: '/perfil.jpg' },
+    { id: 16, type: 'divider', content: 'Novas mensagens' },
+    { id: 17, type: 'date', content: 'HOJE' },
+    { id: 18, type: 'received', content: '', isStory: true, storyAuthor: 'jonas.milgrau', storyAvatarUrl: '/perfil.jpg', storyImageUrl: '/perfil.jpg' },
   ],
 };
 
@@ -103,7 +116,7 @@ const ChatPage: React.FC = () => {
     if (chatUser) {
       let dialogue = getDialogue(chatUser.id);
       // Atualiza dinamicamente o horário da última mensagem
-      const lastDateMsgIndex = dialogue.findIndex(m => m.id === 33);
+      const lastDateMsgIndex = dialogue.findIndex(m => m.id === 17);
       if (lastDateMsgIndex !== -1) {
         const now = new Date();
         const hours = String(now.getHours()).padStart(2, '0');
@@ -140,7 +153,7 @@ const ChatPage: React.FC = () => {
     }
 
     const isSent = msg.type === 'sent';
-    const isEmoji = !msg.isAudio && !msg.isImage && !msg.isHeart && msg.content.match(/^(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udf00-\uffff]|\ud83d[\udc00-\uffff]|\ud83e[\udc00-\uffff])[\s\ufe0f]*$/) && msg.content.length < 10;
+    const isEmoji = !msg.isAudio && !msg.isImage && !msg.isHeart && !msg.isStory && msg.content.match(/^(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udf00-\uffff]|\ud83d[\udc00-\uffff]|\ud83e[\udc00-\uffff])[\s\ufe0f]*$/) && msg.content.length < 10;
 
     return (
       <div key={msg.id} className={`message ${isSent ? 'sent' : 'received'}`}>
@@ -155,7 +168,21 @@ const ChatPage: React.FC = () => {
               </div>
             </div>
           )}
-          <div className={`message-bubble ${isEmoji ? 'emoji-bubble' : ''} ${msg.isHeart ? 'heart-bubble' : ''}`}>
+          <div className={`message-bubble ${isEmoji ? 'emoji-bubble' : ''} ${msg.isHeart ? 'heart-bubble' : ''} ${msg.isStory ? 'story-bubble' : ''}`}>
+            {msg.isStory && (
+              <div className="story-encaminhado-recebido" onClick={() => handleLockedFeature('ver stories encaminhados')}>
+                <div className="story-encaminhado-header">
+                  <img src={msg.storyAvatarUrl} alt={msg.storyAuthor} className="story-encaminhado-avatar" />
+                  <div className="story-encaminhado-info">
+                    <span className="story-encaminhado-name">{msg.storyAuthor}</span>
+                  </div>
+                </div>
+                <img src={msg.storyImageUrl} alt="Story" className="story-encaminhado-image" />
+                <div className="story-encaminhado-play-btn">
+                  <Play size={32} fill="white" stroke="white" strokeWidth={1} />
+                </div>
+              </div>
+            )}
             {msg.isImage && msg.imageUrl && (
               <div className="message-image-container" onClick={() => handleLockedFeature('ver fotos e vídeos censurados')}>
                 <img src={msg.imageUrl} alt="Conteúdo" className="message-image" />
@@ -175,7 +202,7 @@ const ChatPage: React.FC = () => {
                 <span className="audio-duration">{msg.audioDuration}</span>
               </div>
             )}
-            {!msg.isImage && !msg.isAudio && (
+            {!msg.isImage && !msg.isAudio && !msg.isStory && (
               <span className={msg.isBlurred ? 'blurred-text' : ''}>{msg.content}</span>
             )}
             {msg.reaction && <div className="message-reaction">{msg.reaction}</div>}
