@@ -1,278 +1,239 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart, EyeOff } from 'lucide-react';
+import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './ChatPage.css';
 import { Message } from './MessagesPage';
 import LockedFeatureModal from '../components/LockedFeatureModal';
-import { getCitiesByState, getUserLocation } from '../services/geolocationService';
-import VolumeMutedIcon from '../components/icons/VolumeMutedIcon';
 
-// Componente para a forma de onda do áudio
-const AudioWaveform: React.FC = () => (
-  <div className="audio-waveform">
-    {[...Array(30)].map((_, i) => (
-      <div key={i} className="audio-waveform-bar" style={{ height: `${Math.floor(Math.random() * 18) + 4}px` }}></div>
-    ))}
-  </div>
-);
+// Define a estrutura para uma mensagem no chat
+interface ChatMessage {
+  id: number;
+  type: 'sent' | 'received' | 'date' | 'reply_event';
+  content: string;
+  reaction?: string;
+  replyTo?: string;
+  isAudio?: boolean;
+  audioDuration?: string;
+  isBlurred?: boolean;
+}
+
+// Define os diálogos mockados
+const DIALOGUES: { [key: string]: ChatMessage[] } = {
+  // Diálogo Padrão (para o primeiro chat)
+  DEFAULT_CHAT: [
+    { id: 1, type: 'sent', content: '😍😍😍😍😍😍' },
+    { id: 2, type: 'received', content: 'que a vaca da Bruna', isBlurred: true },
+    { id: 3, type: 'sent', content: 'Áudio', isAudio: true, audioDuration: '0:11' },
+    { id: 4, type: 'received', content: 'São João del-Rei' },
+    { id: 5, type: 'sent', content: 'Dboa, amanhã ou terça', reaction: '👍' },
+    { id: 6, type: 'date', content: 'ONTEM, 21:34' },
+    { id: 7, type: 'received', content: 'Amor' },
+    { id: 8, type: 'received', content: 'Ta podendo falar?' },
+    { id: 9, type: 'reply_event', content: 'Amor', replyTo: 'Você respondeu' },
+  ],
+  
+  // Diálogo para o segundo chat (Encaminhou um reel)
+  SECOND_CHAT: [
+    { id: 1, type: 'date', content: 'HOJE, 14:20' },
+    { id: 2, type: 'received', content: 'Encaminhou um reel de jonas.milgrau' },
+    // String de risadas reduzida para um tamanho seguro
+    { id: 3, type: 'sent', content: 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk' },
+    { id: 4, type: 'received', content: 'São João del-Rei' },
+    { id: 5, type: 'sent', content: 'Dboa, amanhã ou terça', reaction: '👍' },
+    { id: 6, type: 'date', content: 'ONTEM, 21:34' },
+    { id: 7, type: 'received', content: 'Amor' },
+    { id: 8, type: 'received', content: 'Ta podendo falar?' },
+    { id: 9, type: 'reply_event', content: 'Amor', replyTo: 'Você respondeu' },
+  ],
+};
 
 const ChatPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  // useParams foi removido pois o ID é obtido via location.state
+  
+  // Extrai o usuário do chat dos dados de navegação
   const chatUser = location.state?.user as Message | undefined;
 
-  const [isSensitiveModalOpen, setIsSensitiveModalOpen] = useState(false);
-  const [isVipModalOpen, setIsVipModalOpen] = useState(false);
-  const [isAudioVipPopupOpen, setIsAudioVipPopupOpen] = useState(false);
-  const [lastMessageTime, setLastMessageTime] = useState('Agora');
-  const [locationPlaceholder, setLocationPlaceholder] = useState('...');
+  // Estados do Chat
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalFeatureName, setModalFeatureName] = useState('');
+  const [showVolumePopup, setShowVolumePopup] = useState(false);
 
-  // Efeito para buscar a localização do usuário e definir o placeholder
-  useEffect(() => {
-    const fetchLocation = async () => {
-      try {
-        const loc = await getUserLocation();
-        const cities = getCitiesByState(loc.city, loc.state);
-        // Pega uma cidade vizinha, se houver, ou a própria cidade
-        setLocationPlaceholder(cities[1] || cities[0] || 'sua cidade');
-      } catch (error) {
-        console.error("Failed to get location, using fallback.");
-        setLocationPlaceholder('São Paulo');
+  // Lógica para selecionar o diálogo correto
+  const getDialogue = useCallback((id: string) => {
+    const storedData = sessionStorage.getItem('invasionData');
+    if (storedData) {
+      const data = JSON.parse(storedData);
+      const suggestedProfiles = data.suggestedProfiles || [];
+      // O segundo chat corresponde ao segundo perfil sugerido (índice 1)
+      const secondUser = suggestedProfiles[1]; 
+      if (secondUser && id === secondUser.username) {
+        return DIALOGUES.SECOND_CHAT;
       }
-    };
-    fetchLocation();
-  }, []);
-
-  // Efeito para definir o horário da última mensagem
-  useEffect(() => {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    setLastMessageTime(`${hours}:${minutes}`);
-  }, []);
-
-  const handleBackClick = () => {
-    // Marcar como lido no localStorage para a página de DMs saber
-    if (chatUser) {
-      localStorage.setItem(`chat-${chatUser.id}-read`, 'true');
     }
-    navigate('/messages');
-  };
+    // Se não for o segundo usuário, usa o chat padrão
+    return DIALOGUES.DEFAULT_CHAT;
+  }, []);
 
-  const handleShowVipModal = () => {
-    setIsSensitiveModalOpen(false);
-    setIsVipModalOpen(true);
+  // Efeito para carregar as mensagens
+  useEffect(() => {
+    if (chatUser) {
+      const dialogue = getDialogue(chatUser.id);
+      setMessages(dialogue);
+    }
+  }, [chatUser, getDialogue]);
+
+  const handleLockedFeature = (feature: string) => {
+    setModalFeatureName(feature);
+    setIsModalOpen(true);
   };
 
   const handleAudioClick = () => {
-    setIsAudioVipPopupOpen(true);
-    setTimeout(() => setIsAudioVipPopupOpen(false), 2500);
+    if (showVolumePopup) return;
+    setShowVolumePopup(true);
+    setTimeout(() => {
+      setShowVolumePopup(false);
+    }, 2500);
   };
 
+  // Função para renderizar uma mensagem
+  const renderMessage = (msg: ChatMessage) => {
+    if (msg.type === 'date') {
+      return <div key={msg.id} className="message-date">{msg.content}</div>;
+    }
+
+    if (msg.type === 'reply_event') {
+      return (
+        <div key={msg.id} className="reply-event sent">
+          <div className="reply-event-content">
+            <span className="reply-event-label">{msg.replyTo}</span>
+            <div className="reply-event-bubble">{msg.content}</div>
+          </div>
+          <div className="reply-event-line"></div>
+        </div>
+      );
+    }
+
+    const isSent = msg.type === 'sent';
+    // Regex para emojis (simplificado para evitar problemas de unicode no parser)
+    const isEmoji = msg.content.match(/^(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udf00-\uffff]|\ud83d[\udc00-\uffff]|\ud83e[\udc00-\uffff])[\s\ufe0f]*$/) && msg.content.length < 10 && !msg.isAudio;
+    
+    return (
+      <div key={msg.id} className={`message ${isSent ? 'sent' : 'received'}`}>
+        {!isSent && chatUser && <img src={chatUser.avatar} alt={chatUser.name} className="message-avatar" />}
+        
+        <div className={`message-bubble ${isEmoji ? 'emoji-bubble' : ''} ${msg.isBlurred ? 'blurred-text' : ''} ${msg.isAudio ? 'audio-bubble' : ''}`}>
+          {msg.isAudio ? (
+            <div className="audio-message sent" onClick={handleAudioClick}>
+              <span className="play-icon">▶</span>
+              <div className="audio-waveform">
+                {/* Waveform bars generated via useEffect or static mock */}
+                {[...Array(40)].map((_, i) => (
+                  <div key={i} className="audio-waveform-bar" style={{ height: `${Math.floor(Math.random() * 16) + 2}px` }}></div>
+                ))}
+              </div>
+              <span className="audio-duration">{msg.audioDuration}</span>
+            </div>
+          ) : (
+            msg.content
+          )}
+          
+          {msg.reaction && <div className="message-reaction">{msg.reaction}</div>}
+          
+          {msg.isAudio && (
+            <div className="transcription-link" onClick={(e) => { e.stopPropagation(); handleLockedFeature('ver transcrições de áudio'); }}>Ver transcrição</div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Efeito para garantir que o waveform seja gerado (mantido para compatibilidade)
+  useEffect(() => {
+    const waveforms = document.querySelectorAll('.audio-waveform');
+    waveforms.forEach(waveform => {
+      if (waveform.children.length === 0) {
+        const numBars = 40;
+        for (let i = 0; i < numBars; i++) {
+          const bar = document.createElement('div');
+          bar.className = 'audio-waveform-bar';
+          bar.style.height = `${Math.floor(Math.random() * 16) + 2}px`;
+          waveform.appendChild(bar);
+        }
+      }
+    });
+  }, [messages]);
+
   if (!chatUser) {
-    // Se não houver dados do usuário, volta para a página de mensagens
-    useEffect(() => {
-      navigate('/messages');
-    }, [navigate]);
     return null;
   }
 
   return (
     <div className="chat-container">
       <LockedFeatureModal
-        isOpen={isVipModalOpen}
-        onClose={() => setIsVipModalOpen(false)}
-        featureName="ver fotos e vídeos censurados"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        featureName={modalFeatureName}
       />
 
-      {/* Modal de Conteúdo Sensível */}
       <AnimatePresence>
-        {isSensitiveModalOpen && (
+        {showVolumePopup && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="sensitive-modal-overlay"
-          >
-            <button onClick={() => setIsSensitiveModalOpen(false)} className="sensitive-modal-back-btn">
-              <ChevronLeft size={28} strokeWidth={2.5} />
-            </button>
-            <div className="sensitive-modal-content">
-              <EyeOff className="sensitive-modal-icon" size={48} />
-              <p className="sensitive-modal-title">Conteúdo sensível</p>
-              <p className="sensitive-modal-subtitle">Esta imagem pode apresentar conteúdo de nudez e atividade sexual explícita.</p>
-            </div>
-            <footer className="sensitive-modal-footer">
-              <button onClick={handleShowVipModal} className="sensitive-modal-view-btn">
-                Ver imagem
-              </button>
-            </footer>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      {/* Modal de Áudio VIP */}
-      <AnimatePresence>
-        {isAudioVipPopupOpen && (
-          <motion.div
-            className="audio-vip-popup-overlay"
+            className="volume-popup-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="audio-vip-popup-content"
+              className="volume-popup-content"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ type: 'spring', damping: 15 }}
             >
               <p>Seja membro VIP para liberar o volume</p>
-              <VolumeMutedIcon className="audio-vip-popup-icon" />
-              <div className="audio-vip-popup-bar">
-                {[...Array(15)].map((_, i) => <div key={i} className="audio-vip-popup-bar-segment" />)}
+              <VolumeX className="volume-popup-icon" size={48} strokeWidth={1.5} />
+              <div className="volume-popup-bar">
+                {[...Array(15)].map((_, i) => <div key={i} className="volume-popup-bar-segment" />)}
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <header className="chat-header">
+      <header className="chat-header-sticky">
         <div className="chat-header-left">
-          <button onClick={handleBackClick} className="back-button">
+          <button onClick={() => navigate('/messages')} className="back-button">
             <ChevronLeft size={28} strokeWidth={2.5} />
           </button>
-          <div className="chat-user-info" onClick={() => setIsVipModalOpen(true)}>
-            <button className="chat-avatar-btn">
-              <div className="chat-avatar-inner">
-                <img src={chatUser.avatar} alt={chatUser.name} className="chat-avatar-img" />
-              </div>
-            </button>
-            <button className="chat-name-btn">
+          <div className="chat-user-info" onClick={() => handleLockedFeature('ver o perfil do usuário')}>
+            <div className="chat-avatar-wrapper-header">
+              <img src={chatUser.avatar} alt={chatUser.name} className="chat-avatar-img" />
+            </div>
+            <div className="chat-name-wrapper">
               <span className="chat-user-name">{chatUser.name}</span>
               <span className="chat-user-status">Online</span>
-            </button>
+            </div>
           </div>
         </div>
         <div className="chat-header-right">
-          <Phone size={24} onClick={() => setIsVipModalOpen(true)} />
-          <Video size={24} onClick={() => setIsVipModalOpen(true)} />
+          <button onClick={() => handleLockedFeature('fazer uma ligação')}><Phone size={24} /></button>
+          <button onClick={() => handleLockedFeature('fazer uma chamada de vídeo')}><Video size={24} /></button>
         </div>
       </header>
 
       <main className="chat-messages">
-        <div className="message-date">3 dias atrás, 11:12</div>
-        
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble"><div className="message-content">Oi minha delícia</div></div>
-        </div>
-
-        <div className="message sent">
-          <div className="message-bubble"><div className="message-content">Oi amor da minha vidq</div></div>
-        </div>
-        <div className="message sent">
-          <div className="message-bubble"><div className="message-content">vida*</div></div>
-        </div>
-
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble"><div className="message-content">To com saudade</div></div>
-        </div>
-
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble" style={{ padding: 0, background: 'none' }}>
-            <div className="message-video" onClick={() => setIsSensitiveModalOpen(true)}>
-              <img src="/nudes1-chat1.jpg" alt="Conteúdo sensível" className="video-blurred" />
-              <div className="video-sensitive-overlay">
-                <EyeOff className="video-sensitive-icon" size={32} />
-              </div>
-            </div>
-            <div className="message-reaction">❤️</div>
-          </div>
-        </div>
-
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble"><div className="message-content">Disso??</div></div>
-        </div>
-
-        <div className="message sent">
-          <div className="message-bubble"><div className="message-content">😍😍😍😍😍😍</div></div>
-        </div>
-
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble"><div className="message-content">Gostou <span className="blur-word">amor</span>?</div></div>
-        </div>
-
-        <div className="message sent">
-          <div className="message-bubble" onClick={handleAudioClick}>
-            <div className="audio-message">
-              <button className="audio-play-btn">▶</button>
-              <AudioWaveform />
-              <span className="audio-duration">0:11</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble"><div className="message-content">Fala pra <span className="blur-word">ela que tem</span> sim em {locationPlaceholder}.</div></div>
-        </div>
-
-        <div className="message sent">
-          <div className="message-bubble">
-            <div className="message-content">Dboa, amanhã ou depois de amanhã</div>
-            <div className="message-reaction">👍🏻</div>
-          </div>
-        </div>
-
-        <div className="message-date">ONTEM, 21:34</div>
-
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble"><div className="message-content">Amor</div></div>
-        </div>
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble"><div className="message-content">Ta podendo falar?</div></div>
-        </div>
-
-        <div className="message sent">
-          <div className="message-bubble">
-            <div className="message-reply">
-              <div className="reply-label">Você respondeu</div>
-              <div className="reply-content-wrapper">
-                <div className="reply-line"></div>
-                <div className="message-content reply-bg-purple">Amor</div>
-              </div>
-            </div>
-            <div className="message-content">Oii bb</div>
-          </div>
-        </div>
-
-        <div className="message-unread-divider">
-          <div className="message-unread-line"></div>
-          <span className="message-unread-text">Novas mensagens</span>
-          <div className="message-unread-line"></div>
-        </div>
-
-        <div className="message-date">{lastMessageTime}</div>
-
-        <div className="message received">
-          <img src={chatUser.avatar} alt="User" className="message-avatar" />
-          <div className="message-bubble">
-            <div className="message-content">Oi delícia, adivinha o que vc esqueceu aqui? kkkk</div>
-          </div>
-        </div>
+        {messages.map(renderMessage)}
       </main>
 
-      <footer className="message-input-container" onClick={() => setIsVipModalOpen(true)}>
+      <footer className="message-input-container" onClick={() => handleLockedFeature('enviar mensagens')}>
         <div className="message-input-wrapper">
-          <button className="input-icon-button camera-button"><Camera size={24} /></button>
+          <button className="input-icon-button camera-button">
+            <Camera size={24} />
+          </button>
           <input type="text" placeholder="Mensagem..." className="message-input" readOnly />
           <div className="message-input-actions">
             <button className="input-icon-button"><Mic size={22} /></button>
