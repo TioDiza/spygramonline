@@ -4,7 +4,7 @@
   height: 100vh;
   max-width: 450px;
   margin: 0 auto;
-  background-color: #101010; /* Darker background from image */
+  background-color: #101010;
   color: #F9F9F9;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   border-left: 1px solid #262626;
@@ -55,7 +55,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(4px); /* Blur header avatar */
+  filter: blur(4px);
 }
 
 .chat-name-wrapper {
@@ -92,7 +92,7 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem; /* Reduced gap */
+  gap: 0.25rem;
 }
 
 .message {
@@ -116,13 +116,19 @@
   height: 28px;
   border-radius: 50%;
   object-fit: cover;
-  filter: blur(4px); /* Blur message avatar */
+  filter: blur(4px);
+}
+
+.message-bubble-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .message-bubble {
   padding: 0.6rem 1rem;
   border-radius: 1.25rem;
   position: relative;
+  max-width: 100%;
 }
 
 .message.sent .message-bubble {
@@ -201,22 +207,16 @@
   align-items: center;
 }
 
-/* Specific message styles from new screenshot */
-.message.sent .emoji-bubble {
+.emoji-bubble, .heart-bubble {
   background: none;
   font-size: 2.5rem;
   padding: 0;
 }
 
-.message-bubble.blurred-text {
+.blurred-text {
   filter: blur(4px);
   user-select: none;
   pointer-events: none;
-}
-
-.message.sent .audio-bubble {
-  background-color: #8E44AD;
-  padding: 0.5rem 1rem;
 }
 
 .audio-message {
@@ -224,11 +224,6 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-}
-
-.audio-message .play-icon {
-  font-size: 1rem;
-  color: white;
 }
 
 .audio-waveform {
@@ -244,22 +239,18 @@
   border-radius: 1px;
 }
 
+.message.received .audio-waveform-bar {
+  background-color: #A8A8A8;
+}
+
 .audio-duration {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.8);
 }
 
-.transcription-link {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 0.25rem;
-  cursor: pointer;
-}
-
 .message-reaction {
   position: absolute;
   bottom: -12px;
-  right: -8px;
   background-color: #262626;
   border-radius: 50%;
   padding: 2px 4px;
@@ -272,46 +263,98 @@
   right: auto;
 }
 
-.reply-event {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin: 0.5rem 0;
-  align-self: flex-end;
+.message.received .message-reaction {
+  right: -8px;
+  left: auto;
 }
 
-.reply-event-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+.message-reply {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 0.5rem;
+  margin-bottom: -0.5rem;
+  position: relative;
+  z-index: 0;
 }
 
-.reply-event-label {
+.message-reply.sent {
+  border-bottom-right-radius: 0.25rem;
+}
+
+.message-reply.received {
+  border-bottom-left-radius: 0.25rem;
+}
+
+.reply-label {
   font-size: 0.75rem;
   color: #A8A8A8;
-  margin-bottom: 0.25rem;
-  padding-right: 0.5rem;
 }
 
-.reply-event-bubble {
-  background-color: #262626;
+.reply-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reply-line {
+  width: 2px;
+  height: 1.2rem;
+  background-color: #8E44AD;
+  border-radius: 1px;
+}
+
+.reply-content {
+  font-size: 0.8rem;
   color: #F9F9F9;
-  padding: 0.6rem 1rem;
-  border-radius: 1.25rem;
-  max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.reply-event-line {
-  width: 2px;
-  height: 2.5rem;
-  background-color: #8E44AD;
-  margin-left: 0.75rem;
+.message-image-container {
+  position: relative;
+  cursor: pointer;
+  border-radius: 1rem;
+  overflow: hidden;
+  max-width: 200px;
 }
 
-/* Volume Popup Styles */
+.message-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: blur(8px);
+}
+
+.sensitive-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.message-unread-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.message-unread-line {
+  flex-grow: 1;
+  height: 1px;
+  background-color: #262626;
+}
+
+.message-unread-text {
+  font-size: 0.75rem;
+  color: #A8A8A8;
+  font-weight: 600;
+}
+
 .volume-popup-overlay {
   position: fixed;
   inset: 0;

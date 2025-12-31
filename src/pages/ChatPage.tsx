@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart, VolumeX } from 'lucide-react';
+import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart, VolumeX, EyeOff, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './ChatPage.css';
 import { Message } from './MessagesPage';
@@ -9,79 +9,107 @@ import LockedFeatureModal from '../components/LockedFeatureModal';
 // Define a estrutura para uma mensagem no chat
 interface ChatMessage {
   id: number;
-  type: 'sent' | 'received' | 'date' | 'reply_event';
+  type: 'sent' | 'received' | 'date' | 'divider';
   content: string;
   reaction?: string;
   replyTo?: string;
+  replyLabel?: string;
   isAudio?: boolean;
   audioDuration?: string;
   isBlurred?: boolean;
+  isImage?: boolean;
+  imageUrl?: string;
+  isHeart?: boolean;
 }
 
 // Define os diálogos mockados
 const DIALOGUES: { [key: string]: ChatMessage[] } = {
-  // Diálogo Padrão (para o primeiro chat)
+  // Diálogo Padrão (para o primeiro chat) - ATUALIZADO
   DEFAULT_CHAT: [
-    { id: 1, type: 'sent', content: '😍😍😍😍😍😍' },
-    { id: 2, type: 'received', content: 'que a vaca da Bruna', isBlurred: true },
-    { id: 3, type: 'sent', content: 'Áudio', isAudio: true, audioDuration: '0:11' },
-    { id: 4, type: 'received', content: 'São João del-Rei' },
-    { id: 5, type: 'sent', content: 'Dboa, amanhã ou terça', reaction: '👍' },
-    { id: 6, type: 'date', content: 'ONTEM, 21:34' },
-    { id: 7, type: 'received', content: 'Amor' },
-    { id: 8, type: 'received', content: 'Ta podendo falar?' },
-    { id: 9, type: 'reply_event', content: 'Amor', replyTo: 'Você respondeu' },
+    { id: 1, type: 'date', content: '3 dias atrás, 11:12' },
+    { id: 2, type: 'received', content: 'Oi minha delícia' },
+    { id: 3, type: 'sent', content: 'Oi amor da minha vidq' },
+    { id: 4, type: 'sent', content: 'vida*' },
+    { id: 5, type: 'received', content: 'To com saudade' },
+    { id: 6, type: 'received', content: '', isImage: true, imageUrl: '/nudes1-chat1.jpg', reaction: '❤️' },
+    { id: 7, type: 'received', content: 'Disso??' },
+    { id: 8, type: 'sent', content: '😍😍😍😍😍😍' },
+    { id: 9, type: 'received', content: 'Gostou amor?', isBlurred: true },
+    { id: 10, type: 'sent', content: 'Áudio', isAudio: true, audioDuration: '0:11' },
+    { id: 11, type: 'received', content: 'Fala pra ela que tem sim em São João del-Rei.', isBlurred: true },
+    { id: 12, type: 'sent', content: 'Dboa, amanhã ou depois de amanhã', reaction: '👍🏻' },
+    { id: 13, type: 'date', content: 'ONTEM, 21:34' },
+    { id: 14, type: 'received', content: 'Amor' },
+    { id: 15, type: 'received', content: 'Ta podendo falar?' },
+    { id: 16, type: 'sent', content: 'Oii bb', replyTo: 'Amor', replyLabel: 'Você respondeu' },
+    { id: 17, type: 'received', content: 'Perai que a vaca da Bruna tá aqui do lado', isBlurred: true },
+    { id: 18, type: 'sent', content: 'kkkkkkkkk' },
+    { id: 19, type: 'received', content: '🦌🦌🦌 kkkk', reaction: '😂' },
+    { id: 20, type: 'received', content: 'Tô em Londrina já, só pra avisar mesmo', isBlurred: true, reaction: '❤️' },
+    { id: 21, type: 'received', content: '❤️', isHeart: true },
+    { id: 22, type: 'sent', content: 'Tá aonde' },
+    { id: 23, type: 'sent', content: 'Na sua prima?' },
+    { id: 24, type: 'received', content: 'Não', replyTo: 'Na sua prima?', replyLabel: 'respondeu a você' },
+    { id: 25, type: 'received', content: 'Casa da Fernanda', isBlurred: true },
+    { id: 26, type: 'sent', content: 'Tá bom 😘' },
+    { id: 27, type: 'sent', content: 'Vou dar uma fodida e depois passo aí blz??', isBlurred: true, reaction: '❤️' },
+    { id: 28, type: 'received', content: 'Áudio', isAudio: true, audioDuration: '0:32' },
+    { id: 29, type: 'received', content: 'Áudio', isAudio: true, audioDuration: '0:07' },
+    { id: 30, type: 'sent', content: 'Pode deixar' },
+    { id: 31, type: 'received', content: '❤️', isHeart: true },
+    { id: 32, type: 'divider', content: 'Novas mensagens' },
+    { id: 33, type: 'date', content: 'HOJE' },
+    { id: 34, type: 'received', content: 'Oi delícia, adivinha o que vc esqueceu aqui? kkkk' },
   ],
   
   // Diálogo para o segundo chat (Encaminhou um reel)
   SECOND_CHAT: [
     { id: 1, type: 'date', content: 'HOJE, 14:20' },
     { id: 2, type: 'received', content: 'Encaminhou um reel de jonas.milgrau' },
-    // String de risadas reduzida para um tamanho seguro
     { id: 3, type: 'sent', content: 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk' },
     { id: 4, type: 'received', content: 'São João del-Rei' },
     { id: 5, type: 'sent', content: 'Dboa, amanhã ou terça', reaction: '👍' },
     { id: 6, type: 'date', content: 'ONTEM, 21:34' },
     { id: 7, type: 'received', content: 'Amor' },
     { id: 8, type: 'received', content: 'Ta podendo falar?' },
-    { id: 9, type: 'reply_event', content: 'Amor', replyTo: 'Você respondeu' },
+    { id: 9, type: 'sent', content: 'Oii bb', replyTo: 'Amor', replyLabel: 'Você respondeu' },
   ],
 };
 
 const ChatPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // useParams foi removido pois o ID é obtido via location.state
-  
-  // Extrai o usuário do chat dos dados de navegação
   const chatUser = location.state?.user as Message | undefined;
 
-  // Estados do Chat
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalFeatureName, setModalFeatureName] = useState('');
   const [showVolumePopup, setShowVolumePopup] = useState(false);
 
-  // Lógica para selecionar o diálogo correto
   const getDialogue = useCallback((id: string) => {
     const storedData = sessionStorage.getItem('invasionData');
     if (storedData) {
       const data = JSON.parse(storedData);
       const suggestedProfiles = data.suggestedProfiles || [];
-      // O segundo chat corresponde ao segundo perfil sugerido (índice 1)
       const secondUser = suggestedProfiles[1]; 
       if (secondUser && id === secondUser.username) {
         return DIALOGUES.SECOND_CHAT;
       }
     }
-    // Se não for o segundo usuário, usa o chat padrão
     return DIALOGUES.DEFAULT_CHAT;
   }, []);
 
-  // Efeito para carregar as mensagens
   useEffect(() => {
     if (chatUser) {
-      const dialogue = getDialogue(chatUser.id);
+      let dialogue = getDialogue(chatUser.id);
+      // Atualiza dinamicamente o horário da última mensagem
+      const lastDateMsgIndex = dialogue.findIndex(m => m.id === 33);
+      if (lastDateMsgIndex !== -1) {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        dialogue[lastDateMsgIndex].content = `${hours}:${minutes}`;
+      }
       setMessages(dialogue);
     }
   }, [chatUser, getDialogue]);
@@ -94,106 +122,78 @@ const ChatPage: React.FC = () => {
   const handleAudioClick = () => {
     if (showVolumePopup) return;
     setShowVolumePopup(true);
-    setTimeout(() => {
-      setShowVolumePopup(false);
-    }, 2500);
+    setTimeout(() => setShowVolumePopup(false), 2500);
   };
 
-  // Função para renderizar uma mensagem
   const renderMessage = (msg: ChatMessage) => {
     if (msg.type === 'date') {
       return <div key={msg.id} className="message-date">{msg.content}</div>;
     }
-
-    if (msg.type === 'reply_event') {
+    if (msg.type === 'divider') {
       return (
-        <div key={msg.id} className="reply-event sent">
-          <div className="reply-event-content">
-            <span className="reply-event-label">{msg.replyTo}</span>
-            <div className="reply-event-bubble">{msg.content}</div>
-          </div>
-          <div className="reply-event-line"></div>
+        <div key={msg.id} className="message-unread-divider">
+          <div className="message-unread-line"></div>
+          <span className="message-unread-text">{msg.content}</span>
+          <div className="message-unread-line"></div>
         </div>
       );
     }
 
     const isSent = msg.type === 'sent';
-    // Regex para emojis (simplificado para evitar problemas de unicode no parser)
-    const isEmoji = msg.content.match(/^(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udf00-\uffff]|\ud83d[\udc00-\uffff]|\ud83e[\udc00-\uffff])[\s\ufe0f]*$/) && msg.content.length < 10 && !msg.isAudio;
-    
+    const isEmoji = !msg.isAudio && !msg.isImage && !msg.isHeart && msg.content.match(/^(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udf00-\uffff]|\ud83d[\udc00-\uffff]|\ud83e[\udc00-\uffff])[\s\ufe0f]*$/) && msg.content.length < 10;
+
     return (
       <div key={msg.id} className={`message ${isSent ? 'sent' : 'received'}`}>
         {!isSent && chatUser && <img src={chatUser.avatar} alt={chatUser.name} className="message-avatar" />}
-        
-        <div className={`message-bubble ${isEmoji ? 'emoji-bubble' : ''} ${msg.isBlurred ? 'blurred-text' : ''} ${msg.isAudio ? 'audio-bubble' : ''}`}>
-          {msg.isAudio ? (
-            <div className="audio-message sent" onClick={handleAudioClick}>
-              <span className="play-icon">▶</span>
-              <div className="audio-waveform">
-                {/* Waveform bars generated via useEffect or static mock */}
-                {[...Array(40)].map((_, i) => (
-                  <div key={i} className="audio-waveform-bar" style={{ height: `${Math.floor(Math.random() * 16) + 2}px` }}></div>
-                ))}
+        <div className="message-bubble-container">
+          {msg.replyTo && (
+            <div className={`message-reply ${isSent ? 'sent' : 'received'}`}>
+              <div className="reply-label">{msg.replyLabel}</div>
+              <div className="reply-content-wrapper">
+                <div className="reply-line"></div>
+                <div className="reply-content">{msg.replyTo}</div>
               </div>
-              <span className="audio-duration">{msg.audioDuration}</span>
             </div>
-          ) : (
-            msg.content
           )}
-          
-          {msg.reaction && <div className="message-reaction">{msg.reaction}</div>}
-          
-          {msg.isAudio && (
-            <div className="transcription-link" onClick={(e) => { e.stopPropagation(); handleLockedFeature('ver transcrições de áudio'); }}>Ver transcrição</div>
-          )}
+          <div className={`message-bubble ${isEmoji ? 'emoji-bubble' : ''} ${msg.isHeart ? 'heart-bubble' : ''}`}>
+            {msg.isImage && msg.imageUrl && (
+              <div className="message-image-container" onClick={() => handleLockedFeature('ver fotos e vídeos censurados')}>
+                <img src={msg.imageUrl} alt="Conteúdo" className="message-image" />
+                <div className="sensitive-overlay">
+                  <EyeOff size={24} />
+                </div>
+              </div>
+            )}
+            {msg.isAudio && (
+              <div className="audio-message" onClick={handleAudioClick}>
+                <Play size={16} fill="white" />
+                <div className="audio-waveform">
+                  {[...Array(isSent ? 25 : 35)].map((_, i) => (
+                    <div key={i} className="audio-waveform-bar" style={{ height: `${Math.floor(Math.random() * 14) + 2}px` }}></div>
+                  ))}
+                </div>
+                <span className="audio-duration">{msg.audioDuration}</span>
+              </div>
+            )}
+            {!msg.isImage && !msg.isAudio && (
+              <span className={msg.isBlurred ? 'blurred-text' : ''}>{msg.content}</span>
+            )}
+            {msg.reaction && <div className="message-reaction">{msg.reaction}</div>}
+          </div>
         </div>
       </div>
     );
   };
 
-  // Efeito para garantir que o waveform seja gerado (mantido para compatibilidade)
-  useEffect(() => {
-    const waveforms = document.querySelectorAll('.audio-waveform');
-    waveforms.forEach(waveform => {
-      if (waveform.children.length === 0) {
-        const numBars = 40;
-        for (let i = 0; i < numBars; i++) {
-          const bar = document.createElement('div');
-          bar.className = 'audio-waveform-bar';
-          bar.style.height = `${Math.floor(Math.random() * 16) + 2}px`;
-          waveform.appendChild(bar);
-        }
-      }
-    });
-  }, [messages]);
-
-  if (!chatUser) {
-    return null;
-  }
+  if (!chatUser) return null;
 
   return (
     <div className="chat-container">
-      <LockedFeatureModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        featureName={modalFeatureName}
-      />
-
+      <LockedFeatureModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} featureName={modalFeatureName} />
       <AnimatePresence>
         {showVolumePopup && (
-          <motion.div
-            className="volume-popup-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="volume-popup-content"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: 'spring', damping: 15 }}
-            >
+          <motion.div className="volume-popup-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div className="volume-popup-content" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.8, opacity: 0 }} transition={{ type: 'spring', damping: 15 }}>
               <p>Seja membro VIP para liberar o volume</p>
               <VolumeX className="volume-popup-icon" size={48} strokeWidth={1.5} />
               <div className="volume-popup-bar">
@@ -203,16 +203,11 @@ const ChatPage: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
       <header className="chat-header-sticky">
         <div className="chat-header-left">
-          <button onClick={() => navigate('/messages')} className="back-button">
-            <ChevronLeft size={28} strokeWidth={2.5} />
-          </button>
+          <button onClick={() => navigate('/messages')} className="back-button"><ChevronLeft size={28} strokeWidth={2.5} /></button>
           <div className="chat-user-info" onClick={() => handleLockedFeature('ver o perfil do usuário')}>
-            <div className="chat-avatar-wrapper-header">
-              <img src={chatUser.avatar} alt={chatUser.name} className="chat-avatar-img" />
-            </div>
+            <div className="chat-avatar-wrapper-header"><img src={chatUser.avatar} alt={chatUser.name} className="chat-avatar-img" /></div>
             <div className="chat-name-wrapper">
               <span className="chat-user-name">{chatUser.name}</span>
               <span className="chat-user-status">Online</span>
@@ -224,16 +219,10 @@ const ChatPage: React.FC = () => {
           <button onClick={() => handleLockedFeature('fazer uma chamada de vídeo')}><Video size={24} /></button>
         </div>
       </header>
-
-      <main className="chat-messages">
-        {messages.map(renderMessage)}
-      </main>
-
+      <main className="chat-messages">{messages.map(renderMessage)}</main>
       <footer className="message-input-container" onClick={() => handleLockedFeature('enviar mensagens')}>
         <div className="message-input-wrapper">
-          <button className="input-icon-button camera-button">
-            <Camera size={24} />
-          </button>
+          <button className="input-icon-button camera-button"><Camera size={24} /></button>
           <input type="text" placeholder="Mensagem..." className="message-input" readOnly />
           <div className="message-input-actions">
             <button className="input-icon-button"><Mic size={22} /></button>
