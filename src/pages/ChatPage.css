@@ -329,11 +329,16 @@
 .sensitive-overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   color: white;
+  gap: 0.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .message-unread-divider {
@@ -451,14 +456,4 @@
   width: 100%;
   height: auto;
   display: block;
-  filter: blur(4px);
-}
-
-.story-encaminhado-play-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  opacity: 0.8;
 }

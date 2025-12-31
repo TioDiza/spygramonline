@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart, VolumeX, EyeOff, Play } from 'lucide-react';
+import { ChevronLeft, Phone, Video, Mic, Camera, Sticker, Heart, VolumeX, EyeOff, Lock, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './ChatPage.css';
 import { Message } from './MessagesPage';
@@ -178,8 +178,9 @@ const ChatPage: React.FC = () => {
                   </div>
                 </div>
                 <img src={msg.storyImageUrl} alt="Story" className="story-encaminhado-image" />
-                <div className="story-encaminhado-play-btn">
-                  <Play size={32} fill="white" stroke="white" strokeWidth={1} />
+                <div className="sensitive-overlay">
+                  <Lock size={32} />
+                  <p>Conteúdo Bloqueado</p>
                 </div>
               </div>
             )}
