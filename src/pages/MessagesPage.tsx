@@ -6,7 +6,8 @@ import MetaAIIcon from '../components/icons/MetaAIIcon';
 import DirectStoryItem from '../components/DirectStoryItem';
 import MessageItem from '../components/MessageItem';
 import './MessagesPage.css';
-import { ProfileData } from '../../types';
+import { ProfileData, SuggestedProfile } from '../../types';
+import { getCitiesByState } from '../services/geolocationService'; // Importa a função de cidades
 
 // Interfaces para os dados da página
 export interface Story {
@@ -26,6 +27,12 @@ export interface Message {
   avatar: string;
 }
 
+// Helper function to mask usernames
+const maskUsername = (username: string) => {
+  if (username.length <= 4) return username;
+  return `${username.substring(0, 3).toLowerCase()}****`;
+};
+
 const MessagesPage: React.FC = () => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
@@ -33,56 +40,64 @@ const MessagesPage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    // Get profile data for the "Sua nota" avatar
     const storedData = sessionStorage.getItem('invasionData');
     if (storedData) {
       const data = JSON.parse(storedData);
       setProfileData(data.profileData);
+
+      const suggestedProfiles: SuggestedProfile[] = data.suggestedProfiles || [];
+      const userCity: string = data.userCity || 'São Paulo';
+      
+      // Gera uma lista de cidades para usar nas mensagens bloqueadas
+      const allCities = getCitiesByState(userCity, 'São Paulo'); // Usando SP como fallback de estado
+      
+      // 1. Cria Stories (usando os primeiros 4 perfis sugeridos)
+      const suggestedStories: Story[] = suggestedProfiles.slice(0, 4).map((profile: SuggestedProfile, index: number) => ({
+        id: profile.username,
+        name: maskUsername(profile.username),
+        note: ['Preguiça Hoje 🥱🥱', 'Coração Partido (Ao Vivo)', 'O vontde fudê a 3 😈', '📍💦 São Paulo'][index % 4],
+        avatar: profile.profile_pic_url,
+      }));
+      setStories(suggestedStories);
+
+      // 2. Cria Mensagens (usando até 10 perfis sugeridos)
+      const suggestedMessages: Message[] = suggestedProfiles.slice(0, 10).map((profile: SuggestedProfile, index: number) => {
+        const isLocked = index >= 2; // Os dois primeiros chats são desbloqueados
+        
+        let messageContent: string;
+        let time: string;
+        let unread: boolean;
+
+        if (isLocked) {
+          // Mensagens bloqueadas simulam localização ou conteúdo genérico
+          const city = allCities[index % allCities.length];
+          messageContent = index % 2 === 0 ? `${city}` : '4 novas mensagens';
+          time = ['22 h', '3 d', '4 d', '1 sem'][index % 4];
+          unread = index % 3 === 0;
+        } else {
+          // Mensagens desbloqueadas (os dois primeiros)
+          messageContent = ['Oi delícia, adivinha o que vc esq...', 'Encaminhou um reel de jonas.milgrau'][index];
+          time = ['Agora', '33 min'][index];
+          unread = true;
+        }
+
+        return {
+          id: profile.username,
+          name: maskUsername(profile.username),
+          message: messageContent,
+          time: time,
+          unread: unread,
+          locked: isLocked,
+          avatar: profile.profile_pic_url,
+        };
+      });
+      
+      setMessages(suggestedMessages);
+
     } else {
-      console.warn("Nenhum dado de invasão encontrado.");
+      console.warn("Nenhum dado de invasão encontrado. Usando dados de fallback.");
       navigate('/');
     }
-
-    // Define static data for stories and messages based on the screenshot
-    const staticStories: Story[] = [
-      { id: 'ali1', name: 'Ali*******', note: 'Preguiça Hoje 🥱🥱', avatar: '/perfil.jpg' },
-      { id: 'ali2', name: 'Ali*******', note: 'Partido (Ao...', avatar: '/perfil.jpg' },
-      { id: 'swi1', name: 'Swi*******', note: 'O vontde fudê a 3', avatar: '/nudes1-chat1.jpg' },
-    ];
-
-    const staticMessages: Message[] = [
-      {
-        id: 'fer',
-        name: 'Fer*****',
-        message: 'Oi delícia, adivinha o que vc esque...',
-        time: '1 min',
-        unread: true,
-        locked: false, // Shows blurred photo
-        avatar: '/perfil.jpg',
-      },
-      {
-        id: 'gus',
-        name: 'Gus*****',
-        message: 'Encaminhou um reel de jonas.m...',
-        time: '34 min',
-        unread: false,
-        locked: true, // Shows blurred placeholder
-        avatar: '',
-      },
-      {
-        id: 'bru',
-        name: 'Bru*****',
-        message: 'Blz depois a gente se fala',
-        time: '2 h',
-        unread: false,
-        locked: true, // Shows blurred placeholder
-        avatar: '',
-      },
-    ];
-
-    setStories(staticStories);
-    setMessages(staticMessages);
-
   }, [navigate]);
 
   const handleLockedClick = () => {
@@ -90,12 +105,7 @@ const MessagesPage: React.FC = () => {
   };
 
   const handleChatClick = (user: Message) => {
-    // Apenas o primeiro chat (Fer*****) é clicável nesta simulação
-    if (user.id === 'fer') {
-      navigate(`/chat/${user.id}`, { state: { user } });
-    } else {
-      handleLockedClick();
-    }
+    navigate(`/chat/${user.id}`, { state: { user } });
   };
 
   return (
@@ -146,7 +156,7 @@ const MessagesPage: React.FC = () => {
         </div>
 
         <div className="messages-list">
-          {messages.map((msg) => (
+          {messages.map((msg, index) => (
             <MessageItem
               key={msg.id}
               avatarUrl={msg.avatar}
@@ -155,7 +165,8 @@ const MessagesPage: React.FC = () => {
               time={msg.time}
               unread={msg.unread}
               locked={msg.locked}
-              onClick={() => handleChatClick(msg)}
+              // Permite que os dois primeiros chats (index 0 e 1) sejam clicáveis se não estiverem bloqueados
+              onClick={(!msg.locked && (index === 0 || index === 1)) ? () => handleChatClick(msg) : handleLockedClick}
             />
           ))}
         </div>
