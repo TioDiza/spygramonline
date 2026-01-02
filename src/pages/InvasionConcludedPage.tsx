@@ -7,14 +7,15 @@ import InteractionProfilesCarousel from '../components/InteractionProfilesCarous
 import RealTimeLocationCard from '../components/RealTimeLocationCard';
 import DatingAppCard from '../components/DatingAppCard';
 import LicensePlateLocationCard from '../components/LicensePlateLocationCard';
-import RecoveredDataCard from '../components/RecoveredDataCard'; // Importa o novo card
+import RecoveredDataCard from '../components/RecoveredDataCard';
 import CheckoutPromptModal from '../components/CheckoutPromptModal';
 import FeatureCarousel from '../components/FeatureCarousel';
 import PriceDiscountCard from '../components/PriceDiscountCard';
 import LiveChatFAQ from '../components/LiveChatFAQ';
 import GuaranteeBanner from '../components/GuaranteeBanner';
 import StaticFAQSection from '../components/StaticFAQSection';
-import { motion, AnimatePresence } from 'framer-motion'; // Importa motion e AnimatePresence
+import { motion, AnimatePresence } from 'framer-motion';
+import ShineButton from '../components/ui/ShineButton'; // Importando o ShineButton
 
 // Componente para a seção fixa (agora animado)
 const FixedScrollPrompt: React.FC<{ isVisible: boolean }> = ({ isVisible }) => (
@@ -163,6 +164,19 @@ const InvasionConcludedPage: React.FC = () => {
         
         {/* Banner de Garantia */}
         <GuaranteeBanner />
+
+        {/* CTA Button after Guarantee */}
+        <div className="mt-8 w-full">
+          <ShineButton
+            onClick={() => handleUnlockClick('acesso completo')}
+            className="w-full bg-green-600 focus:ring-green-500 active:scale-95"
+            shineColorClasses="bg-green-500"
+          >
+            <span className="text-lg font-extrabold">
+              QUERO MEU ACESSO SEGURO AGORA
+            </span>
+          </ShineButton>
+        </div>
 
         {/* Seção de Perguntas Frequentes Estáticas */}
         <StaticFAQSection />
